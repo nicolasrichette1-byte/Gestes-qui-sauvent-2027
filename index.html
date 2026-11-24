@@ -1,0 +1,1880 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Gestes qui sauvent 2027</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+  <style>
+    /* Layout: bandeau de rôle, synthèse 10 sessions / 150 jeunes, puis onglets Calendrier et Sessions. Ambiance sobre, vert santé, rouge réservé aux refus. */
+    :root {
+      color-scheme: light;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      --bg: #f4f6f3;
+      --surface: #ffffff;
+      --surface2: #ecf0ec;
+      --fg: #14211c;
+      --muted: #56635d;
+      --line: #d6ddd8;
+      --accent: #0a6a4c;
+      --accent-fg: #ffffff;
+      --accent-soft: #dcefe6;
+      --ok: #1b7a43;
+      --ok-soft: #dbf0e2;
+      --warn: #8f5400;
+      --warn-soft: #faeacb;
+      --bad: #b3261e;
+      --bad-soft: #f8dcd9;
+      --hatch: #e3e8e4;
+      --body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0f1714;
+        --surface: #17211d;
+        --surface2: #1f2b26;
+        --fg: #e8efeb;
+        --muted: #9aaaa2;
+        --line: #2c3a34;
+        --accent: #4fcf9f;
+        --accent-fg: #06281c;
+        --accent-soft: #17382c;
+        --ok: #5fd18a;
+        --ok-soft: #173a26;
+        --warn: #f0b455;
+        --warn-soft: #3b2d10;
+        --bad: #ff8a80;
+        --bad-soft: #41201d;
+        --hatch: #202b26;
+        color-scheme: dark;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #0f1714;
+      --surface: #17211d;
+      --surface2: #1f2b26;
+      --fg: #e8efeb;
+      --muted: #9aaaa2;
+      --line: #2c3a34;
+      --accent: #4fcf9f;
+      --accent-fg: #06281c;
+      --accent-soft: #17382c;
+      --ok: #5fd18a;
+      --ok-soft: #173a26;
+      --warn: #f0b455;
+      --warn-soft: #3b2d10;
+      --bad: #ff8a80;
+      --bad-soft: #41201d;
+      --hatch: #202b26;
+      color-scheme: dark;
+    }
+
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    [hidden]:not([hidden=until-found i]) {
+      display: none !important;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font: 15px/1.5 var(--body);
+      padding-block: 20px 64px;
+      padding-left: max(16px, env(safe-area-inset-left, 0px));
+      padding-right: max(16px, env(safe-area-inset-right, 0px));
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--display);
+      margin: 0;
+      text-wrap: balance;
+      letter-spacing: -.01em;
+    }
+
+    h1 {
+      font-size: 28px;
+      line-height: 1.15;
+      font-weight: 700;
+    }
+
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .sub {
+      color: var(--muted);
+      margin: 6px 0 0;
+      max-width: 62ch;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .small {
+      font-size: 13px;
+    }
+
+    /* Bandeau de rôle */
+    .rolebar {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 16px;
+      align-items: center;
+    }
+
+    .rolebar .lbl {
+      font-size: 12px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .seg {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .seg button {
+      min-height: 40px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .seg button[aria-pressed="true"] {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--accent-fg);
+    }
+
+    .who {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+      min-width: 0;
+    }
+
+    .who input {
+      min-height: 40px;
+      width: 190px;
+      max-width: 100%;
+    }
+
+    input[type=text], input[type=number], input[type=date], select, textarea {
+      width: 100%;
+      min-height: 42px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 76px;
+      resize: vertical;
+    }
+
+    /* Alertes / Notices */
+    .notice {
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      border: 1px solid var(--line);
+      background: var(--surface2);
+    }
+
+    .notice.warn {
+      background: var(--warn-soft);
+      border-color: transparent;
+      color: var(--warn);
+    }
+
+    .notice.bad {
+      background: var(--bad-soft);
+      border-color: transparent;
+      color: var(--bad);
+    }
+
+    /* Synthèse */
+    .summary {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      min-width: 0;
+    }
+
+    .stat .v {
+      font-family: var(--display);
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat .v small {
+      font-size: 15px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .stat .k {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .slots {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 4px;
+    }
+
+    .slot {
+      height: 12px;
+      border-radius: 3px;
+      border: 1px solid var(--line);
+      background: transparent;
+    }
+
+    .slot.valid {
+      background: var(--ok);
+      border-color: var(--ok);
+    }
+
+    .slot.pending {
+      background: var(--warn-soft);
+      border-color: var(--warn);
+    }
+
+    .slot.over {
+      background: var(--bad-soft);
+      border-color: var(--bad);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sw {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      border: 1px solid var(--line);
+      display: inline-block;
+    }
+
+    .sw.valid {
+      background: var(--ok);
+      border-color: var(--ok);
+    }
+
+    .sw.pending {
+      background: var(--warn-soft);
+      border-color: var(--warn);
+    }
+
+    .sw.free {
+      background: transparent;
+    }
+
+    .sw.closed {
+      background: repeating-linear-gradient(135deg, var(--hatch) 0 4px, transparent 4px 8px);
+    }
+
+    /* Onglets et Boutons */
+    .tabbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      min-height: 44px;
+      padding: 0 16px;
+      border: 0;
+      background: transparent;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .tab[aria-selected="true"] {
+      color: var(--fg);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab .badge {
+      display: inline-block;
+      margin-left: 6px;
+      min-width: 20px;
+      padding: 0 6px;
+      border-radius: 10px;
+      background: var(--accent);
+      color: var(--accent-fg);
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .tabbar .grow {
+      flex: 1;
+    }
+
+    .btn {
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--accent-fg);
+    }
+
+    .btn.ok {
+      background: var(--ok);
+      border-color: var(--ok);
+      color: var(--surface);
+    }
+
+    .btn.bad {
+      border-color: var(--bad);
+      color: var(--bad);
+    }
+
+    .tabbar .btn {
+      margin-bottom: 6px;
+    }
+
+    /* Calendrier */
+    .calhead {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 0 10px;
+    }
+
+    .calhead h2 {
+      flex: 1;
+      text-transform: capitalize;
+    }
+
+    .calhead .btn {
+      min-width: 44px;
+      padding: 0 10px;
+    }
+
+    .cal {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 4px;
+    }
+
+    .dow {
+      font-size: 12px;
+      text-align: center;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 2px 0;
+    }
+
+    .day {
+      min-height: 56px;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      text-align: left;
+      min-width: 0;
+    }
+
+    .day .n {
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .day.weekend {
+      background: transparent;
+      border-color: transparent;
+      color: var(--muted);
+    }
+
+    .day.vac, .day.ferie, .day.closed, .day.out {
+      background: repeating-linear-gradient(135deg, var(--hatch) 0 5px, transparent 5px 10px);
+      color: var(--muted);
+    }
+
+    .day.sel {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+
+    .dots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot.valid {
+      background: var(--ok);
+    }
+
+    .dot.pending {
+      background: var(--warn);
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .panel .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .mini {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 4px 12px;
+      align-items: center;
+      padding: 8px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .mini .t {
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    .mini .e {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    /* Liste des sessions */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 4px 0 12px;
+      align-items: center;
+    }
+
+    .pill {
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .pill[aria-pressed="true"] {
+      background: var(--fg);
+      color: var(--bg);
+      border-color: var(--fg);
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 60px minmax(0, 1fr);
+      gap: 4px 14px;
+    }
+
+    .dateblock {
+      text-align: center;
+      border-radius: 8px;
+      background: var(--surface2);
+      padding: 6px 0;
+      align-self: start;
+    }
+
+    .dateblock .d {
+      font-family: var(--display);
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .dateblock .m {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--muted);
+    }
+
+    .cbody {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ctitle {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 10px;
+      align-items: baseline;
+    }
+
+    .ctitle strong {
+      font-size: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 13px;
+      background: var(--surface2);
+    }
+
+    .chip::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    .chip.ok {
+      background: var(--ok-soft);
+      color: var(--ok);
+    }
+
+    .chip.ok::before {
+      background: var(--ok);
+    }
+
+    .chip.pending {
+      background: var(--warn-soft);
+      color: var(--warn);
+    }
+
+    .chip.pending::before {
+      background: var(--warn);
+    }
+
+    .chip.refused {
+      background: var(--bad-soft);
+      color: var(--bad);
+    }
+
+    .chip.refused::before {
+      background: var(--bad);
+    }
+
+    .tag {
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: var(--surface2);
+      color: var(--muted);
+    }
+
+    .tag.bad {
+      background: var(--bad-soft);
+      color: var(--bad);
+    }
+
+    .tag.ok {
+      background: var(--ok-soft);
+      color: var(--ok);
+    }
+
+    .cactions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .cactions textarea {
+      flex-basis: 100%;
+    }
+
+    .empty {
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--muted);
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+    }
+
+    .empty strong {
+      display: block;
+      color: var(--fg);
+      font-family: var(--display);
+      font-size: 17px;
+      margin-bottom: 4px;
+    }
+
+    .foot {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 80ch;
+    }
+
+    /* Modale formulaire & Toast */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 20, 16, .5);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      z-index: 50;
+      overflow: auto;
+      padding: max(12px, env(safe-area-inset-top, 0px)) max(12px, env(safe-area-inset-right, 0px)) max(12px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+    }
+
+    .sheet {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 520px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-block: auto;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .msg {
+      font-size: 13px;
+    }
+
+    .msg.bad {
+      color: var(--bad);
+    }
+
+    .msg.warn {
+      color: var(--warn);
+    }
+
+    .msg.ok {
+      color: var(--ok);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+      background: var(--fg);
+      color: var(--bg);
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      z-index: 60;
+      max-width: calc(100% - 32px);
+    }
+
+    @media (max-width: 520px) {
+      .who {
+        margin-left: 0;
+        width: 100%;
+      }
+      .who input {
+        width: 100%;
+      }
+      .row2 {
+        grid-template-columns: 1fr;
+      }
+      .card {
+        grid-template-columns: 52px minmax(0, 1fr);
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .day, .btn, .pill {
+        transition: background .12s, border-color .12s;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>Gestes qui sauvent 2027</h1>
+    <p class="sub">Formation de 2 h pour les collégiens de Nouvelle-Calédonie, financée par Groupama pour le vice-rectorat et mise en œuvre par la Croix-Rouge dans le cadre d’une convention. 10 sessions de 12 stagiaires, soit 120 parcours.</p>
+  </header>
+
+  <div class="rolebar">
+    <span class="lbl">Je suis</span>
+    <div class="seg" id="roleSeg" role="group" aria-label="Mon rôle"></div>
+    <div class="who">
+      <label class="small muted" for="who">Mon nom</label>
+      <input type="text" id="who" maxlength="60" placeholder="Prénom Nom" autocomplete="name">
+    </div>
+  </div>
+
+  <div id="notices" aria-live="polite"></div>
+  <section class="summary" id="summary" aria-label="Synthèse"></section>
+
+  <div class="tabbar" role="tablist" id="tabbar"></div>
+  <main id="main"></main>
+
+  <p class="foot">Calendrier scolaire 2027 de Nouvelle-Calédonie : rentrée des élèves le 15 février, vacances du 3 au 18 avril, du 5 au 20 juin, du 7 au 22 août et du 9 au 24 octobre, vacances d’été à partir du 18 décembre. Les jours fériés sont ceux de 2027. Les ponts éventuels ne sont pas connus : la DAFPIC peut marquer un jour comme indisponible dans le calendrier. À contrôler par la DAFPIC avant validation.</p>
+</div>
+
+<div class="overlay" id="overlay" hidden></div>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+  import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc, updateDoc, deleteDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+  /* --- CALENDRIER SCOLAIRE 2027 NOUVELLE-CALÉDONIE --- */
+  var RENTREE = '2027-02-15';
+  var FIN_ANNEE = '2027-12-17';
+  var VAC = [
+    ['2027-04-03', '2027-04-18', 'Vacances de la 1re période'],
+    ['2027-06-05', '2027-06-20', 'Vacances de la 2e période'],
+    ['2027-08-07', '2027-08-22', 'Vacances de la 3e période'],
+    ['2027-10-09', '2027-10-24', 'Vacances de la 4e période']
+  ];
+  var FERIES = {
+    '2027-03-29': 'Lundi de Pâques',
+    '2027-05-06': 'Ascension',
+    '2027-05-17': 'Lundi de Pentecôte',
+    '2027-07-14': 'Fête nationale',
+    '2027-09-24': 'Fête de la Citoyenneté',
+    '2027-11-01': 'Toussaint',
+    '2027-11-11': 'Armistice'
+  };
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function iso(y, m, d) { return y + '-' + pad(m) + '-' + pad(d); }
+  function dow(s) { return new Date(s + 'T00:00:00Z').getUTCDay(); }
+
+  function dayInfo(s, closures) {
+    if (s < RENTREE) return { kind: 'out', open: false, label: 'Avant la rentrée du 15 février' };
+    if (s > FIN_ANNEE) return { kind: 'out', open: false, label: 'Vacances d’été' };
+    var w = dow(s);
+    if (w === 0 || w === 6) return { kind: 'weekend', open: false, label: 'Week-end' };
+    for (var i = 0; i < VAC.length; i++) {
+      if (s >= VAC[i][0] && s <= VAC[i][1]) return { kind: 'vac', open: false, label: VAC[i][2] };
+    }
+    if (FERIES[s]) return { kind: 'ferie', open: false, label: 'Jour férié : ' + FERIES[s] };
+    if (closures && closures[s]) return { kind: 'closed', open: false, label: closures[s] };
+    return { kind: 'open', open: true, label: 'Jour de classe' };
+  }
+
+  function toMin(t) { var p = t.split(':'); return (+p[0]) * 60 + (+p[1]); }
+  function fromMin(n) { return pad(Math.floor(n / 60)) + ':' + pad(n % 60); }
+
+  /* --- CONSTANTES & ÉTAT --- */
+  var NB_SESSIONS = 10, NB_JEUNES = 12, TOTAL = NB_SESSIONS * NB_JEUNES;
+  var ROLES = { etab: 'Établissement', dafpic: 'DAFPIC', cr: 'Croix-Rouge', gp: 'Groupama' };
+  var VALIDATORS = ['dafpic', 'cr', 'gp'];
+  var VAL_LABEL = { dafpic: 'DAFPIC', cr: 'Croix-Rouge', gp: 'Groupama' };
+  var MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+  var MOIS_C = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
+  var $ = function(s) { return document.querySelector(s); };
+
+  // État en mémoire pour la session utilisateur (nom, rôle, dernière saisie)
+  var memPrefs = { role: 'etab', who: '', etab: '', contact: '' };
+
+  var S = {
+    role: 'etab',
+    who: '',
+    tab: 'cal',
+    month: 2,
+    sel: null,
+    filter: 'all',
+    sessions: [],
+    closures: {},
+    loaded: false,
+    slow: false,
+    store: null,
+    canWrite: true,
+    dl: true,
+    refusing: {},
+    notes: {},
+    confirmDel: null,
+    pending: false
+  };
+
+  /* --- COUCHE DE PERSISTANCE (FIRESTORE + REPLI MÉMOIRE TRANSPARENT) --- */
+  function createDataStore() {
+    var hasFirebase = (typeof __firebase_config !== 'undefined' && __firebase_config);
+    if (hasFirebase) {
+      try {
+        var firebaseConfig = JSON.parse(__firebase_config);
+        var appId = typeof __app_id !== 'undefined' ? __app_id : 'gestes-qui-sauvent-2027';
+        var app = initializeApp(firebaseConfig);
+        var auth = getAuth(app);
+        var db = getFirestore(app);
+        var readyPromise = (async function() {
+          if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            await signInWithCustomToken(auth, __initial_auth_token);
+          } else {
+            await signInAnonymously(auth);
+          }
+          return auth.currentUser;
+        })();
+
+        return {
+          mode: 'firestore',
+          init: async function(onSessions, onClosures, onErr) {
+            try {
+              var user = await readyPromise;
+              if (!user) throw new Error('Authentification requise');
+              var sessionsCol = collection(db, 'artifacts', appId, 'public', 'data', 'sessions');
+              var closuresDoc = doc(db, 'artifacts', appId, 'public', 'data', 'config', 'closures');
+
+              onSnapshot(sessionsCol, function(snap) {
+                var list = snap.docs.map(function(d) {
+                  return Object.assign({}, d.data() || {}, { id: d.id });
+                });
+                onSessions(list);
+              }, function(err) {
+                if (onErr) onErr(err);
+              });
+
+              onSnapshot(closuresDoc, function(d) {
+                onClosures(d.exists() ? Object.assign({}, d.data() || {}) : {});
+              }, function() {});
+            } catch (e) {
+              if (onErr) onErr(e);
+            }
+          },
+          addSession: async function(data) {
+            var user = await readyPromise;
+            if (!user) throw new Error('Non authentifié');
+            var id = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+            var ref = doc(db, 'artifacts', appId, 'public', 'data', 'sessions', id);
+            await setDoc(ref, data);
+          },
+          updateVal: async function(sessionId, orgKey, valObj) {
+            var user = await readyPromise;
+            if (!user) throw new Error('Non authentifié');
+            var ref = doc(db, 'artifacts', appId, 'public', 'data', 'sessions', sessionId);
+            var patch = {};
+            patch['val.' + orgKey] = valObj;
+            await updateDoc(ref, patch);
+          },
+          deleteSession: async function(sessionId) {
+            var user = await readyPromise;
+            if (!user) throw new Error('Non authentifié');
+            var ref = doc(db, 'artifacts', appId, 'public', 'data', 'sessions', sessionId);
+            await deleteDoc(ref);
+          },
+          setClosures: async function(daysObj) {
+            var user = await readyPromise;
+            if (!user) throw new Error('Non authentifié');
+            var ref = doc(db, 'artifacts', appId, 'public', 'data', 'config', 'closures');
+            await setDoc(ref, { days: daysObj });
+          }
+        };
+      } catch (e) {
+        // Bascule vers le stockage en mémoire si l'initialisation cloud échoue
+      }
+    }
+
+    // Repli en mémoire locale (sans utiliser localStorage) avec données de démonstration réalistes en Nouvelle-Calédonie
+    var memSessions = [
+      {
+        id: 'demo-1',
+        etab: 'Collège de Magenta (Nouméa)',
+        classe: '4e',
+        effectif: 12,
+        date: '2027-03-11',
+        debut: '08:00',
+        fin: '10:00',
+        contact: 'M. Laurent (CPE) - 27.45.10',
+        note: 'Salle polyvalente au rez-de-chaussée, accès véhicule Croix-Rouge par le portail nord.',
+        createdBy: 'Collège de Magenta',
+        createdAt: '2027-02-18T09:15:00.000Z',
+        val: {
+          dafpic: { state: 'ok', by: 'A. Moreau (DAFPIC)', at: '2027-02-19T14:00:00.000Z', note: '' },
+          cr: { state: 'ok', by: 'S. Tein (Croix-Rouge)', at: '2027-02-20T10:30:00.000Z', note: '' },
+          gp: { state: 'ok', by: 'C. Garnier (Groupama)', at: '2027-02-21T08:45:00.000Z', note: '' }
+        }
+      },
+      {
+        id: 'demo-2',
+        etab: 'Collège de Dumbéa-sur-Mer',
+        classe: '4e',
+        effectif: 12,
+        date: '2027-03-25',
+        debut: '13:30',
+        fin: '15:30',
+        contact: 'Mme Wamo (Infirmière scolaire)',
+        note: 'Groupe de 12 élèves délégués de 4e.',
+        createdBy: 'Collège de Dumbéa-sur-Mer',
+        createdAt: '2027-02-22T11:20:00.000Z',
+        val: {
+          dafpic: { state: 'ok', by: 'A. Moreau (DAFPIC)', at: '2027-02-23T09:10:00.000Z', note: '' },
+          cr: { state: 'pending' },
+          gp: { state: 'pending' }
+        }
+      },
+      {
+        id: 'demo-3',
+        etab: 'Collège de Koné (Paiamboué)',
+        classe: '4e',
+        effectif: 12,
+        date: '2027-04-29',
+        debut: '08:30',
+        fin: '10:30',
+        contact: 'Direction - 47.21.88',
+        note: 'Intervention de l’antenne Croix-Rouge Province Nord.',
+        createdBy: 'Collège de Koné',
+        createdAt: '2027-02-24T15:05:00.000Z',
+        val: {
+          dafpic: { state: 'pending' },
+          cr: { state: 'pending' },
+          gp: { state: 'pending' }
+        }
+      }
+    ];
+    var memClosures = { days: {} };
+    var sessionListeners = [];
+    var closureListeners = [];
+
+    function notify() {
+      var snapSessions = memSessions.map(function(s) { return JSON.parse(JSON.stringify(s)); });
+      var snapClosures = JSON.parse(JSON.stringify(memClosures));
+      sessionListeners.forEach(function(fn) { fn(snapSessions); });
+      closureListeners.forEach(function(fn) { fn(snapClosures); });
+    }
+
+    return {
+      mode: 'memory',
+      init: function(onSessions, onClosures) {
+        sessionListeners.push(onSessions);
+        closureListeners.push(onClosures);
+        setTimeout(notify, 30);
+      },
+      addSession: async function(data) {
+        var id = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+        memSessions.push(Object.assign({}, data, { id: id }));
+        notify();
+      },
+      updateVal: async function(sessionId, orgKey, valObj) {
+        var item = memSessions.find(function(s) { return s.id === sessionId; });
+        if (item) {
+          item.val = item.val || {};
+          item.val[orgKey] = valObj;
+          notify();
+        }
+      },
+      deleteSession: async function(sessionId) {
+        memSessions = memSessions.filter(function(s) { return s.id !== sessionId; });
+        notify();
+      },
+      setClosures: async function(daysObj) {
+        memClosures = { days: Object.assign({}, daysObj) };
+        notify();
+      }
+    };
+  }
+
+  /* --- UTILITAIRES DOM & FORMATAGE --- */
+  function h(tag, props) {
+    var el = document.createElement(tag), p = props || {};
+    Object.keys(p).forEach(function(k) {
+      var v = p[k];
+      if (v == null || v === false) return;
+      if (k === 'class') el.className = v;
+      else if (k.slice(0, 2) === 'on') el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? '' : v);
+    });
+    for (var i = 2; i < arguments.length; i++) { add(el, arguments[i]); }
+    return el;
+  }
+
+  function add(el, kid) {
+    if (kid == null || kid === false) return;
+    if (Array.isArray(kid)) { kid.forEach(function(k) { add(el, k); }); return; }
+    el.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+  }
+
+  var fmtLongF = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  function fmtLong(s) { return fmtLongF.format(new Date(s + 'T00:00:00Z')); }
+  function dayNum(s) { return +s.slice(8); }
+  function monAbbr(s) { return MOIS_C[+s.slice(5, 7) - 1]; }
+
+  function stateOf(s) {
+    var v = s.val || {}, st = VALIDATORS.map(function(k) { return (v[k] && v[k].state) || 'pending'; });
+    if (st.indexOf('refused') >= 0) return 'refused';
+    if (st.every(function(x) { return x === 'ok'; })) return 'valid';
+    return 'pending';
+  }
+
+  function ownState(s, org) {
+    return (s.val && s.val[org] && s.val[org].state) || 'pending';
+  }
+
+  function bySlot(a, b) {
+    return (a.date + a.debut).localeCompare(b.date + b.debut);
+  }
+
+  function activeList() {
+    return S.sessions
+      .filter(function(s) { return stateOf(s) !== 'refused'; })
+      .sort(function(a, b) { return String(a.createdAt || '').localeCompare(String(b.createdAt || '')); });
+  }
+
+  function canAct() {
+    return !!S.store && S.canWrite !== false;
+  }
+
+  function who() {
+    return S.who.trim() || ROLES[S.role];
+  }
+
+  /* --- SÉLECTEUR DE RÔLE --- */
+  function buildRole() {
+    var seg = $('#roleSeg');
+    seg.replaceChildren();
+    Object.keys(ROLES).forEach(function(k) {
+      seg.append(h('button', {
+        type: 'button',
+        'aria-pressed': S.role === k ? 'true' : 'false',
+        onclick: function() {
+          S.role = k;
+          memPrefs.role = k;
+          if (k === 'etab') {
+            S.tab = 'cal';
+            S.filter = 'all';
+          } else {
+            S.tab = 'sessions';
+            S.filter = 'todo';
+          }
+          S.refusing = {};
+          S.confirmDel = null;
+          buildRole();
+          render();
+        }
+      }, ROLES[k]));
+    });
+  }
+
+  $('#who').value = S.who;
+  $('#who').addEventListener('input', function(e) {
+    S.who = e.target.value;
+    memPrefs.who = S.who;
+  });
+
+  /* --- RENDU GLOBAL --- */
+  function render() {
+    var a = document.activeElement;
+    if (a && $('#main').contains(a) && (a.tagName === 'TEXTAREA' || a.tagName === 'INPUT')) {
+      S.pending = true;
+      return;
+    }
+    S.pending = false;
+    renderNotices();
+    renderSummary();
+    renderTabs();
+    renderMain();
+  }
+
+  document.addEventListener('focusout', function() {
+    if (S.pending) setTimeout(function() { if (S.pending) render(); }, 50);
+  });
+
+  function renderNotices() {
+    var n = $('#notices');
+    n.replaceChildren();
+    var act = activeList();
+    if (act.length > NB_SESSIONS) {
+      n.append(h('div', { class: 'notice bad' }, act.length + ' sessions sont proposées pour ' + NB_SESSIONS + ' financées. Les sessions au-delà de la dixième (par ordre de dépôt) sont repérées en rouge : refusez-les ou retirez-les.'));
+    }
+    if (S.store && !S.loaded && S.slow) {
+      n.append(h('div', { class: 'notice warn' }, 'Les données n’ont pas encore répondu. Ce que vous voyez peut ne pas être à jour.'));
+    }
+    n.style.display = n.childNodes.length ? 'flex' : 'none';
+    n.style.flexDirection = 'column';
+    n.style.gap = '8px';
+  }
+
+  function renderSummary() {
+    var el = $('#summary');
+    el.replaceChildren();
+    var act = activeList();
+    var valid = act.filter(function(s) { return stateOf(s) === 'valid'; }).length;
+    var pend = act.length - valid;
+    var jeunes = act.reduce(function(a, s) { return a + (+s.effectif || 0); }, 0);
+
+    var stat = function(v, total, k) {
+      return h('div', { class: 'stat' },
+        h('div', { class: 'v' }, String(v), total ? h('small', null, ' / ' + total) : null),
+        h('div', { class: 'k' }, k)
+      );
+    };
+
+    el.append(h('div', { class: 'stats' },
+      stat(act.length, NB_SESSIONS, 'sessions proposées'),
+      stat(jeunes, TOTAL, 'stagiaires inscrits'),
+      stat(valid, null, 'validées'),
+      stat(pend, null, 'non encore validées'),
+      stat(act.filter(function(s) { return s.classe === '4e'; }).length, null, 'sessions en 4e (prioritaire)')
+    ));
+
+    var slots = h('div', {
+      class: 'slots',
+      role: 'img',
+      'aria-label': valid + ' sessions validées, ' + pend + ' en attente, ' + Math.max(0, NB_SESSIONS - act.length) + ' places libres'
+    });
+    var ord = act.slice().sort(function(a, b) {
+      return (stateOf(a) === 'valid' ? 0 : 1) - (stateOf(b) === 'valid' ? 0 : 1);
+    });
+    for (var i = 0; i < Math.max(NB_SESSIONS, act.length); i++) {
+      var s = ord[i], cls = 'slot';
+      if (s) cls += ' ' + stateOf(s);
+      if (i >= NB_SESSIONS) cls += ' over';
+      slots.append(h('span', { class: cls }));
+    }
+    el.append(slots);
+
+    el.append(h('div', { class: 'legend' },
+      h('span', null, h('i', { class: 'sw valid' }), 'Validée'),
+      h('span', null, h('i', { class: 'sw pending' }), 'En attente'),
+      h('span', null, h('i', { class: 'sw free' }), 'Place libre')
+    ));
+  }
+
+  function todoCount() {
+    if (S.role === 'etab') return 0;
+    return S.sessions.filter(function(s) {
+      return stateOf(s) !== 'refused' && ownState(s, S.role) === 'pending';
+    }).length;
+  }
+
+  function renderTabs() {
+    var t = $('#tabbar');
+    t.replaceChildren();
+    var tc = todoCount();
+    t.append(h('button', {
+      class: 'tab',
+      role: 'tab',
+      'aria-selected': S.tab === 'cal' ? 'true' : 'false',
+      onclick: function() { S.tab = 'cal'; render(); }
+    }, 'Calendrier'));
+
+    t.append(h('button', {
+      class: 'tab',
+      role: 'tab',
+      'aria-selected': S.tab === 'sessions' ? 'true' : 'false',
+      onclick: function() { S.tab = 'sessions'; render(); }
+    }, 'Sessions', tc ? h('span', { class: 'badge', 'aria-label': tc + ' à traiter' }, String(tc)) : null));
+
+    t.append(h('span', { class: 'grow' }));
+
+    if (S.role === 'etab') {
+      t.append(h('button', {
+        class: 'btn primary',
+        type: 'button',
+        disabled: !canAct(),
+        onclick: function() {
+          openForm(S.sel && dayInfo(S.sel, S.closures.days).open ? S.sel : '');
+        }
+      }, 'Proposer une session'));
+    }
+  }
+
+  function renderMain() {
+    var m = $('#main');
+    m.replaceChildren();
+    m.append(S.tab === 'cal' ? calView() : sessionsView());
+  }
+
+  /* --- VUE CALENDRIER --- */
+  function calView() {
+    var y = 2027, mo = S.month, closures = S.closures.days || {};
+    var startDow = (dow(iso(y, mo, 1)) + 6) % 7;
+    var dim = new Date(Date.UTC(y, mo, 0)).getUTCDate();
+    var byDate = {};
+    activeList().forEach(function(s) { (byDate[s.date] = byDate[s.date] || []).push(s); });
+
+    var wrap = h('div');
+    wrap.append(h('div', { class: 'calhead' },
+      h('button', { class: 'btn', type: 'button', 'aria-label': 'Mois précédent', disabled: mo <= 2, onclick: function() { S.month--; render(); } }, '‹'),
+      h('h2', null, MOIS[mo - 1] + ' ' + y),
+      h('button', { class: 'btn', type: 'button', 'aria-label': 'Mois suivant', disabled: mo >= 12, onclick: function() { S.month++; render(); } }, '›')
+    ));
+
+    var grid = h('div', { class: 'cal' });
+    ['lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.'].forEach(function(n) {
+      grid.append(h('div', { class: 'dow' }, n));
+    });
+    for (var i = 0; i < startDow; i++) grid.append(h('div'));
+
+    for (var d = 1; d <= dim; d++) {
+      (function(d) {
+        var s = iso(y, mo, d), info = dayInfo(s, closures), list = byDate[s] || [];
+        var dots = h('span', { class: 'dots' },
+          list.slice(0, 4).map(function(x) { return h('i', { class: 'dot ' + stateOf(x) }); }),
+          list.length > 4 ? '+' + (list.length - 4) : null
+        );
+        grid.append(h('button', {
+          type: 'button',
+          class: 'day ' + info.kind + (S.sel === s ? ' sel' : ''),
+          'aria-pressed': S.sel === s ? 'true' : 'false',
+          'aria-label': fmtLong(s) + ' : ' + (info.open ? 'jour de classe' : info.label) + (list.length ? ', ' + list.length + ' session' + (list.length > 1 ? 's' : '') : ''),
+          onclick: function() { S.sel = s; render(); }
+        }, h('span', { class: 'n' }, String(d)), dots));
+      })(d);
+    }
+
+    wrap.append(grid);
+    wrap.append(h('div', { class: 'legend', style: 'margin-top:10px' },
+      h('span', null, h('i', { class: 'sw free' }), 'Jour de classe'),
+      h('span', null, h('i', { class: 'sw closed' }), 'Vacances, férié ou indisponible'),
+      h('span', null, h('i', { class: 'dot pending' }), 'Session en attente'),
+      h('span', null, h('i', { class: 'dot valid' }), 'Session validée')
+    ));
+    wrap.append(dayPanel(byDate));
+    return wrap;
+  }
+
+  function dayPanel(byDate) {
+    var s = S.sel, p = h('div', { class: 'panel' });
+    if (!s) {
+      p.append(h('p', { class: 'muted', style: 'margin:0' }, S.role === 'etab' ? 'Touchez un jour de classe pour y proposer une session.' : 'Touchez un jour pour voir les sessions prévues.'));
+      return p;
+    }
+    var info = dayInfo(s, S.closures.days), list = (byDate[s] || []).slice().sort(bySlot);
+    p.append(h('h3', { style: 'text-transform:capitalize' }, fmtLong(s)));
+    p.append(h('div', { class: 'msg ' + (info.open ? 'ok' : 'warn') }, info.open ? 'Jour de classe disponible' : info.label));
+
+    if (list.length) {
+      list.forEach(function(x) {
+        p.append(h('div', { class: 'mini' },
+          h('span', { class: 't' }, x.debut + ' – ' + x.fin),
+          h('span', { class: 'e' }, x.etab + ' · ' + x.classe + ' · ' + x.effectif + ' stagiaires'),
+          h('span', { class: 'tag ' + (stateOf(x) === 'valid' ? 'ok' : '') }, stateOf(x) === 'valid' ? 'Validée' : (S.role === 'etab' ? 'Non validée' : 'En attente'))
+        ));
+      });
+    } else if (info.open) {
+      p.append(h('div', { class: 'muted small' }, 'Aucune session prévue ce jour.'));
+    }
+
+    var acts = h('div', { class: 'actions' });
+    if (S.role === 'etab' && info.open) {
+      var full = activeList().length >= NB_SESSIONS;
+      acts.append(h('button', {
+        class: 'btn primary',
+        type: 'button',
+        disabled: !canAct() || full,
+        onclick: function() { openForm(s); }
+      }, 'Proposer une session ce jour'));
+      if (full) acts.append(h('span', { class: 'msg warn' }, 'Les 10 sessions financées sont déjà proposées.'));
+    }
+
+    if (S.role === 'dafpic') {
+      var cl = (S.closures.days || {})[s];
+      var base = dayInfo(s, {});
+      if (base.open && canAct()) {
+        if (cl) {
+          acts.append(h('button', { class: 'btn', type: 'button', onclick: function() { setClosure(s, null); } }, 'Rouvrir ce jour'));
+        } else {
+          acts.append(h('button', { class: 'btn', type: 'button', onclick: function() { setClosure(s, 'Jour indisponible (DAFPIC)'); } }, 'Marquer indisponible (pont, événement)'));
+        }
+      }
+    }
+    if (acts.childNodes.length) p.append(acts);
+    return p;
+  }
+
+  function setClosure(date, label) {
+    var days = Object.assign({}, S.closures.days || {});
+    if (label) days[date] = label;
+    else delete days[date];
+    S.store.setClosures(days)
+      .then(function() { toast(label ? 'Jour marqué indisponible.' : 'Jour rouvert.'); })
+      .catch(function(e) { toast(errText(e)); });
+  }
+
+  /* --- VUE SESSIONS --- */
+  function sessionsView() {
+    var wrap = h('div');
+    var all = S.sessions.slice().sort(bySlot);
+    var filters = [['all', 'Toutes', all.length]];
+    if (S.role !== 'etab') filters.push(['todo', 'À traiter', todoCount()]);
+    filters.push(['valid', 'Validées', all.filter(function(s) { return stateOf(s) === 'valid'; }).length]);
+    if (S.role === 'etab') {
+      filters.push(['unvalid', 'Non validées', all.filter(function(s) { return stateOf(s) !== 'valid'; }).length]);
+    } else {
+      filters.push(['pending', 'En attente', all.filter(function(s) { return stateOf(s) === 'pending'; }).length]);
+      filters.push(['refused', 'Refusées', all.filter(function(s) { return stateOf(s) === 'refused'; }).length]);
+    }
+
+    var f = h('div', { class: 'filters' });
+    filters.forEach(function(x) {
+      f.append(h('button', {
+        class: 'pill',
+        type: 'button',
+        'aria-pressed': S.filter === x[0] ? 'true' : 'false',
+        onclick: function() { S.filter = x[0]; render(); }
+      }, x[1] + ' (' + x[2] + ')'));
+    });
+    f.append(h('span', { style: 'flex:1' }));
+    if (all.length && S.role !== 'etab') {
+      f.append(h('button', { class: 'btn', type: 'button', onclick: exportCsv }, 'Exporter (CSV)'));
+    }
+    wrap.append(f);
+
+    var shown = all.filter(function(s) {
+      var st = stateOf(s);
+      if (S.filter === 'todo') return st !== 'refused' && ownState(s, S.role) === 'pending';
+      if (S.filter === 'all') return true;
+      if (S.filter === 'unvalid') return st !== 'valid';
+      return st === S.filter;
+    });
+
+    if (!S.loaded && S.store) {
+      wrap.append(h('div', { class: 'empty' }, 'Chargement des sessions…'));
+      return wrap;
+    }
+
+    if (!shown.length) {
+      var none = !all.length;
+      wrap.append(h('div', { class: 'empty' },
+        h('strong', null, none ? 'Aucune session proposée pour l’instant' : 'Rien dans cette liste'),
+        none
+          ? (S.role === 'etab' ? 'Choisissez un jour de classe dans le calendrier, puis proposez votre session.' : 'Les propositions des établissements apparaîtront ici dès qu’elles seront déposées.')
+          : (S.filter === 'todo' ? 'Vous avez traité toutes les propositions.' : 'Changez de filtre pour voir les autres sessions.')
+      ));
+      return wrap;
+    }
+
+    var overIds = {};
+    activeList().forEach(function(s, i) { if (i >= NB_SESSIONS) overIds[s.id] = true; });
+    var list = h('div', { class: 'list' });
+    shown.forEach(function(s) { list.append(sessionCard(s, !!overIds[s.id])); });
+    wrap.append(list);
+    return wrap;
+  }
+
+  function chip(org, s) {
+    var st = ownState(s, org);
+    var txt = { pending: 'En attente', ok: 'Validé', refused: 'Refusé' }[st];
+    return h('span', { class: 'chip ' + st }, h('b', null, VAL_LABEL[org]), txt);
+  }
+
+  function sessionCard(s, over) {
+    var st = stateOf(s), info = dayInfo(s.date, S.closures.days), isE = S.role === 'etab';
+    var body = h('div', { class: 'cbody' });
+
+    body.append(h('div', { class: 'ctitle' },
+      h('strong', null, s.etab),
+      h('span', { class: 'meta' }, s.classe + ' · ' + s.effectif + ' stagiaires'),
+      s.classe !== '4e' ? h('span', { class: 'tag' }, 'Hors 4e') : null,
+      isE
+        ? (st === 'valid' ? h('span', { class: 'tag ok' }, 'Validée') : h('span', { class: 'tag' }, 'Non validée'))
+        : (st === 'valid' ? h('span', { class: 'tag ok' }, 'Validée') : (st === 'refused' ? h('span', { class: 'tag bad' }, 'Refusée') : null)),
+      over ? h('span', { class: 'tag bad' }, 'Au-delà des 10 sessions') : null,
+      !info.open ? h('span', { class: 'tag bad' }, 'Date indisponible : ' + info.label) : null
+    ));
+
+    body.append(h('div', { class: 'meta' }, s.debut + ' – ' + s.fin + (s.contact ? ' · Contact : ' + s.contact : '')));
+    if (s.note) body.append(h('div', { class: 'meta' }, 'Remarque : ' + s.note));
+
+    if (!isE) {
+      body.append(h('div', { class: 'chips' }, VALIDATORS.map(function(o) { return chip(o, s); })));
+      VALIDATORS.forEach(function(o) {
+        var v = (s.val && s.val[o]) || {};
+        if (v.state === 'refused' && v.note) {
+          body.append(h('div', { class: 'msg bad' }, VAL_LABEL[o] + ' : ' + v.note + (v.by ? ' (' + v.by + ')' : '')));
+        } else if (v.state === 'ok' && v.by) {
+          body.append(h('div', { class: 'meta small' }, VAL_LABEL[o] + ' : validé par ' + v.by + (v.at ? ', le ' + new Date(v.at).toLocaleDateString('fr-FR') : '')));
+        }
+      });
+    }
+
+    var acts = h('div', { class: 'cactions' });
+    if (VALIDATORS.indexOf(S.role) >= 0) {
+      var own = ownState(s, S.role);
+      if (S.refusing[s.id]) {
+        var ta = h('textarea', { 'aria-label': 'Motif du refus', placeholder: 'Motif du refus (obligatoire)' });
+        ta.value = S.notes[s.id] || '';
+        ta.addEventListener('input', function() { S.notes[s.id] = ta.value; });
+        acts.append(
+          ta,
+          h('button', {
+            class: 'btn bad',
+            type: 'button',
+            disabled: !canAct(),
+            onclick: function() {
+              var note = (S.notes[s.id] || '').trim();
+              if (!note) { toast('Indiquez le motif du refus.'); return; }
+              setVal(s, 'refused', note);
+            }
+          }, 'Confirmer le refus'),
+          h('button', { class: 'btn', type: 'button', onclick: function() { S.refusing[s.id] = false; render(); } }, 'Annuler')
+        );
+      } else {
+        if (own !== 'ok') {
+          acts.append(h('button', { class: 'btn ok', type: 'button', disabled: !canAct(), onclick: function() { setVal(s, 'ok', ''); } }, 'Valider'));
+        }
+        if (own === 'pending') {
+          acts.append(h('button', { class: 'btn bad', type: 'button', disabled: !canAct(), onclick: function() { S.refusing[s.id] = true; render(); } }, 'Refuser'));
+        }
+        if (own !== 'pending') {
+          acts.append(h('button', { class: 'btn', type: 'button', disabled: !canAct(), onclick: function() { setVal(s, 'pending', ''); } }, own === 'ok' ? 'Annuler ma validation' : 'Annuler mon refus'));
+        }
+      }
+    }
+
+    if (S.role === 'etab' || S.role === 'dafpic') {
+      if (S.confirmDel === s.id) {
+        acts.append(
+          h('button', { class: 'btn bad', type: 'button', disabled: !canAct(), onclick: function() { delSession(s); } }, 'Confirmer le retrait'),
+          h('button', { class: 'btn', type: 'button', onclick: function() { S.confirmDel = null; render(); } }, 'Garder')
+        );
+      } else {
+        acts.append(h('button', { class: 'btn', type: 'button', disabled: !canAct(), onclick: function() { S.confirmDel = s.id; render(); } }, 'Retirer la session'));
+      }
+    }
+
+    body.append(acts);
+    return h('article', { class: 'card' },
+      h('div', { class: 'dateblock' },
+        h('div', { class: 'd' }, String(dayNum(s.date))),
+        h('div', { class: 'm' }, monAbbr(s.date))
+      ),
+      body
+    );
+  }
+
+  function setVal(s, state, note) {
+    var valObj = {
+      state: state,
+      by: state === 'pending' ? '' : who(),
+      at: state === 'pending' ? '' : new Date().toISOString(),
+      note: note || ''
+    };
+    S.store.updateVal(s.id, S.role, valObj)
+      .then(function() {
+        S.refusing[s.id] = false;
+        S.notes[s.id] = '';
+        S.pending = false;
+        render();
+        toast(state === 'ok' ? 'Validation enregistrée.' : state === 'refused' ? 'Refus enregistré.' : 'Votre décision est annulée.');
+      })
+      .catch(function(e) { toast(errText(e)); });
+  }
+
+  function delSession(s) {
+    S.store.deleteSession(s.id)
+      .then(function() {
+        S.confirmDel = null;
+        render();
+        toast('Session retirée.');
+      })
+      .catch(function(e) { toast(errText(e)); });
+  }
+
+  /* --- FORMULAIRE DE PROPOSITION --- */
+  function slotOptions(sel) {
+    var o = [];
+    for (var m = 420; m <= 900; m += 30) {
+      var t = fromMin(m);
+      o.push(h('option', { value: t, selected: t === sel ? true : null }, t));
+    }
+    return o;
+  }
+
+  function overlapsOf(date, debut) {
+    var a = toMin(debut), b = a + 120;
+    return activeList().filter(function(s) {
+      return s.date === date && toMin(s.debut) < b && toMin(s.debut) + 120 > a;
+    });
+  }
+
+  function openForm(date) {
+    var ov = $('#overlay');
+    ov.replaceChildren();
+    ov.hidden = false;
+    var full = activeList().length >= NB_SESSIONS;
+
+    var etab = h('input', { id: 'f-etab', type: 'text', maxlength: '80', autocomplete: 'organization', placeholder: 'Ex. Collège de …', value: memPrefs.etab || '' });
+    var classe = h('select', { id: 'f-classe' }, ['4e', '3e', '5e', '6e', 'Classes mélangées', 'Autre'].map(function(c) {
+      return h('option', { value: c, selected: c === '4e' ? true : null }, c === '4e' ? '4e (niveau prioritaire)' : c);
+    }));
+    var eff = h('input', { id: 'f-eff', type: 'number', min: '1', max: String(NB_JEUNES), inputmode: 'numeric', value: String(NB_JEUNES) });
+    var dt = h('input', { id: 'f-date', type: 'date', min: RENTREE, max: FIN_ANNEE, value: date || '' });
+    var deb = h('select', { id: 'f-deb' }, slotOptions('08:00'));
+    var contact = h('input', { id: 'f-contact', type: 'text', maxlength: '100', placeholder: 'Nom du référent, téléphone ou e-mail', value: memPrefs.contact || '' });
+    var note = h('textarea', { id: 'f-note', maxlength: '300', placeholder: 'Salle, accès, besoins particuliers…' });
+    var dmsg = h('div', { class: 'msg' });
+    var emsg = h('div', { class: 'msg bad' });
+    var fin = h('div', { class: 'muted small' });
+    var submit = h('button', { class: 'btn primary', type: 'submit' }, 'Proposer cette session');
+
+    function check() {
+      var errs = [], d = dt.value;
+      dmsg.className = 'msg';
+      dmsg.textContent = '';
+      if (d) {
+        var info = dayInfo(d, S.closures.days);
+        if (!info.open) {
+          dmsg.className = 'msg bad';
+          dmsg.textContent = 'Date impossible : ' + info.label + '.';
+          errs.push('date');
+        } else {
+          dmsg.className = 'msg ok';
+          dmsg.textContent = fmtLong(d) + ' : jour de classe.';
+          var ov2 = overlapsOf(d, deb.value);
+          if (ov2.length) {
+            dmsg.className = 'msg warn';
+            dmsg.textContent += ' Une autre session est déjà prévue sur ce créneau (' + ov2[0].etab + '). La Croix-Rouge devra confirmer qu’elle a assez de formateurs.';
+          }
+        }
+      }
+      fin.textContent = 'Durée 2 h : fin à ' + fromMin(toMin(deb.value) + 120);
+      return errs;
+    }
+
+    [dt, deb].forEach(function(x) { x.addEventListener('change', check); });
+
+    var sheet = h('form', {
+      class: 'sheet',
+      novalidate: true,
+      onsubmit: function(ev) {
+        ev.preventDefault();
+        emsg.textContent = '';
+        var errs = [], d = dt.value, e = etab.value.trim(), n = +eff.value;
+        if (!e) errs.push('Indiquez le nom de l’établissement.');
+        if (!(n >= 1 && n <= NB_JEUNES)) errs.push('Le nombre de stagiaires doit être compris entre 1 et ' + NB_JEUNES + '.');
+        if (!d) errs.push('Choisissez une date.');
+        else {
+          var info = dayInfo(d, S.closures.days);
+          if (!info.open) errs.push('Cette date n’est pas disponible : ' + info.label + '.');
+        }
+        if (d && e) {
+          var dup = overlapsOf(d, deb.value).filter(function(s) {
+            return s.etab.trim().toLowerCase() === e.toLowerCase();
+          });
+          if (dup.length) errs.push('Votre établissement a déjà une session sur ce créneau.');
+        }
+        if (activeList().length >= NB_SESSIONS) errs.push('Les 10 sessions financées sont déjà proposées.');
+        if (!S.store) errs.push('Enregistrement impossible : stockage indisponible.');
+        if (errs.length) {
+          emsg.textContent = errs.join(' ');
+          return;
+        }
+        submit.disabled = true;
+        var payload = {
+          etab: e,
+          classe: classe.value,
+          effectif: n,
+          date: d,
+          debut: deb.value,
+          fin: fromMin(toMin(deb.value) + 120),
+          contact: contact.value.trim(),
+          note: note.value.trim(),
+          createdBy: who(),
+          createdAt: new Date().toISOString(),
+          val: {
+            dafpic: { state: 'pending' },
+            cr: { state: 'pending' },
+            gp: { state: 'pending' }
+          }
+        };
+
+        S.store.addSession(payload)
+          .then(function() {
+            memPrefs.etab = e;
+            memPrefs.contact = contact.value.trim();
+            closeForm();
+            S.tab = 'sessions';
+            S.filter = 'all';
+            render();
+            toast('Session proposée le ' + fmtLong(d) + '. Elle sera examinée avant validation.');
+          })
+          .catch(function(err) {
+            submit.disabled = false;
+            emsg.textContent = errText(err);
+          });
+      }
+    },
+      h('h2', null, 'Proposer une session'),
+      full ? h('div', { class: 'notice bad' }, 'Les 10 sessions financées sont déjà proposées. Une session refusée ou retirée libère une place.') : null,
+      h('div', { class: 'field' }, h('label', { for: 'f-etab' }, 'Établissement'), etab),
+      h('div', { class: 'row2' },
+        h('div', { class: 'field' }, h('label', { for: 'f-classe' }, 'Niveau'), classe),
+        h('div', { class: 'field' }, h('label', { for: 'f-eff' }, 'Nombre de stagiaires (12 max)'), eff)
+      ),
+      h('div', { class: 'row2' },
+        h('div', { class: 'field' }, h('label', { for: 'f-date' }, 'Date en 2027'), dt),
+        h('div', { class: 'field' }, h('label', { for: 'f-deb' }, 'Début'), deb)
+      ),
+      dmsg,
+      fin,
+      h('div', { class: 'field' }, h('label', { for: 'f-contact' }, 'Contact sur place'), contact),
+      h('div', { class: 'field' }, h('label', { for: 'f-note' }, 'Remarques (facultatif)'), note),
+      emsg,
+      h('div', { class: 'actions', style: 'display:flex;gap:8px;flex-wrap:wrap' },
+        submit,
+        h('button', { class: 'btn', type: 'button', onclick: closeForm }, 'Annuler')
+      )
+    );
+
+    if (full) submit.disabled = true;
+    ov.append(sheet);
+    check();
+    setTimeout(function() { (date ? etab : dt).focus(); }, 30);
+  }
+
+  function closeForm() {
+    var ov = $('#overlay');
+    ov.hidden = true;
+    ov.replaceChildren();
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !$('#overlay').hidden) closeForm();
+  });
+
+  $('#overlay').addEventListener('mousedown', function(e) {
+    if (e.target === e.currentTarget) closeForm();
+  });
+
+  /* --- NOTIFICATIONS & EXPORT CSV --- */
+  var toastT;
+  function toast(t) {
+    var el = $('#toast');
+    el.textContent = t;
+    el.hidden = false;
+    clearTimeout(toastT);
+    toastT = setTimeout(function() { el.hidden = true; }, 4500);
+  }
+
+  function errText(e) {
+    var c = e && e.code;
+    if (c === 'permission-denied' || c === 'invalid_argument') return 'Action refusée : vous n’avez probablement pas le droit de modifier ces données.';
+    if (c === 'quota_exceeded') return 'La limite de stockage est atteinte.';
+    if (c === 'unavailable' || c === 'resource-exhausted') return 'Service momentanément indisponible. Réessayez dans un instant.';
+    return 'L’enregistrement a échoué. Réessayez.';
+  }
+
+  function exportCsv() {
+    try {
+      var q = function(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; };
+      var lab = { pending: 'En attente', ok: 'Validé', refused: 'Refusé' };
+      var rows = [['Date', 'Début', 'Fin', 'Établissement', 'Niveau', 'Stagiaires', 'Contact', 'DAFPIC', 'Croix-Rouge', 'Groupama', 'Statut', 'Remarques']];
+      S.sessions.slice().sort(bySlot).forEach(function(s) {
+        rows.push([
+          s.date,
+          s.debut,
+          s.fin,
+          s.etab,
+          s.classe,
+          s.effectif,
+          s.contact,
+          lab[ownState(s, 'dafpic')],
+          lab[ownState(s, 'cr')],
+          lab[ownState(s, 'gp')],
+          { valid: 'Validée par les 3 parties', pending: 'En attente', refused: 'Refusée' }[stateOf(s)],
+          s.note
+        ]);
+      });
+      var data = '\uFEFF' + rows.map(function(r) { return r.map(q).join(';'); }).join('\r\n');
+      var blob = new Blob([data], { type: 'text/csv;charset=utf-8;' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'gestes-qui-sauvent-2027-sessions.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+      toast('Export CSV téléchargé.');
+    } catch (e) {
+      toast('Export impossible dans ce navigateur.');
+    }
+  }
+
+  /* --- DÉMARRAGE --- */
+  buildRole();
+  render();
+  setTimeout(function() {
+    if (!S.loaded) {
+      S.slow = true;
+      render();
+    }
+  }, 10000);
+
+  S.store = createDataStore();
+  S.store.init(
+    function(list) {
+      S.sessions = list;
+      S.loaded = true;
+      S.slow = false;
+      render();
+    },
+    function(closures) {
+      S.closures = closures;
+      render();
+    },
+    function() {
+      S.loaded = true;
+      S.slow = true;
+      render();
+    }
+  );
+</script>
+</body>
+</html>
