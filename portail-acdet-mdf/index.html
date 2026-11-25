@@ -1,0 +1,2550 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appel à Projets Santé, Prévention & Sécurité — A.C.D.E.T. × MDF (Nouvelle-Calédonie)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0F2C59;
+      --navy-dark: #091D3E;
+      --lagoon: #008080;
+      --lagoon-light: #E6F4F4;
+      --lagoon-mid: #B2DFDF;
+      --coral: #E07A5F;
+      --coral-light: #FDF1EE;
+      --amber: #F4A261;
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --ink: #1E293B;
+      --muted: #64748B;
+      --line: #E2E8F0;
+      --ok: #15803D;
+      --ok-bg: #DCFCE7;
+      --warn: #B45309;
+      --warn-bg: #FEF3C7;
+      --err: #B91C1C;
+      --err-bg: #FEE2E2;
+      --radius: 16px;
+      --shadow-sm: 0 2px 8px rgba(15, 44, 89, 0.05);
+      --shadow-md: 0 8px 24px rgba(15, 44, 89, 0.08);
+      --shadow-lg: 0 16px 36px rgba(15, 44, 89, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, .font-display {
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    /* ================= HEADER INSTITUTIONNEL ================= */
+    header {
+      background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 55%, #134E5E 100%);
+      color: #FFFFFF;
+      padding: 1.5rem 0 3.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 128, 128, 0.28) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logos-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .logo-badge-img {
+      background: #FFFFFF;
+      padding: 0.4rem 0.85rem;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+      transition: transform 0.2s ease;
+      height: 52px;
+    }
+
+    .logo-badge-img:hover {
+      transform: translateY(-2px);
+    }
+
+    .logo-badge-img img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .partner-cross {
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--amber);
+    }
+
+    .convention-pill {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(6px);
+      padding: 0.45rem 0.95rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #E2E8F0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 2rem;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-title {
+      font-size: clamp(1.55rem, 3vw, 2.3rem);
+      font-weight: 800;
+      line-height: 1.18;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title span {
+      color: var(--amber);
+    }
+
+    .hero-desc {
+      color: #CBD5E1;
+      font-size: 1rem;
+      max-width: 640px;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-highlights {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.85rem;
+    }
+
+    .highlight-box {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      padding: 0.95rem;
+    }
+
+    .highlight-box .hl-val {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .highlight-box .hl-lbl {
+      font-size: 0.78rem;
+      color: #CBD5E1;
+      line-height: 1.35;
+    }
+
+    /* ================= NAVIGATION ONGLETS ================= */
+    .nav-wrapper {
+      margin-top: -1.65rem;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .tabs-nav {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 0.45rem;
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      box-shadow: var(--shadow-md);
+      width: 100%;
+    }
+
+    .tab-btn {
+      flex: 1;
+      min-width: 210px;
+      background: transparent;
+      border: none;
+      border-radius: 12px;
+      padding: 0.85rem 1.2rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.93rem;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--navy);
+      background: #F1F5F9;
+    }
+
+    .tab-btn.active {
+      background: var(--navy);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(15, 44, 89, 0.22);
+    }
+
+    .tab-badge {
+      background: var(--coral);
+      color: #FFFFFF;
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 0.12rem 0.55rem;
+      border-radius: 999px;
+    }
+
+    .tab-btn.active .tab-badge {
+      background: var(--amber);
+      color: var(--navy-dark);
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+      animation: slideUp 0.25s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ================= LAYOUT ONGLET 1 : DEPOT ================= */
+    .depot-layout {
+      display: grid;
+      grid-template-columns: 1fr 370px;
+      gap: 1.75rem;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.65rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-header {
+      margin-bottom: 1.35rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .card-header h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .card-header p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Stepper horizontal 6 étapes */
+    .stepper {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.4rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .step-ind {
+      background: #F1F5F9;
+      border: 1.5px solid var(--line);
+      border-radius: 11px;
+      padding: 0.55rem 0.35rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .step-ind .s-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #CBD5E1;
+      color: var(--navy);
+      font-size: 0.76rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.25rem;
+    }
+
+    .step-ind .s-lbl {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--muted);
+      line-height: 1.2;
+    }
+
+    .step-ind.active {
+      background: var(--lagoon-light);
+      border-color: var(--lagoon);
+    }
+
+    .step-ind.active .s-num {
+      background: var(--lagoon);
+      color: #FFFFFF;
+    }
+
+    .step-ind.active .s-lbl {
+      color: var(--navy);
+    }
+
+    .step-ind.done {
+      background: var(--ok-bg);
+      border-color: #86EFAC;
+    }
+
+    .step-ind.done .s-num {
+      background: var(--ok);
+      color: #FFFFFF;
+    }
+
+    .step-ind.done .s-lbl {
+      color: var(--ok);
+    }
+
+    .form-step {
+      display: none;
+    }
+
+    .form-step.active {
+      display: block;
+      animation: slideUp 0.2s ease;
+    }
+
+    .step-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .field {
+      margin-bottom: 1.05rem;
+    }
+
+    .field label.lbl {
+      display: block;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.35rem;
+    }
+
+    .req {
+      color: var(--err);
+      font-weight: 800;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    input[type="date"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      border: 1.5px solid var(--line);
+      border-radius: 11px;
+      font-family: inherit;
+      font-size: 0.93rem;
+      color: var(--ink);
+      background: #FFFFFF;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--lagoon);
+      box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.14);
+    }
+
+    input.invalid,
+    select.invalid,
+    textarea.invalid {
+      border-color: var(--err);
+      background: #FFFBFB;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* Pills thématiques */
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.65rem;
+    }
+
+    .theme-chk {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.7rem 0.85rem;
+      border: 1.5px solid var(--line);
+      border-radius: 11px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+
+    .theme-chk:hover {
+      border-color: var(--lagoon);
+      background: var(--lagoon-light);
+    }
+
+    .theme-chk input {
+      width: 17px;
+      height: 17px;
+      accent-color: var(--lagoon);
+    }
+
+    /* Calculateur budgétaire */
+    .budget-summary {
+      background: #F1F5F9;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: 1rem 1.15rem;
+      margin: 1rem 0;
+    }
+
+    .budget-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      padding: 0.3rem 0;
+    }
+
+    .budget-row.total {
+      border-top: 1px dashed #CBD5E1;
+      margin-top: 0.45rem;
+      padding-top: 0.6rem;
+      font-weight: 800;
+      font-size: 0.98rem;
+    }
+
+    .budget-status {
+      margin-top: 0.65rem;
+      padding: 0.65rem 0.85rem;
+      border-radius: 9px;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .budget-status.ok { background: var(--ok-bg); color: var(--ok); }
+    .budget-status.warn { background: var(--warn-bg); color: var(--warn); }
+    .budget-status.err { background: var(--err-bg); color: var(--err); }
+
+    .derog-box {
+      background: var(--coral-light);
+      border: 1px solid #F5C2B4;
+      border-radius: 11px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Checkboxes engagements */
+    .chk-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      padding: 0.75rem 0.9rem;
+      border: 1.5px solid var(--line);
+      border-radius: 11px;
+      margin-bottom: 0.65rem;
+      cursor: pointer;
+      font-size: 0.87rem;
+      background: #FFFFFF;
+      transition: border-color 0.15s;
+    }
+
+    .chk-card:hover {
+      border-color: var(--lagoon);
+    }
+
+    .chk-card input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--lagoon);
+      flex-shrink: 0;
+    }
+
+    .chk-master {
+      background: var(--lagoon-light);
+      border-color: var(--lagoon);
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .alert-box {
+      background: var(--warn-bg);
+      border-left: 4px solid var(--amber);
+      color: #78350F;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      margin: 1rem 0;
+    }
+
+    .err-alert {
+      background: var(--err-bg);
+      border: 1px solid #FCA5A5;
+      color: var(--err);
+      padding: 0.8rem 1rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    /* Boutons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.3rem;
+      border-radius: 11px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--navy);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(15, 44, 89, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: var(--navy-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-lagoon {
+      background: var(--lagoon);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(0, 128, 128, 0.22);
+    }
+
+    .btn-lagoon:hover {
+      background: #006666;
+      transform: translateY(-1px);
+    }
+
+    .btn-coral {
+      background: var(--coral);
+      color: #FFFFFF;
+    }
+
+    .btn-coral:hover {
+      background: #C9654B;
+    }
+
+    .btn-outline {
+      background: #FFFFFF;
+      color: var(--navy);
+      border: 1.5px solid var(--line);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--navy);
+      background: #F8FAFC;
+    }
+
+    .btn-sm {
+      padding: 0.48rem 0.85rem;
+      font-size: 0.8rem;
+      border-radius: 9px;
+    }
+
+    .step-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding-top: 1.15rem;
+      border-top: 1px solid var(--line);
+    }
+
+    /* ================= SIDEBAR SECONDAIRE : IDÉE & RESSOURCES ================= */
+    .sidebar-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .inspire-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.35rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .badge-tag {
+      display: inline-block;
+      background: #F1F5F9;
+      color: var(--navy);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.22rem 0.65rem;
+      border-radius: 999px;
+      margin-bottom: 0.6rem;
+    }
+
+    .inspire-card h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 0.45rem;
+    }
+
+    .phases-mini {
+      list-style: none;
+      margin: 0.75rem 0;
+      padding: 0.75rem;
+      background: #F8FAFC;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .quick-ideas {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .idea-btn {
+      text-align: left;
+      background: #FFFFFF;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--navy);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.15s;
+    }
+
+    .idea-btn:hover {
+      border-color: var(--lagoon);
+      background: var(--lagoon-light);
+    }
+
+    .resource-item {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.83rem;
+    }
+
+    .resource-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .resource-item strong {
+      color: var(--navy);
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    .contact-chip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      background: #F1F5F9;
+      padding: 0.55rem 0.75rem;
+      border-radius: 9px;
+      margin-top: 0.5rem;
+      font-size: 0.81rem;
+    }
+
+    .contact-chip a {
+      color: var(--lagoon);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    /* Écran confirmation soumission */
+    .success-panel {
+      display: none;
+      text-align: center;
+      padding: 2.25rem 1.5rem;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--ok-bg);
+      color: var(--ok);
+      font-size: 2rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+    }
+
+    .ref-box {
+      display: inline-block;
+      background: var(--lagoon-light);
+      border: 2px dashed var(--lagoon);
+      color: var(--navy);
+      font-family: monospace;
+      font-size: 1.15rem;
+      font-weight: 800;
+      padding: 0.55rem 1.25rem;
+      border-radius: 12px;
+      margin: 0.85rem 0 1.25rem;
+    }
+
+    /* ================= ONGLET 2 : SUIVI & COMMISSION ================= */
+    .auth-card {
+      max-width: 480px;
+      margin: 1.5rem auto;
+      text-align: center;
+      padding: 2.25rem 1.75rem;
+    }
+
+    .auth-input-group {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 1.15rem;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .kpi-box {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .kpi-box .k-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .kpi-box .k-num {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin: 0.3rem 0;
+    }
+
+    .kpi-box .k-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .gauge-track {
+      width: 100%;
+      height: 10px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 0.65rem;
+    }
+
+    .gauge-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--lagoon), var(--navy));
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+
+    .table-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .table-wrap {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      box-shadow: var(--shadow-sm);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 780px;
+    }
+
+    th {
+      background: #F1F5F9;
+      color: var(--navy);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      text-align: left;
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    td {
+      padding: 0.95rem 1rem;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.88rem;
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: #F8FAFC;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 0.28rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .pill-inst { background: #E0F2FE; color: #0369A1; }
+    .pill-ok { background: var(--ok-bg); color: var(--ok); }
+    .pill-done { background: var(--lagoon-light); color: var(--lagoon); }
+    .pill-ko { background: var(--err-bg); color: var(--err); }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 44, 89, 0.55);
+      backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 1000;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #FFFFFF;
+      border-radius: 18px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 1.75rem;
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* ================= ONGLET 3 : CONVENTION & KIT VISIBILITE ================= */
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 1.1rem;
+      margin-bottom: 2rem;
+    }
+
+    .art-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .art-card .art-num {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--lagoon);
+      letter-spacing: 0.04em;
+    }
+
+    .art-card h3 {
+      font-size: 1rem;
+      color: var(--navy);
+      margin: 0.2rem 0 0.45rem;
+    }
+
+    .art-card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .kit-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .logo-preview-box {
+      background: #FFFFFF;
+      border: 1.5px dashed #CBD5E1;
+      border-radius: 14px;
+      padding: 1.5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    /* ================= FOOTER ================= */
+    footer {
+      background: var(--navy-dark);
+      color: #CBD5E1;
+      padding: 2.5rem 0 2rem;
+      margin-top: 3.5rem;
+      font-size: 0.84rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .footer-grid h4 {
+      color: #FFFFFF;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-bottom {
+      padding-top: 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-size: 0.78rem;
+      color: #94A3B8;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--navy-dark);
+      color: #FFFFFF;
+      padding: 0.85rem 1.25rem;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(140%);
+      opacity: 0;
+      transition: all 0.25s ease;
+      z-index: 2000;
+      max-width: 370px;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 960px) {
+      .hero-grid, .depot-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-highlights, .grid-2, .grid-3, .themes-grid {
+        grid-template-columns: 1fr;
+      }
+      .stepper {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.3rem;
+      }
+      .step-ind .s-lbl {
+        font-size: 0.6rem;
+      }
+    }
+
+    @media print {
+      header, .nav-wrapper, .sidebar-stack, .step-nav, footer, #toast {
+        display: none !important;
+      }
+      body { background: #FFFFFF; }
+      .card { box-shadow: none; border: 1px solid #CCC; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= HEADER INSTITUTIONNEL ================= -->
+  <header>
+    <div class="container">
+      <div class="top-bar">
+        <div class="logos-cluster">
+          <!-- Logo officiel ACDET -->
+          <div class="logo-badge-img" title="Association Calédonienne pour le Développement de l'Enseignement Technique">
+            <img src="image_a8ee3e.png" alt="Logo ACDET" onerror="this.onerror=null;this.src='https://placehold.co/140x40/0F2C59/FFFFFF?text=ACDET';" />
+          </div>
+
+          <span class="partner-cross">×</span>
+
+          <!-- Logo officiel MDF -->
+          <div class="logo-badge-img" title="Mutuelle des Fonctionnaires - MDF Mutuelle Solidaire">
+            <img src="image_a8ee97.png" alt="Logo MDF Mutuelle Solidaire" onerror="this.onerror=null;this.src='https://placehold.co/140x40/008080/FFFFFF?text=MDF';" />
+          </div>
+        </div>
+
+        <div class="convention-pill">
+          🤝 Partenariat A.C.D.E.T. × MDF
+        </div>
+      </div>
+
+      <div class="hero-grid">
+        <div>
+          <h1 class="hero-title">
+            Soutien aux projets <span>Santé, Prévention, Bien-être &amp; Sécurité</span>
+          </h1>
+          <p class="hero-desc">
+            Un grand merci pour toutes les actions menées au sein de vos établissements ! Ce dispositif partenarial simple et concret entre l’<strong>A.C.D.E.T.</strong> et la <strong>MDF</strong> permet d'encourager et de cofinancer vos initiatives éducatives.
+          </p>
+        </div>
+
+        <div class="hero-highlights">
+          <div class="highlight-box">
+            <span class="hl-val">50 000 F CFP</span>
+            <span class="hl-lbl">Aide repère par projet (enveloppe globale 150 000 F / an)</span>
+          </div>
+          <div class="highlight-box">
+            <span class="hl-val">3 Projets / an</span>
+            <span class="hl-lbl">Actions sélectionnées conjointement chaque exercice</span>
+          </div>
+          <div class="highlight-box">
+            <span class="hl-val">4 Thématiques</span>
+            <span class="hl-lbl">Santé, Prévention, Bien-être &amp; Sécurité</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= NAVIGATION PAR ONGLETS ================= -->
+  <div class="container nav-wrapper">
+    <nav class="tabs-nav" aria-label="Menu principal">
+      <button type="button" class="tab-btn active" data-tab="depot">
+        📝 Déposer un projet
+      </button>
+      <button type="button" class="tab-btn" data-tab="suivi">
+        📊 Espace Suivi &amp; Commission
+        <span class="tab-badge" id="navCount">0</span>
+      </button>
+      <button type="button" class="tab-btn" data-tab="convention">
+        📜 La Convention &amp; Kit Visibilité
+      </button>
+    </nav>
+  </div>
+
+  <main class="container">
+    <!-- =================================================================
+         ONGLET 1 : DÉPOSER UN PROJET (FORMULAIRE EN 6 ÉTAPES)
+         ================================================================= -->
+    <section id="panel-depot" class="panel active">
+      <div class="depot-layout">
+        <!-- COLONNE PRINCIPALE : FORMULAIRE EN 6 ÉTAPES -->
+        <div class="card">
+          <div id="formContainer">
+            <div class="card-header">
+              <h2>Dossier de candidature — Partenariat A.C.D.E.T. × MDF</h2>
+              <p>Complétez les 6 étapes ci-dessous. Le montant standard de soutien est de <strong>50 000 F CFP par projet</strong> (ajustable sur accord tripartite préalable selon l’article 4).</p>
+            </div>
+
+            <!-- Indicateur d'étapes (6 étapes) -->
+            <div class="stepper" id="stepper">
+              <div class="step-ind active" data-step="1">
+                <span class="s-num">1</span>
+                <span class="s-lbl">Établissement</span>
+              </div>
+              <div class="step-ind" data-step="2">
+                <span class="s-num">2</span>
+                <span class="s-lbl">Action &amp; Thème</span>
+              </div>
+              <div class="step-ind" data-step="3">
+                <span class="s-num">3</span>
+                <span class="s-lbl">Budget</span>
+              </div>
+              <div class="step-ind" data-step="4">
+                <span class="s-num">4</span>
+                <span class="s-lbl">Visibilité MDF</span>
+              </div>
+              <div class="step-ind" data-step="5">
+                <span class="s-num">5</span>
+                <span class="s-lbl">Engagements</span>
+              </div>
+              <div class="step-ind" data-step="6">
+                <span class="s-num">6</span>
+                <span class="s-lbl">Récap &amp; Ref.</span>
+              </div>
+            </div>
+
+            <div id="formError" class="err-alert" role="alert"></div>
+
+            <form id="candidatureForm" novalidate>
+              <!-- ÉTAPE 1 : ÉTABLISSEMENT & PORTEUR -->
+              <div class="form-step active" data-step="1">
+                <h3 class="step-title">1. Identification de l’établissement &amp; du porteur</h3>
+                <div class="grid-2">
+                  <div class="field">
+                    <label class="lbl" for="etabNom">Nom de l’établissement scolaire <span class="req">*</span></label>
+                    <input type="text" id="etabNom" placeholder="Ex : Lycée Professionnel Petro Attiti, Lycée Jules Garnier..." required />
+                  </div>
+                  <div class="field">
+                    <label class="lbl" for="etabCommune">Commune / Province <span class="req">*</span></label>
+                    <select id="etabCommune" required>
+                      <option value="">— Sélectionner —</option>
+                      <option value="Nouméa (Province Sud)">Nouméa (Province Sud)</option>
+                      <option value="Dumbéa / Païta / Mont-Dore (Province Sud)">Dumbéa / Païta / Mont-Dore (Province Sud)</option>
+                      <option value="Bourail / La Foa / Brousse Sud (Province Sud)">Bourail / La Foa / Brousse Sud (Province Sud)</option>
+                      <option value="Koné / Pouembout / Voh (Province Nord)">Koné / Pouembout / Voh (Province Nord)</option>
+                      <option value="Poindimié / Touho / Côte Est (Province Nord)">Poindimié / Touho / Côte Est (Province Nord)</option>
+                      <option value="Koumac / Grand Nord (Province Nord)">Koumac / Grand Nord (Province Nord)</option>
+                      <option value="Lifou / Maré / Ouvéa (Îles Loyauté)">Lifou / Maré / Ouvéa (Îles Loyauté)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="grid-2">
+                  <div class="field">
+                    <label class="lbl" for="porteurNom">Nom &amp; Prénom du référent projet <span class="req">*</span></label>
+                    <input type="text" id="porteurNom" placeholder="Ex : Mme Claire NEKELO" required />
+                  </div>
+                  <div class="field">
+                    <label class="lbl" for="porteurFonction">Fonction dans l’établissement <span class="req">*</span></label>
+                    <input type="text" id="porteurFonction" placeholder="Ex : Enseignant PLP, Infirmière scolaire, CPE, DDFPT..." required />
+                  </div>
+                </div>
+
+                <div class="grid-2">
+                  <div class="field">
+                    <label class="lbl" for="porteurEmail">Courriel professionnel <span class="req">*</span></label>
+                    <input type="email" id="porteurEmail" placeholder="prenom.nom@ac-noumea.nc" required />
+                  </div>
+                  <div class="field">
+                    <label class="lbl" for="porteurTel">Téléphone direct <span class="req">*</span></label>
+                    <input type="tel" id="porteurTel" placeholder="Ex : 24.XX.XX ou 78.XX.XX" required />
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="lbl" for="chefEtab">Nom du Chef d’établissement &amp; validation interne <span class="req">*</span></label>
+                  <input type="text" id="chefEtab" placeholder="Nom du Proviseur / Principal ayant validé la démarche" required />
+                </div>
+
+                <div class="step-nav">
+                  <span></span>
+                  <button type="button" class="btn btn-primary" data-next="2">Étape suivante : Le Projet →</button>
+                </div>
+              </div>
+
+              <!-- ÉTAPE 2 : LE PROJET & LES THÉMATIQUES -->
+              <div class="form-step" data-step="2">
+                <h3 class="step-title">2. Présentation du projet &amp; thématiques (CAFAT &amp; INRS)</h3>
+                <div class="field">
+                  <label class="lbl" for="projTitre">Intitulé du projet ou de l’événement <span class="req">*</span></label>
+                  <input type="text" id="projTitre" placeholder="Ex : Forum santé et prévention des risques professionnels..." required />
+                </div>
+
+                <div class="field">
+                  <label class="lbl">Thématique(s) concernée(s) en lien avec la CAFAT et l’INRS <span class="req">*</span></label>
+                  <div class="themes-grid">
+                    <label class="theme-chk"><input type="checkbox" name="theme" value="Santé" /> 🩺 Santé</label>
+                    <label class="theme-chk"><input type="checkbox" name="theme" value="Prévention" /> 🛡️ Prévention (CAFAT / INRS)</label>
+                    <label class="theme-chk"><input type="checkbox" name="theme" value="Bien-être" /> 🌿 Bien-être</label>
+                    <label class="theme-chk"><input type="checkbox" name="theme" value="Sécurité" /> ⚠️ Sécurité au travail</label>
+                  </div>
+                </div>
+
+                <div class="grid-3">
+                  <div class="field">
+                    <label class="lbl" for="publicCible">Public cible (classes / filières) <span class="req">*</span></label>
+                    <input type="text" id="publicCible" placeholder="Ex : Élèves de 1ère Bac Pro" required />
+                  </div>
+                  <div class="field">
+                    <label class="lbl" for="nbEleves">Effectif élèves concernés <span class="req">*</span></label>
+                    <input type="number" id="nbEleves" min="1" placeholder="Ex : 60" required />
+                  </div>
+                  <div class="field">
+                    <label class="lbl" for="datePrevue">Date(s) prévisionnelle(s) <span class="req">*</span></label>
+                    <input type="date" id="datePrevue" required />
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="lbl" for="projDesc">Objectifs pédagogiques et déroulement de l’action <span class="req">*</span></label>
+                  <textarea id="projDesc" placeholder="Décrivez les objectifs, les étapes prévues avec les élèves et l'impact attendu..." required></textarea>
+                </div>
+
+                <div class="field">
+                  <label class="lbl" for="projPartenaires">Intervenants et partenaires associés (CAFAT, INRS, Association Jeunes et Toiles...)</label>
+                  <input type="text" id="projPartenaires" placeholder="Ex : Service Prévention CAFAT, supports INRS..." />
+                </div>
+
+                <div class="step-nav">
+                  <button type="button" class="btn btn-outline" data-prev="1">← Précédent</button>
+                  <button type="button" class="btn btn-primary" data-next="3">Étape suivante : Budget →</button>
+                </div>
+              </div>
+
+              <!-- ÉTAPE 3 : BUDGET & FINANCEMENT -->
+              <div class="form-step" data-step="3">
+                <h3 class="step-title">3. Budget prévisionnel &amp; calcul automatique de l’écart</h3>
+                <p class="hint" style="margin-bottom: 1rem;">
+                  L’enveloppe annuelle de 150 000 F CFP est répartie sur 3 projets maximum, soit une aide repère de <strong>50 000 F CFP par projet</strong>.
+                </p>
+
+                <div class="grid-2">
+                  <div class="field">
+                    <label class="lbl" for="coutTotal">Coût total estimé du projet (F CFP) <span class="req">*</span></label>
+                    <input type="number" id="coutTotal" min="1000" step="500" placeholder="Ex : 95000" required />
+                  </div>
+                  <div class="field">
+                    <label class="lbl" for="montantMdf">Aide demandée à la MDF (F CFP repère : 50 000 F) <span class="req">*</span></label>
+                    <input type="number" id="montantMdf" min="1000" max="50000" step="500" value="50000" required />
+                    <div class="hint" id="mdfCapHint">Plafond standard : 50 000 F CFP par projet.</div>
+                  </div>
+                </div>
+
+                <div class="derog-box">
+                  <label style="display:flex; align-items:center; gap:0.55rem; font-size:0.84rem; font-weight:700; color:var(--navy); cursor:pointer;">
+                    <input type="checkbox" id="derogCheck" style="width:16px; height:16px; accent-color:var(--coral);" />
+                    Demande exceptionnelle supérieure à 50 000 F CFP (soumise à accord tripartite préalable MDF / A.C.D.E.T. / Établissement — Art. 4)
+                  </label>
+                  <div id="derogReasonWrap" style="display:none; margin-top:0.65rem;">
+                    <input type="text" id="derogReason" placeholder="Précisez la justification de cette demande dérogatoire (max. 150 000 F CFP)..." />
+                  </div>
+                </div>
+
+                <div class="grid-2">
+                  <div class="field">
+                    <label class="lbl" for="autofinancement">Apport Établissement / FSE / Coopérative (F CFP)</label>
+                    <input type="number" id="autofinancement" min="0" step="500" value="0" />
+                  </div>
+                  <div class="field">
+                    <label class="lbl" for="autresCofin">Autres cofinancements (CAFAT, Vice-Rectorat, Provinces...) (F CFP)</label>
+                    <input type="number" id="autresCofin" min="0" step="500" value="0" />
+                  </div>
+                </div>
+
+                <!-- Calculateur budgétaire dynamique sans erreur -->
+                <div class="budget-summary">
+                  <div class="budget-row">
+                    <span>Coût total des dépenses prévues :</span>
+                    <strong id="calcDepenses">0 F CFP</strong>
+                  </div>
+                  <div class="budget-row">
+                    <span>Total des ressources mobilisées (MDF + Autofin. + Autres) :</span>
+                    <strong id="calcRecettes">0 F CFP</strong>
+                  </div>
+                  <div class="budget-row total">
+                    <span>Écart / Reste à financer :</span>
+                    <span id="calcEcart">0 F CFP</span>
+                  </div>
+                  <div id="budgetStatusMsg" class="budget-status ok">
+                    Saisissez les montants pour vérifier l’équilibre budgétaire du projet.
+                  </div>
+                </div>
+
+                <div class="grid-2">
+                  <div class="field">
+                    <label class="lbl" for="benefVersement">Bénéficiaire du versement (Article 4) <span class="req">*</span></label>
+                    <select id="benefVersement" required>
+                      <option value="L'établissement scolaire concerné">L’établissement scolaire concerné</option>
+                      <option value="L'association support (FSE / Coopérative / A.C.D.E.T.)">L’association support (FSE / Coopérative / A.C.D.E.T.)</option>
+                      <option value="Le prestataire ou organisme chargé de l'organisation">Le prestataire ou organisme chargé de l’organisation</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label class="lbl" for="detailDepenses">Nature principale des dépenses <span class="req">*</span></label>
+                    <input type="text" id="detailDepenses" placeholder="Ex : Prestation intervenants, supports pédagogiques, matériel..." required />
+                  </div>
+                </div>
+
+                <div class="step-nav">
+                  <button type="button" class="btn btn-outline" data-prev="2">← Précédent</button>
+                  <button type="button" class="btn btn-primary" data-next="4">Étape suivante : Visibilité →</button>
+                </div>
+              </div>
+
+              <!-- ÉTAPE 4 : PLAN DE VISIBILITÉ MDF -->
+              <div class="form-step" data-step="4">
+                <h3 class="step-title">4. Contreparties de visibilité au bénéfice de la MDF (Article 3)</h3>
+                <p class="hint" style="margin-bottom: 1rem;">
+                  En contrepartie du soutien financier, l’action doit prévoir des mesures de visibilité adaptées au bénéfice de la Mutuelle des Fonctionnaires (MDF) en respectant sa charte graphique.
+                </p>
+
+                <label class="chk-card">
+                  <input type="checkbox" name="visibilite" value="Apposition du logo MDF sur tous les supports de communication" checked />
+                  <span><strong>Apposition du logo MDF</strong> sur les supports de communication de l’événement (affiches, flyers, générique vidéo, programmes).</span>
+                </label>
+
+                <label class="chk-card">
+                  <input type="checkbox" name="visibilite" value="Mention du soutien de la MDF sur les supports numériques et imprimés" checked />
+                  <span><strong>Mention explicite du soutien de la MDF</strong> sur les supports numériques (site du lycée, Pronote, réseaux sociaux) et imprimés.</span>
+                </label>
+
+                <label class="chk-card">
+                  <input type="checkbox" name="visibilite" value="Présence de supports de communication MDF lors de l'événement" />
+                  <span><strong>Présence de supports de communication MDF</strong> (kakémono, documentation prévention) lors de la manifestation ou projection.</span>
+                </label>
+
+                <div class="field" style="margin-top: 0.85rem;">
+                  <label class="lbl" for="visibiliteAutre">Autres mesures de visibilité envisagées (presse locale, invitation des représentants MDF/A.C.D.E.T.)</label>
+                  <input type="text" id="visibiliteAutre" placeholder="Ex : Invitation de la MDF et de l'A.C.D.E.T. à la restitution..." />
+                </div>
+
+                <div class="alert-box">
+                  <strong>⏳ Rappel important — Article 6.1 (Validation préalable) :</strong><br />
+                  Tout usage des marques, logos et images de la MDF doit respecter sa charte graphique et être soumis à <strong>validation préalable par courriel (<a href="mailto:partenariats@mdf.nc" style="color:inherit;">partenariats@mdf.nc</a>) sous sept (7) jours ouvrés</strong> avant diffusion.
+                </div>
+
+                <div class="step-nav">
+                  <button type="button" class="btn btn-outline" data-prev="3">← Précédent</button>
+                  <button type="button" class="btn btn-primary" data-next="5">Étape suivante : Engagements →</button>
+                </div>
+              </div>
+
+              <!-- ÉTAPE 5 : ENGAGEMENTS RÉGLEMENTAIRES & ÉTHIQUES -->
+              <div class="form-step" data-step="5">
+                <h3 class="step-title">5. Engagements réglementaires, éthiques &amp; conventionnels</h3>
+
+                <label class="chk-card chk-master" for="chkAll">
+                  <input type="checkbox" id="chkAll" />
+                  <span>Tout cocher — Accepter l’ensemble des 5 engagements de la convention A.C.D.E.T. × MDF</span>
+                </label>
+
+                <label class="chk-card">
+                  <input type="checkbox" class="eng-item" />
+                  <span><strong>1. Valeurs mutualistes &amp; éthique (Art. 7) :</strong> Respecter les valeurs portées par la MDF, les règles de transparence du parrainage et les dispositions anti-corruption (Loi Sapin II), sans publicité pour l’alcool, le tabac ou les jeux d’argent.</span>
+                </label>
+
+                <label class="chk-card">
+                  <input type="checkbox" class="eng-item" />
+                  <span><strong>2. Validation graphique préalable sous 7 jours ouvrés (Art. 6.1) :</strong> Soumettre tout support comportant le logo MDF à <em>partenariats@mdf.nc</em> au moins 7 jours ouvrés avant publication ou impression.</span>
+                </label>
+
+                <label class="chk-card">
+                  <input type="checkbox" class="eng-item" />
+                  <span><strong>3. Assurance Responsabilité Civile (Art. 8) :</strong> Certifier que l’établissement ou l’organisateur est couvert par une assurance responsabilité civile valide pour les dommages causés aux tiers durant l’action.</span>
+                </label>
+
+                <label class="chk-card">
+                  <input type="checkbox" class="eng-item" />
+                  <span><strong>4. Sécurité &amp; réglementation (Art. 7.3) :</strong> Respecter l’ensemble des normes de sécurité, d’encadrement scolaire et d’autorisations liées à l’activité menée.</span>
+                </label>
+
+                <label class="chk-card">
+                  <input type="checkbox" class="eng-item" />
+                  <span><strong>5. Justificatifs financiers obligatoires (Art. 4) :</strong> Transmettre à la MDF et à l’A.C.D.E.T., à l’issue de l’action, les justificatifs attestant de l’utilisation des fonds versés (factures, état des dépenses ou document équivalent).</span>
+                </label>
+
+                <div class="step-nav">
+                  <button type="button" class="btn btn-outline" data-prev="4">← Précédent</button>
+                  <button type="button" class="btn btn-primary" data-next="6">Étape suivante : Récapitulatif →</button>
+                </div>
+              </div>
+
+              <!-- ÉTAPE 6 : RÉCAPITULATIF & VALIDATION -->
+              <div class="form-step" data-step="6">
+                <h3 class="step-title">6. Récapitulatif de la candidature &amp; attribution du numéro de dossier</h3>
+                <p class="hint" style="margin-bottom: 1rem;">
+                  Vérifiez les informations ci-dessous avant de valider l’enregistrement officiel de votre dossier.
+                </p>
+
+                <div id="recapBoxFinal" style="background:#F8FAFC; border:1px solid var(--line); border-radius:12px; padding:1.15rem; margin-bottom:1.25rem; font-size:0.87rem; line-height:1.5;"></div>
+
+                <div class="step-nav">
+                  <button type="button" class="btn btn-outline" data-prev="5">← Précédent</button>
+                  <button type="submit" class="btn btn-lagoon">✅ Enregistrer et soumettre le dossier</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- ÉCRAN DE CONFIRMATION APRÈS DÉPÔT -->
+          <div id="successPanel" class="success-panel">
+            <div class="success-icon">✓</div>
+            <h2 style="color:var(--navy); font-size:1.45rem;">Votre dossier a bien été enregistré !</h2>
+            <p style="color:var(--muted); max-width:520px; margin:0.4rem auto 0;">
+              Votre candidature est enregistrée dans le portail de suivi conjoint <strong>A.C.D.E.T. × MDF</strong> avec attribution d’un numéro unique. Conservez votre référence :
+            </p>
+            <div class="ref-box" id="createdRef">MDF-ACDET-2027-0001</div>
+
+            <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:0.75rem; margin-top:0.5rem;">
+              <a id="mailtoSubmitBtn" href="#" class="btn btn-primary">✉️ Envoyer par email à l’A.C.D.E.T. &amp; MDF</a>
+              <button type="button" id="printRecapBtn" class="btn btn-outline">🖨️ Imprimer / PDF</button>
+              <button type="button" id="newDossierBtn" class="btn btn-outline">➕ Nouveau dossier</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLONNE LATÉRALE SECONDAIRE : IDÉE AUDIOVISUEL & RESSOURCES -->
+        <aside class="sidebar-stack">
+          <!-- Idée Audiovisuel « Jeunes et Toiles » en second plan (discrète) -->
+          <div class="inspire-card">
+            <span class="badge-tag">💡 Idée d’action (Inspiration)</span>
+            <h3>Court-métrage sécurité au travail</h3>
+            <p style="font-size:0.82rem; color:var(--muted); margin-bottom:0.6rem;">
+        <!-- COLONNE LATÉRALE SECONDAIRE : IDÉE & RESSOURCES -->
+        <aside class="sidebar-stack">
+          <!-- Idée Audiovisuel « Jeunes et Toiles » en second plan (discrète) -->
+          <div class="inspire-card">
+            <span class="badge-tag">💡 Idée d’action (Inspiration)</span>
+            <h3>Court-métrage sécurité au travail</h3>
+            <p style="font-size:0.82rem; color:var(--muted); margin-bottom:0.6rem;">
+              Pour inciter et encourager vos équipes : réalisez une capsule vidéo avec le prestataire <strong>Jeunes et Toiles</strong> (contact : <a href="mailto:hsinger.cinema@gmail.com" style="color:var(--lagoon); font-weight:700;">hsinger.cinema@gmail.com</a>).
+            </p>
+            <ul class="phases-mini">
+              <li>Phase 1 : Présentation &amp; brainstorming (1h)</li>
+              <li>Phase 2 : Écriture du scénario (2×2h)</li>
+              <li>Phase 3 : Tournage en équipe (2×3h)</li>
+              <li>Phase 4 : Montage vidéo sur CapCut (1×3h)</li>
+              <li>Phase 5 : Projection &amp; débriefing (1h)</li>
+            </ul>
+            <button type="button" class="btn btn-outline btn-sm" style="width:100%; font-size:0.78rem;" id="fillVideoIdeaBtn">
+              ✨ Pré-remplir avec cette idée
+            </button>
+          </div>
+
+          <!-- Autres idées rapides en 1 clic -->
+          <div class="card" style="padding:1.25rem;">
+            <h3 style="font-size:0.95rem; color:var(--navy); margin-bottom:0.25rem;">💡 Autres thématiques (1 clic)</h3>
+            <div class="quick-ideas">
+              <button type="button" class="idea-btn" data-preset="forum">
+                <span>🩺 Forum Santé &amp; Prévention Jeunes</span>
+                <span>→</span>
+              </button>
+              <button type="button" class="idea-btn" data-preset="postures">
+                <span>🛡️ Ateliers Postures &amp; TMS (INRS)</span>
+                <span>→</span>
+              </button>
+              <button type="button" class="idea-btn" data-preset="bienetre">
+                <span>🌿 Semaine Bien-être &amp; Stress</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Ressources CAFAT & INRS -->
+          <div class="card" style="padding:1.25rem;">
+            <h3 style="font-size:0.95rem; color:var(--navy); margin-bottom:0.5rem;">📚 CAFAT &amp; INRS</h3>
+            <div class="resource-item">
+              <strong>CAFAT</strong>
+              <span style="color:var(--muted);">Prévention des risques professionnels et supports pédagogiques (<a href="https://www.cafat.nc" target="_blank" rel="noopener" style="color:var(--lagoon); font-weight:600;">cafat.nc</a>).</span>
+            </div>
+            <div class="resource-item">
+              <strong>INRS</strong>
+              <span style="color:var(--muted);">Dispositifs de prévention et brochures de sécurité au travail (<a href="https://www.inrs.fr" target="_blank" rel="noopener" style="color:var(--lagoon); font-weight:600;">inrs.fr</a>).</span>
+            </div>
+          </div>
+
+          <!-- Contacts officiels (sans Jeunes et Toiles, prestataire uniquement en encart) -->
+          <div class="card" style="padding:1.25rem;">
+            <h3 style="font-size:0.95rem; color:var(--navy); margin-bottom:0.5rem;">✉️ Contacts officiels</h3>
+            <div class="contact-chip">
+              <div>
+                <strong style="display:block; font-size:0.76rem;">A.C.D.E.T.</strong>
+                <a href="mailto:acdetnc@gmail.com">acdetnc@gmail.com</a>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm" data-copy="acdetnc@gmail.com">Copier</button>
+            </div>
+            <div class="contact-chip">
+              <div>
+                <strong style="display:block; font-size:0.76rem;">MDF Partenariats</strong>
+                <a href="mailto:partenariats@mdf.nc">partenariats@mdf.nc</a>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm" data-copy="partenariats@mdf.nc">Copier</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         ONGLET 2 : ESPACE SUIVI & COMMISSION (CODE : ACDET2027)
+         ================================================================= -->
+    <section id="panel-suivi" class="panel">
+      <!-- Écran de verrouillage -->
+      <div id="lockCard" class="card auth-card">
+        <div style="font-size:2.2rem; margin-bottom:0.5rem;">🔐</div>
+        <h2 style="color:var(--navy); margin-bottom:0.35rem;">Espace Suivi &amp; Commission Paritaire</h2>
+        <p style="font-size:0.88rem; color:var(--muted);">
+          Accès sécurisé réservé aux représentants de l’<strong>A.C.D.E.T.</strong> et de la <strong>MDF</strong> (code requis : <code>ACDET2027</code>).
+        </p>
+        <div class="auth-input-group">
+          <input type="password" id="accessCodeInput" placeholder="Entrez le code 'ACDET2027'..." aria-label="Code d'accès" />
+          <button type="button" id="unlockBtn" class="btn btn-primary">Accéder</button>
+        </div>
+        <div id="authError" style="color:var(--err); font-size:0.83rem; font-weight:700; margin-top:0.6rem; display:none;"></div>
+        <div style="margin-top:1rem;">
+          <button type="button" id="hintCodeBtn" class="btn btn-outline btn-sm" style="font-size:0.76rem;">
+            🔑 Remplir le code (ACDET2027)
+          </button>
+        </div>
+      </div>
+
+      <!-- Tableau de bord déverrouillé -->
+      <div id="dashboardArea" style="display:none;">
+        <div class="kpi-grid">
+          <div class="kpi-box">
+            <div class="k-title">Quota annuel projets retenus</div>
+            <div class="k-num" id="kpiProjects">0 / 3</div>
+            <div class="k-sub" id="kpiProjectsSub">3 places disponibles sur l’exercice</div>
+            <div class="gauge-track"><div class="gauge-fill" id="gaugeProjects" style="width:0%;"></div></div>
+          </div>
+
+          <div class="kpi-box">
+            <div class="k-title">Enveloppe MDF engagée</div>
+            <div class="k-num" id="kpiBudget">0 F CFP</div>
+            <div class="k-sub" id="kpiBudgetSub">Sur 150 000 F CFP disponibles (50 000 F repère / projet)</div>
+            <div class="gauge-track"><div class="gauge-fill" id="gaugeBudget" style="width:0%;"></div></div>
+          </div>
+
+          <div class="kpi-box">
+            <div class="k-title">Dossiers déposés</div>
+            <div class="k-num" id="kpiTotal">0</div>
+            <div class="k-sub" id="kpiInstruction">0 en cours d’instruction</div>
+          </div>
+
+          <div class="kpi-box">
+            <div class="k-title">Justificatifs financiers reçus</div>
+            <div class="k-num" id="kpiJustif">0 / 0</div>
+            <div class="k-sub">Obligatoire après chaque action (Art. 4)</div>
+          </div>
+        </div>
+
+        <div class="table-toolbar">
+          <div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.6rem;">
+            <label for="statusFilter" style="font-size:0.85rem; font-weight:700; color:var(--navy);">Statut :</label>
+            <select id="statusFilter" style="width:auto; min-width:230px;">
+              <option value="ALL">Tous les dossiers</option>
+              <option value="EN_INSTRUCTION">En instruction</option>
+              <option value="ACCORD_TRIPARTITE">Accord tripartite validé</option>
+              <option value="REALISE_JUSTIF_OK">Action réalisée — Justificatif reçu</option>
+              <option value="REFUSE">Refusé</option>
+            </select>
+          </div>
+
+          <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+            <button type="button" id="loadSampleBtn" class="btn btn-outline btn-sm">📥 Charger exemples de test</button>
+            <button type="button" id="exportCsvBtn" class="btn btn-outline btn-sm">📊 Exporter CSV</button>
+            <button type="button" id="clearAllBtn" class="btn btn-outline btn-sm">🗑️ Vider le tableau</button>
+            <button type="button" id="lockBtn" class="btn btn-primary btn-sm">🔒 Verrouiller</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Référence</th>
+                <th>Établissement</th>
+                <th>Projet &amp; Thématiques</th>
+                <th>Coût / Aide MDF</th>
+                <th>Statut</th>
+                <th>Suivi Convention</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="dossiersTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         ONGLET 3 : LA CONVENTION & KIT VISIBILITÉ
+         ================================================================= -->
+    <section id="panel-convention" class="panel">
+      <div class="card" style="margin-bottom:1.5rem;">
+        <div class="card-header">
+          <h2>Synthèse de la Convention de Partenariat MDF × A.C.D.E.T.</h2>
+          <p>Signée à Nouméa le 10 novembre 2026 entre la Société Mutualiste des Fonctionnaires (MDF) et l’Association Calédonienne pour le Développement de l’Enseignement Technique (A.C.D.E.T.).</p>
+        </div>
+
+        <div class="articles-grid">
+          <div class="art-card">
+            <span class="art-num">Article 1 &amp; Préambule</span>
+            <h3>Objet &amp; Thématiques</h3>
+            <p>Soutien financier à <strong>3 événements ou actions maximum</strong> par exercice dans les établissements d’enseignement de Nouvelle-Calédonie sur les thèmes : <strong>Santé, Prévention, Bien-être et Sécurité</strong>.</p>
+          </div>
+
+          <div class="art-card">
+            <span class="art-num">Article 4</span>
+            <h3>Engagement financier (150 000 F CFP)</h3>
+            <p>Enveloppe annuelle maximale de <strong>150 000 F CFP</strong> pour 3 actions max (soit une aide repère de <strong>50 000 F CFP par projet</strong>). Justificatif financier obligatoire après l’action.</p>
+          </div>
+
+          <div class="art-card">
+            <span class="art-num">Article 6.1</span>
+            <h3>Validation graphique préalable</h3>
+            <p>Respect de la charte graphique et <strong>validation préalable obligatoire par email sous 7 jours ouvrés</strong> à <em>partenariats@mdf.nc</em> avant toute diffusion du logo MDF.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal d'instruction -->
+  <div id="detailModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid var(--line);">
+        <div>
+          <span id="modalRef" style="font-family:monospace; font-size:0.8rem; font-weight:800; color:var(--lagoon);"></span>
+          <h3 id="modalTitle" style="color:var(--navy); font-size:1.2rem; margin-top:0.2rem;"></h3>
+        </div>
+        <button type="button" id="closeModalBtn" class="btn btn-outline btn-sm">✕ Fermer</button>
+      </div>
+
+      <div id="modalBody" style="font-size:0.88rem;"></div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>A.C.D.E.T.</h4>
+          <p>Association Calédonienne pour le Développement de l’Enseignement Technique</p>
+          <p>Contact : <a href="mailto:acdetnc@gmail.com" style="color:#F4A261;">acdetnc@gmail.com</a></p>
+        </div>
+
+        <div>
+          <h4>MDF — Mutuelle Solidaire</h4>
+          <p>Société Mutualiste des Fonctionnaires et Agents des Services Publics</p>
+          <p>Contact : <a href="mailto:partenariats@mdf.nc" style="color:#F4A261;">partenariats@mdf.nc</a></p>
+        </div>
+
+        <div>
+          <h4>Dispositif Partenarial</h4>
+          <p>Soutien aux actions Santé, Prévention, Bien-être et Sécurité.</p>
+          <p>Enveloppe annuelle : 150 000 F CFP (3 actions max / 50 000 F CFP par projet).</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>Un grand merci pour toutes les actions menées au sein de vos établissements !</span>
+        <span>Portail A.C.D.E.T. × MDF</span>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = 'acdet_mdf_dossiers_2027_v3';
+      const AUTH_KEY = 'acdet_mdf_auth_2027';
+      const ACCESS_CODE = 'ACDET2027';
+      const STANDARD_AID = 50000;
+      const MAX_ANNUAL_ENVELOPE = 150000;
+      const MAX_ANNUAL_PROJECTS = 3;
+
+      let currentStep = 1;
+      let activeModalId = null;
+
+      function fmtCFP(val) {
+        return (Number(val) || 0).toLocaleString('fr-FR') + ' F CFP';
+      }
+
+      let toastTimer = null;
+      function showToast(msg) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove('show'), 3600);
+      }
+
+      function copyText(text, label) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => showToast(`📋 ${label} copié : ${text}`)).catch(() => fallbackCopy(text, label));
+        } else {
+          fallbackCopy(text, label);
+        }
+      }
+
+      function fallbackCopy(text, label) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast(`📋 ${label} copié : ${text}`);
+      }
+
+      function getDossiers() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? JSON.parse(raw) : [];
+        } catch (e) {
+          return [];
+        }
+      }
+
+      function saveDossiers(list) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        updateBadgeCount();
+      }
+
+      function updateBadgeCount() {
+        document.getElementById('navCount').textContent = getDossiers().length;
+      }
+
+      function switchTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+        document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + tabName));
+        if (tabName === 'suivi') {
+          checkAuth();
+        }
+      }
+
+      function goToStep(stepNum) {
+        if (stepNum > currentStep && !validateStep(currentStep)) {
+          return;
+        }
+        currentStep = stepNum;
+        document.getElementById('formError').style.display = 'none';
+
+        document.querySelectorAll('.form-step').forEach(fs => {
+          fs.classList.toggle('active', Number(fs.dataset.step) === currentStep);
+        });
+
+        document.querySelectorAll('.step-ind').forEach(ind => {
+          const s = Number(ind.dataset.step);
+          ind.classList.remove('active', 'done');
+          if (s === currentStep) ind.classList.add('active');
+          else if (s < currentStep) ind.classList.add('done');
+        });
+
+        if (currentStep === 6) {
+          buildRecapFinal();
+        }
+      }
+
+      function validateStep(step) {
+        const errBox = document.getElementById('formError');
+        errBox.style.display = 'none';
+        const stepEl = document.querySelector(`.form-step[data-step="${step}"]`);
+        stepEl.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+
+        const requiredInputs = Array.from(stepEl.querySelectorAll('[required]'));
+        for (const inp of requiredInputs) {
+          if (!inp.value.trim()) {
+            inp.classList.add('invalid');
+            inp.focus();
+            errBox.textContent = '⚠️ Merci de compléter tous les champs obligatoires marqués d’un astérisque (*).';
+            errBox.style.display = 'block';
+            return false;
+          }
+          if (inp.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value.trim())) {
+            inp.classList.add('invalid');
+            inp.focus();
+            errBox.textContent = '⚠️ Veuillez saisir une adresse courriel valide.';
+            errBox.style.display = 'block';
+            return false;
+          }
+        }
+
+        if (step === 2) {
+          const checkedThemes = stepEl.querySelectorAll('input[name="theme"]:checked');
+          if (checkedThemes.length === 0) {
+            errBox.textContent = '⚠️ Sélectionnez au moins une thématique.';
+            errBox.style.display = 'block';
+            return false;
+          }
+        }
+
+        if (step === 3) {
+          const cout = Number(document.getElementById('coutTotal').value) || 0;
+          const mdf = Number(document.getElementById('montantMdf').value) || 0;
+          const isDerog = document.getElementById('derogCheck').checked;
+          const maxAllowed = isDerog ? MAX_ANNUAL_ENVELOPE : STANDARD_AID;
+
+          if (mdf <= 0 || mdf > maxAllowed) {
+            document.getElementById('montantMdf').classList.add('invalid');
+            errBox.textContent = isDerog
+              ? '⚠️ L’aide MDF ne peut excéder l’enveloppe globale de 150 000 F CFP.'
+              : '⚠️ L’aide repère est de 50 000 F CFP par projet (cochez la demande dérogatoire si nécessaire).';
+            errBox.style.display = 'block';
+            return false;
+          }
+          if (mdf > cout) {
+            document.getElementById('montantMdf').classList.add('invalid');
+            errBox.textContent = '⚠️ L’aide demandée à la MDF ne peut pas dépasser le coût total du projet.';
+            errBox.style.display = 'block';
+            return false;
+          }
+          if (isDerog && !document.getElementById('derogReason').value.trim()) {
+            document.getElementById('derogReason').classList.add('invalid');
+            errBox.textContent = '⚠️ Veuillez motiver la demande dérogatoire.';
+            errBox.style.display = 'block';
+            return false;
+          }
+        }
+
+        if (step === 4) {
+          const vis = stepEl.querySelectorAll('input[name="visibilite"]:checked');
+          if (vis.length === 0) {
+            errBox.textContent = '⚠️ Veuillez sélectionner au moins une contrepartie de visibilité (Art. 3).';
+            errBox.style.display = 'block';
+            return false;
+          }
+        }
+
+        if (step === 5) {
+          const engItems = Array.from(document.querySelectorAll('.eng-item'));
+          if (!engItems.every(cb => cb.checked)) {
+            errBox.textContent = '⚠️ Veuillez cocher l’ensemble des 5 engagements réglementaires et éthiques.';
+            errBox.style.display = 'block';
+            return false;
+          }
+        }
+
+        return true;
+      }
+
+      function updateBudgetCalc() {
+        const cout = Number(document.getElementById('coutTotal').value) || 0;
+        const mdf = Number(document.getElementById('montantMdf').value) || 0;
+        const auto = Number(document.getElementById('autofinancement').value) || 0;
+        const autres = Number(document.getElementById('autresCofin').value) || 0;
+
+        const recettes = mdf + auto + autres;
+        const ecart = cout - recettes;
+
+        document.getElementById('calcDepenses').textContent = fmtCFP(cout);
+        document.getElementById('calcRecettes').textContent = fmtCFP(recettes);
+        document.getElementById('calcEcart').textContent = fmtCFP(Math.abs(ecart));
+
+        const statusEl = document.getElementById('budgetStatusMsg');
+        if (cout === 0) {
+          statusEl.className = 'budget-status ok';
+          statusEl.textContent = 'Saisissez le coût total du projet pour calculer l’écart budgétaire.';
+        } else if (ecart === 0) {
+          statusEl.className = 'budget-status ok';
+          statusEl.textContent = '✅ Budget parfaitement équilibré.';
+        } else if (ecart > 0) {
+          statusEl.className = 'budget-status warn';
+          statusEl.textContent = `ℹ️ Reste à financer : ${fmtCFP(ecart)}.`;
+        } else {
+          statusEl.className = 'budget-status err';
+          statusEl.textContent = `⚠️ Les ressources dépassent le coût total de ${fmtCFP(Math.abs(ecart))}.`;
+        }
+      }
+
+      function buildRecapFinal() {
+        const themes = Array.from(document.querySelectorAll('input[name="theme"]:checked')).map(c => c.value).join(', ');
+        const etab = document.getElementById('etabNom').value.trim() || 'Non renseigné';
+        const titre = document.getElementById('projTitre').value.trim() || 'Non renseigné';
+        const cout = fmtCFP(document.getElementById('coutTotal').value);
+        const mdf = fmtCFP(document.getElementById('montantMdf').value);
+        const porteur = document.getElementById('porteurNom').value.trim() || 'Non renseigné';
+
+        document.getElementById('recapBoxFinal').innerHTML = `
+          <strong style="color:var(--navy); display:block; margin-bottom:0.4rem;">📋 Récapitulatif avant validation finale :</strong>
+          <div>• <strong>Établissement :</strong> ${etab} (${document.getElementById('etabCommune').value})</div>
+          <div>• <strong>Porteur :</strong> ${porteur} (${document.getElementById('porteurFonction').value})</div>
+          <div>• <strong>Projet :</strong> ${titre}</div>
+          <div>• <strong>Thématiques :</strong> ${themes}</div>
+          <div>• <strong>Budget :</strong> Coût total ${cout} — <strong>Aide MDF sollicitée : ${mdf}</strong></div>
+          <div>• <strong>Engagements :</strong> 5 / 5 validés (Règlementaire, éthique, assurance RC, visibilité 7j, justificatifs)</div>
+        `;
+      }
+
+      function fillVideoExample() {
+        switchTab('depot');
+        document.getElementById('projTitre').value = 'Capsules vidéo de sensibilisation à la sécurité au travail (Jeunes et Toiles)';
+        document.querySelectorAll('input[name="theme"]').forEach(cb => {
+          cb.checked = (cb.value === 'Prévention' || cb.value === 'Sécurité');
+        });
+        document.getElementById('publicCible').value = 'Élèves de Bac Pro / CAP';
+        document.getElementById('nbEleves').value = 30;
+        const d = new Date();
+        d.setDate(d.getDate() + 45);
+        document.getElementById('datePrevue').value = d.toISOString().split('T')[0];
+        document.getElementById('projDesc').value =
+          'Projet de réalisation de capsules vidéo de prévention des risques professionnels avec l’association Jeunes et Toiles (contact: hsinger.cinema@gmail.com). Déroulement en 5 phases : présentation, écriture, tournage, montage CapCut et visionnage.';
+        document.getElementById('projPartenaires').value = 'Association Jeunes et Toiles (hsinger.cinema@gmail.com), CAFAT, INRS';
+
+        document.getElementById('coutTotal').value = 231000;
+        document.getElementById('derogCheck').checked = false;
+        document.getElementById('derogReasonWrap').style.display = 'none';
+        document.getElementById('montantMdf').value = 50000;
+        document.getElementById('autofinancement').value = 81000;
+        document.getElementById('autresCofin').value = 100000;
+        document.getElementById('benefVersement').value = 'L\'établissement scolaire concerné';
+        document.getElementById('detailDepenses').value = 'Interventions et matériel audiovisuel (Devis Jeunes et Toiles)';
+        updateBudgetCalc();
+
+        showToast('✨ Exemple « Jeunes et Toiles » chargé dans le formulaire.');
+      }
+
+      function applyQuickPreset(key) {
+        const presets = {
+          forum: {
+            titre: 'Forum Santé, Nutrition & Prévention des Addictions',
+            themes: ['Santé', 'Prévention'],
+            public: 'Élèves de Seconde',
+            nb: 120,
+            desc: 'Journée d’ateliers de prévention santé, hygiène de vie et sommeil.',
+            partenaires: 'Professionnels de santé scolaire',
+            cout: 85000,
+            auto: 35000,
+            autres: 0,
+            dep: 'Supports pédagogiques et ateliers'
+          },
+          postures: {
+            titre: 'Ateliers Postures, Gestes & Prévention TMS (INRS)',
+            themes: ['Prévention', 'Sécurité'],
+            public: 'Filières industrielles et BTP',
+            nb: 70,
+            desc: 'Sensibilisation aux troubles musculo-squelettiques et EPI en atelier.',
+            partenaires: 'Service Prévention CAFAT / INRS',
+            cout: 75000,
+            auto: 25000,
+            autres: 0,
+            dep: 'Matériel ergonomique et brochures'
+          },
+          bienetre: {
+            titre: 'Semaine Bien-être & Gestion du Stress aux Examens',
+            themes: ['Bien-être', 'Santé'],
+            public: 'Classes de Terminale',
+            nb: 100,
+            desc: 'Ateliers de relaxation et gestion du stress avant les examens.',
+            partenaires: 'Infirmerie et professeurs EPS',
+            cout: 65000,
+            auto: 15000,
+            autres: 0,
+            dep: 'Interventions et documentation'
+          }
+        };
+
+        const p = presets[key];
+        if (!p) return;
+        document.getElementById('projTitre').value = p.titre;
+        document.querySelectorAll('input[name="theme"]').forEach(cb => {
+          cb.checked = p.themes.includes(cb.value);
+        });
+        document.getElementById('publicCible').value = p.public;
+        document.getElementById('nbEleves').value = p.nb;
+        const d = new Date();
+        d.setDate(d.getDate() + 30);
+        document.getElementById('datePrevue').value = d.toISOString().split('T')[0];
+        document.getElementById('projDesc').value = p.desc;
+        document.getElementById('projPartenaires').value = p.partenaires;
+        document.getElementById('coutTotal').value = p.cout;
+        document.getElementById('derogCheck').checked = false;
+        document.getElementById('derogReasonWrap').style.display = 'none';
+        document.getElementById('montantMdf').value = 50000;
+        document.getElementById('autofinancement').value = p.auto;
+        document.getElementById('autresCofin').value = p.autres;
+        document.getElementById('detailDepenses').value = p.dep;
+        updateBudgetCalc();
+        showToast('✨ Trame pré-remplie !');
+      }
+
+      function handleFormSubmit(e) {
+        e.preventDefault();
+        if (!validateStep(6)) return;
+
+        const list = getDossiers();
+        const ref = `MDF-ACDET-2027-${String(list.length + 1).padStart(4, '0')}`;
+        const themes = Array.from(document.querySelectorAll('input[name="theme"]:checked')).map(c => c.value);
+        const visibilite = Array.from(document.querySelectorAll('input[name="visibilite"]:checked')).map(c => c.value);
+        const visAutre = document.getElementById('visibiliteAutre').value.trim();
+        if (visAutre) visibilite.push(visAutre);
+
+        const dossier = {
+          id: ref,
+          dateDepot: new Date().toLocaleDateString('fr-FR'),
+          etabNom: document.getElementById('etabNom').value.trim(),
+          etabCommune: document.getElementById('etabCommune').value,
+          porteurNom: document.getElementById('porteurNom').value.trim(),
+          porteurFonction: document.getElementById('porteurFonction').value.trim(),
+          porteurEmail: document.getElementById('porteurEmail').value.trim(),
+          porteurTel: document.getElementById('porteurTel').value.trim(),
+          chefEtab: document.getElementById('chefEtab').value.trim(),
+          projTitre: document.getElementById('projTitre').value.trim(),
+          themes,
+          publicCible: document.getElementById('publicCible').value.trim(),
+          nbEleves: Number(document.getElementById('nbEleves').value) || 0,
+          datePrevue: document.getElementById('datePrevue').value,
+          projDesc: document.getElementById('projDesc').value.trim(),
+          projPartenaires: document.getElementById('projPartenaires').value.trim(),
+          coutTotal: Number(document.getElementById('coutTotal').value) || 0,
+          montantMdfDemande: Number(document.getElementById('montantMdf').value) || 0,
+          montantMdfAccorde: Number(document.getElementById('montantMdf').value) || 0,
+          derogation: document.getElementById('derogCheck').checked,
+          derogReason: document.getElementById('derogReason').value.trim(),
+          autofinancement: Number(document.getElementById('autofinancement').value) || 0,
+          autresCofin: Number(document.getElementById('autresCofin').value) || 0,
+          benefVersement: document.getElementById('benefVersement').value,
+          detailDepenses: document.getElementById('detailDepenses').value.trim(),
+          visibilite,
+          statut: 'EN_INSTRUCTION',
+          steps: {
+            accordAcdet: false,
+            accordMdf: false,
+            visuels7j: false,
+            versementOk: false,
+            justificatifRecu: false
+          },
+          notesCommission: ''
+        };
+
+        list.unshift(dossier);
+        saveDossiers(list);
+
+        document.getElementById('createdRef').textContent = ref;
+        const subject = encodeURIComponent(`[Candidature A.C.D.E.T. x MDF] ${ref} — ${dossier.etabNom}`);
+        const body = encodeURIComponent(
+          `Bonjour,\n\nVeuillez trouver ci-dessous le dossier de candidature soumis :\n\n` +
+          `Référence : ${ref}\n` +
+          `Établissement : ${dossier.etabNom} (${dossier.etabCommune})\n` +
+          `Porteur : ${dossier.porteurNom} (${dossier.porteurFonction}) — ${dossier.porteurTel}\n` +
+          `Projet : ${dossier.projTitre}\n` +
+          `Aide MDF demandée : ${fmtCFP(dossier.montantMdfDemande)}\n\n` +
+          `Cordialement,\n${dossier.porteurNom}`
+        );
+        document.getElementById('mailtoSubmitBtn').href = `mailto:acdetnc@gmail.com,partenariats@mdf.nc,hsinger.cinema@gmail.com?subject=${subject}&body=${body}`;
+
+        document.getElementById('formContainer').style.display = 'none';
+        document.getElementById('successPanel').style.display = 'block';
+        showToast(`✅ Dossier ${ref} créé avec succès !`);
+      }
+
+      function checkAuth() {
+        const unlocked = sessionStorage.getItem(AUTH_KEY) === 'true';
+        document.getElementById('lockCard').style.display = unlocked ? 'none' : 'block';
+        document.getElementById('dashboardArea').style.display = unlocked ? 'block' : 'none';
+        if (unlocked) {
+          renderDashboard();
+        }
+      }
+
+      function tryUnlock() {
+        const val = document.getElementById('accessCodeInput').value.trim().toUpperCase();
+        const errEl = document.getElementById('authError');
+        if (val === ACCESS_CODE) {
+          sessionStorage.setItem(AUTH_KEY, 'true');
+          errEl.style.display = 'none';
+          document.getElementById('accessCodeInput').value = '';
+          checkAuth();
+          showToast('🔓 Espace Suivi déverrouillé.');
+        } else {
+          errEl.textContent = '❌ Code incorrect. Utilisez ACDET2027.';
+          errEl.style.display = 'block';
+        }
+      }
+
+      function getStatusBadge(st) {
+        switch (st) {
+          case 'ACCORD_TRIPARTITE':
+            return '<span class="pill pill-ok">✅ Accord tripartite validé</span>';
+          case 'REALISE_JUSTIF_OK':
+            return '<span class="pill pill-done">📁 Réalisé — Justificatif OK</span>';
+          case 'REFUSE':
+            return '<span class="pill pill-ko">✕ Refusé</span>';
+          default:
+            return '<span class="pill pill-inst">⏳ En instruction</span>';
+        }
+      }
+
+      function renderDashboard() {
+        const all = getDossiers();
+        const filter = document.getElementById('statusFilter').value;
+
+        const retenus = all.filter(d => d.statut === 'ACCORD_TRIPARTITE' || d.statut === 'REALISE_JUSTIF_OK');
+        const enInstruction = all.filter(d => d.statut === 'EN_INSTRUCTION');
+        const justifsOk = retenus.filter(d => d.steps && d.steps.justificatifRecu);
+
+        const budgetEngage = retenus.reduce((sum, d) => sum + (Number(d.montantMdfAccorde) || 0), 0);
+        const budgetRestant = Math.max(0, MAX_ANNUAL_ENVELOPE - budgetEngage);
+
+        document.getElementById('kpiProjects').textContent = `${retenus.length} / ${MAX_ANNUAL_PROJECTS}`;
+        document.getElementById('kpiProjectsSub').textContent = retenus.length >= MAX_ANNUAL_PROJECTS
+          ? 'Quota atteint (3 projets max)'
+          : `${MAX_ANNUAL_PROJECTS - retenus.length} place(s) disponible(s)`;
+        document.getElementById('gaugeProjects').style.width = Math.min(100, (retenus.length / MAX_ANNUAL_PROJECTS) * 100) + '%';
+
+        document.getElementById('kpiBudget').textContent = fmtCFP(budgetEngage);
+        document.getElementById('kpiBudgetSub').textContent = `Reste : ${fmtCFP(budgetRestant)} sur 150 000 F`;
+        document.getElementById('gaugeBudget').style.width = Math.min(100, (budgetEngage / MAX_ANNUAL_ENVELOPE) * 100) + '%';
+
+        document.getElementById('kpiTotal').textContent = all.length;
+        document.getElementById('kpiInstruction').textContent = `${enInstruction.length} en instruction`;
+
+        document.getElementById('kpiJustif').textContent = `${justifsOk.length} / ${retenus.length}`;
+
+        const filtered = filter === 'ALL' ? all : all.filter(d => d.statut === filter);
+        const tbody = document.getElementById('dossiersTbody');
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" style="text-align:center; padding:2.25rem; color:var(--muted);">
+                Aucun dossier enregistré pour le moment.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = filtered.map(d => {
+          const s = d.steps || {};
+          const checksSummary = [
+            s.accordAcdet ? 'A.C.D.E.T. ✓' : 'A.C.D.E.T. ·',
+            s.accordMdf ? 'MDF ✓' : 'MDF ·',
+            s.visuels7j ? 'Logo 7j ✓' : 'Logo 7j ·',
+            s.justificatifRecu ? 'Justif ✓' : 'Justif ·'
+          ].join(' | ');
+
+          return `
+            <tr>
+              <td><strong style="font-family:monospace; color:var(--navy);">${d.id}</strong><br><span style="font-size:0.75rem; color:var(--muted);">${d.dateDepot}</span></td>
+              <td><strong>${d.etabNom}</strong><br><span style="font-size:0.78rem; color:var(--muted);">${d.etabCommune}</span></td>
+              <td><strong>${d.projTitre}</strong><br><span style="font-size:0.78rem; color:var(--lagoon); font-weight:600;">${(d.themes || []).join(', ')}</span></td>
+              <td><span style="font-size:0.78rem; color:var(--muted);">Total : ${fmtCFP(d.coutTotal)}</span><br><strong style="color:var(--navy);">MDF : ${fmtCFP(d.montantMdfAccorde)}</strong></td>
+              <td>${getStatusBadge(d.statut)}</td>
+              <td style="font-size:0.76rem; color:var(--muted); font-weight:600;">${checksSummary}</td>
+              <td>
+                <button type="button" class="btn btn-primary btn-sm" onclick="openDossierModal('${d.id}')">Instruire</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      window.openDossierModal = function (id) {
+        const list = getDossiers();
+        const d = list.find(item => item.id === id);
+        if (!d) return;
+        activeModalId = id;
+
+        document.getElementById('modalRef').textContent = `${d.id} • Déposé le ${d.dateDepot}`;
+        document.getElementById('modalTitle').textContent = `${d.etabNom} — ${d.projTitre}`;
+
+        const s = d.steps || {};
+        document.getElementById('modalBody').innerHTML = `
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:0.75rem; background:#F8FAFC; padding:0.9rem; border-radius:12px; margin-bottom:1rem;">
+            <div><strong>Porteur :</strong> ${d.porteurNom} (${d.porteurFonction})</div>
+            <div><strong>Contact :</strong> ${d.porteurEmail} • ${d.porteurTel}</div>
+            <div><strong>Chef d’établissement :</strong> ${d.chefEtab}</div>
+            <div><strong>Public &amp; Date :</strong> ${d.publicCible} (${d.nbEleves} él.) • ${d.datePrevue}</div>
+          </div>
+
+          <p style="margin-bottom:0.75rem;"><strong>Description :</strong> ${d.projDesc}</p>
+          <p style="margin-bottom:0.75rem;"><strong>Partenaires :</strong> ${d.projPartenaires || 'Non précisé'}</p>
+          <p style="margin-bottom:1rem;"><strong>Plan de financement :</strong> Coût total <strong>${fmtCFP(d.coutTotal)}</strong> | Demandé MDF : <strong>${fmtCFP(d.montantMdfDemande)}</strong><br>
+          <strong>Bénéficiaire versement (Art. 4) :</strong> ${d.benefVersement}</p>
+
+          <div style="border-top:1px solid var(--line); padding-top:1rem; margin-top:1rem;">
+            <h4 style="color:var(--navy); margin-bottom:0.75rem;">Décision tripartite &amp; suivi</h4>
+            <div class="grid-2">
+              <div class="field">
+                <label class="lbl" for="modStatut">Statut du dossier</label>
+                <select id="modStatut">
+                  <option value="EN_INSTRUCTION" ${d.statut === 'EN_INSTRUCTION' ? 'selected' : ''}>⏳ En instruction</option>
+                  <option value="ACCORD_TRIPARTITE" ${d.statut === 'ACCORD_TRIPARTITE' ? 'selected' : ''}>✅ Accord tripartite validé</option>
+                  <option value="REALISE_JUSTIF_OK" ${d.statut === 'REALISE_JUSTIF_OK' ? 'selected' : ''}>📁 Action réalisée — Justificatif reçu</option>
+                  <option value="REFUSE" ${d.statut === 'REFUSE' ? 'selected' : ''}>✕ Refusé</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="lbl" for="modMontant">Montant attribué MDF (F CFP — Art. 4)</label>
+                <input type="number" id="modMontant" min="0" max="150000" step="500" value="${d.montantMdfAccorde}" />
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr)); gap:0.5rem; margin:0.75rem 0;">
+              <label class="chk-card" style="margin:0;"><input type="checkbox" id="chkAcdet" ${s.accordAcdet ? 'checked' : ''}> Avis favorable A.C.D.E.T.</label>
+              <label class="chk-card" style="margin:0;"><input type="checkbox" id="chkMdf" ${s.accordMdf ? 'checked' : ''}> Validation MDF</label>
+              <label class="chk-card" style="margin:0;"><input type="checkbox" id="chkVis7j" ${s.visuels7j ? 'checked' : ''}> Validation visuels 7j (Art. 6.1)</label>
+              <label class="chk-card" style="margin:0;"><input type="checkbox" id="chkVersement" ${s.versementOk ? 'checked' : ''}> Versement effectué</label>
+              <label class="chk-card" style="margin:0;"><input type="checkbox" id="chkJustif" ${s.justificatifRecu ? 'checked' : ''}> Justificatif financier reçu (Art. 4)</label>
+            </div>
+
+            <div class="field">
+              <label class="lbl" for="modNotes">Observations / Notes de commission</label>
+              <textarea id="modNotes" style="min-height:65px;" placeholder="Notes internes...">${d.notesCommission || ''}</textarea>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; gap:0.75rem; margin-top:1rem;">
+              <button type="button" class="btn btn-outline btn-sm" style="color:var(--err);" onclick="deleteDossier('${d.id}')">🗑️ Supprimer</button>
+              <button type="button" class="btn btn-lagoon" onclick="saveModalChanges()">💾 Enregistrer</button>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('detailModal').classList.add('open');
+      };
+
+      window.saveModalChanges = function () {
+        const list = getDossiers();
+        const idx = list.findIndex(item => item.id === activeModalId);
+        if (idx === -1) return;
+
+        const newStatut = document.getElementById('modStatut').value;
+        const newMontant = Number(document.getElementById('modMontant').value) || 0;
+
+        const otherRetenus = list.filter((item, i) => i !== idx && (item.statut === 'ACCORD_TRIPARTITE' || item.statut === 'REALISE_JUSTIF_OK'));
+        if ((newStatut === 'ACCORD_TRIPARTITE' || newStatut === 'REALISE_JUSTIF_OK') && otherRetenus.length >= MAX_ANNUAL_PROJECTS) {
+          showToast('⚠️ Quota annuel atteint (3 projets max).');
+          return;
+        }
+
+        list[idx].statut = newStatut;
+        list[idx].montantMdfAccorde = newMontant;
+        list[idx].steps = {
+          accordAcdet: document.getElementById('chkAcdet').checked,
+          accordMdf: document.getElementById('chkMdf').checked,
+          visuels7j: document.getElementById('chkVis7j').checked,
+          versementOk: document.getElementById('chkVersement').checked,
+          justificatifRecu: document.getElementById('chkJustif').checked
+        };
+        list[idx].notesCommission = document.getElementById('modNotes').value.trim();
+
+        saveDossiers(list);
+        document.getElementById('detailModal').classList.remove('open');
+        renderDashboard();
+        showToast('✅ Modifications enregistrées.');
+      };
+
+      window.deleteDossier = function (id) {
+        const list = getDossiers().filter(item => item.id !== id);
+        saveDossiers(list);
+        document.getElementById('detailModal').classList.remove('open');
+        renderDashboard();
+        showToast('🗑️ Dossier supprimé.');
+      };
+
+      function loadSampleDossiers() {
+        const samples = [
+          {
+            id: 'MDF-ACDET-2027-0001',
+            dateDepot: '18/11/2026',
+            etabNom: 'Lycée Professionnel Commercial et Hôtelier Auguste Escoffier',
+            etabCommune: 'Nouméa (Province Sud)',
+            porteurNom: 'Mme Nathalie WAHETRA',
+            porteurFonction: 'Infirmière scolaire',
+            porteurEmail: 'nathalie.wahetra@ac-noumea.nc',
+            porteurTel: '24.18.90',
+            chefEtab: 'M. Laurent MERCIER',
+            projTitre: 'Journée Prévention Santé, Sommeil & Nutrition',
+            themes: ['Santé', 'Prévention', 'Bien-être'],
+            publicCible: 'Classes de Seconde Bac Pro',
+            nbEleves: 140,
+            datePrevue: '2027-04-15',
+            projDesc: 'Ateliers sur l’alimentation équilibrée, le sommeil et la prévention des risques.',
+            projPartenaires: 'Professionnels de santé NC',
+            coutTotal: 85000,
+            montantMdfDemande: 50000,
+            montantMdfAccorde: 50000,
+            derogation: false,
+            autofinancement: 35000,
+            autresCofin: 0,
+            benefVersement: 'L\'établissement scolaire concerné',
+            detailDepenses: 'Supports pédagogiques et ateliers',
+            visibilite: ['Apposition du logo MDF'],
+            statut: 'ACCORD_TRIPARTITE',
+            steps: { accordAcdet: true, accordMdf: true, visuels7j: true, versementOk: true, justificatifRecu: false },
+            notesCommission: 'Accord tripartite validé.'
+          }
+        ];
+        saveDossiers(samples);
+        renderDashboard();
+        showToast('📥 Dossiers de démonstration chargés.');
+      }
+
+      function exportCSV() {
+        const list = getDossiers();
+        if (list.length === 0) {
+          showToast('Aucun dossier à exporter.');
+          return;
+        }
+        const headers = ['Reference', 'Date', 'Etablissement', 'Commune', 'Projet', 'Themes', 'Cout_Total_CFP', 'Aide_MDF_CFP', 'Statut'];
+        const rows = list.map(d => [
+          d.id,
+          d.dateDepot,
+          `"${(d.etabNom || '').replace(/"/g, '""')}"`,
+          `"${(d.etabCommune || '').replace(/"/g, '""')}"`,
+          `"${(d.projTitre || '').replace(/"/g, '""')}"`,
+          `"${(d.themes || []).join(' / ')}"`,
+          d.coutTotal,
+          d.montantMdfAccorde,
+          d.statut
+        ]);
+        const csv = '\uFEFF' + [headers.join(';'), ...rows.map(r => r.join(';'))].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Suivi-Partenariat-ACDET-MDF.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('📊 Export CSV téléchargé.');
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        updateBadgeCount();
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+        });
+
+        document.querySelectorAll('[data-next]').forEach(btn => {
+          btn.addEventListener('click', () => goToStep(Number(btn.dataset.next)));
+        });
+        document.querySelectorAll('[data-prev]').forEach(btn => {
+          btn.addEventListener('click', () => goToStep(Number(btn.dataset.prev)));
+        });
+        document.querySelectorAll('.step-ind').forEach(ind => {
+          ind.addEventListener('click', () => {
+            const target = Number(ind.dataset.step);
+            if (target <= currentStep) goToStep(target);
+          });
+        });
+
+        document.getElementById('derogCheck').addEventListener('change', (e) => {
+          const wrap = document.getElementById('derogReasonWrap');
+          const mdfInput = document.getElementById('montantMdf');
+          const hint = document.getElementById('mdfCapHint');
+          if (e.target.checked) {
+            wrap.style.display = 'block';
+            mdfInput.max = MAX_ANNUAL_ENVELOPE;
+            hint.textContent = 'Demande dérogatoire activée (plafond max. 150 000 F CFP).';
+          } else {
+            wrap.style.display = 'none';
+            mdfInput.max = STANDARD_AID;
+            if (Number(mdfInput.value) > STANDARD_AID) mdfInput.value = STANDARD_AID;
+            hint.textContent = 'Plafond standard : 50 000 F CFP par projet.';
+          }
+          updateBudgetCalc();
+        });
+
+        ['coutTotal', 'montantMdf', 'autofinancement', 'autresCofin'].forEach(id => {
+          document.getElementById(id).addEventListener('input', updateBudgetCalc);
+        });
+        updateBudgetCalc();
+
+        const chkAll = document.getElementById('chkAll');
+        const engItems = Array.from(document.querySelectorAll('.eng-item'));
+        chkAll.addEventListener('change', () => {
+          engItems.forEach(cb => { cb.checked = chkAll.checked; });
+        });
+        engItems.forEach(cb => {
+          cb.addEventListener('change', () => {
+            chkAll.checked = engItems.every(i => i.checked);
+            chkAll.indeterminate = !chkAll.checked && engItems.some(i => i.checked);
+          });
+        });
+
+        document.getElementById('candidatureForm').addEventListener('submit', handleFormSubmit);
+        document.getElementById('printRecapBtn').addEventListener('click', () => window.print());
+        document.getElementById('newDossierBtn').addEventListener('click', () => {
+          document.getElementById('candidatureForm').reset();
+          document.getElementById('montantMdf').value = 50000;
+          document.getElementById('derogReasonWrap').style.display = 'none';
+          chkAll.indeterminate = false;
+          updateBudgetCalc();
+          currentStep = 1;
+          goToStep(1);
+          document.getElementById('successPanel').style.display = 'none';
+          document.getElementById('formContainer').style.display = 'block';
+        });
+
+        document.getElementById('fillVideoIdeaBtn').addEventListener('click', fillVideoExample);
+        document.querySelectorAll('[data-preset]').forEach(btn => {
+          btn.addEventListener('click', () => applyQuickPreset(btn.dataset.preset));
+        });
+        document.querySelectorAll('[data-copy]').forEach(btn => {
+          btn.addEventListener('click', () => copyText(btn.dataset.copy, 'Courriel'));
+        });
+
+        document.getElementById('unlockBtn').addEventListener('click', tryUnlock);
+        document.getElementById('accessCodeInput').addEventListener('keydown', e => {
+          if (e.key === 'Enter') { e.preventDefault(); tryUnlock(); }
+        });
+        document.getElementById('hintCodeBtn').addEventListener('click', () => {
+          document.getElementById('accessCodeInput').value = ACCESS_CODE;
+          showToast('🔑 Code ACDET2027 pré-saisi.');
+        });
+        document.getElementById('lockBtn').addEventListener('click', () => {
+          sessionStorage.removeItem(AUTH_KEY);
+          checkAuth();
+          showToast('🔒 Espace verrouillé.');
+        });
+
+        document.getElementById('statusFilter').addEventListener('change', renderDashboard);
+        document.getElementById('loadSampleBtn').addEventListener('click', loadSampleDossiers);
+        document.getElementById('exportCsvBtn').addEventListener('click', exportCSV);
+        document.getElementById('clearAllBtn').addEventListener('click', () => {
+          saveDossiers([]);
+          renderDashboard();
+          showToast('🗑️ Tableau réinitialisé.');
+        });
+
+        document.getElementById('closeModalBtn').addEventListener('click', () => {
+          document.getElementById('detailModal').classList.remove('open');
+        });
+        document.getElementById('detailModal').addEventListener('click', e => {
+          if (e.target.id === 'detailModal') {
+            document.getElementById('detailModal').classList.remove('open');
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
