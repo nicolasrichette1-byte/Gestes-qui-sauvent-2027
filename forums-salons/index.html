@@ -892,7 +892,7 @@ th { background: var(--chip); font-weight: 700; color: var(--pri2); }
         <div>
           <h2>Espace de Gestion Organisateur</h2>
           <p class="hint" style="margin:0;">Suivi des inscriptions exposants & validation des événements scolaires</p>
-        <p class="hint" style="margin:4px 0 0;">Les inscriptions et les événements sont conservés dans ce navigateur, sur cet appareil. Rien n'est envoyé automatiquement : après chaque séance, pensez à l'export CSV pour partager le suivi, et gardez une sauvegarde.</p>
+        <p class="hint" style="margin:4px 0 0;">La liste des événements est commune : chacun publie et tout le monde la voit. Les inscriptions exposants (coordonnées personnelles) restent enregistrées dans ce navigateur, sur cet appareil — exportez le CSV après chaque séance pour partager le suivi.</p>
         </div>
         <div>
           <button class="btn sm" onclick="exportDataCSV()">⬇️ Exporter en CSV</button>
@@ -1269,6 +1269,38 @@ function loadForumData() {
   } catch (e) { return false; }
 }
 
+// Liste commune des événements (base gratuite Supabase du projet, table clé/valeur "coordination")
+// Les événements publiés par chaque établissement apparaissent pour tous. Les inscriptions exposants,
+// qui contiennent des coordonnées personnelles, restent enregistrées uniquement dans le navigateur local.
+const SB_URL = 'https://xyrvjilfbbnucmocacek.supabase.co';
+const SB_KEY = 'sb_publishable_ymyeN1YlxpYev6LAQq56DA_8rOcz2vP';
+const CLOUD_KEY = 'forum_events_v1';
+
+async function cloudReadEvents() {
+  const r = await fetch(SB_URL + '/rest/v1/coordination?select=data&key=eq.' + CLOUD_KEY, { headers: { 'apikey': SB_KEY } });
+  if (!r.ok) throw new Error('http ' + r.status);
+  const a = await r.json();
+  return (a.length && a[0].data && Array.isArray(a[0].data.list)) ? a[0].data.list : [];
+}
+async function cloudWriteEvents(list) {
+  const r = await fetch(SB_URL + '/rest/v1/coordination?on_conflict=key', {
+    method: 'POST',
+    headers: { 'apikey': SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+    body: JSON.stringify({ key: CLOUD_KEY, data: { list } })
+  });
+  if (!r.ok) throw new Error('http ' + r.status);
+}
+async function cloudAddEvent(ev) {
+  const cloud = await cloudReadEvents();
+  const list = cloud.filter(x => x.id != ev.id);
+  list.unshift(ev);
+  await cloudWriteEvents(list);
+}
+async function cloudRemoveEvent(id) {
+  const cloud = await cloudReadEvents();
+  await cloudWriteEvents(cloud.filter(x => x.id != id));
+}
+
 // Soumission Formulaire Exposant
 function handleExposantSubmit(e) {
   e.preventDefault();
@@ -1310,7 +1342,7 @@ function handleExposantSubmit(e) {
 }
 
 // Soumission Formulaire Proposer un Événement
-function handleEventSubmit(e) {
+async function handleEventSubmit(e) {
   e.preventDefault();
 
   const title = document.getElementById('ev_title').value.trim();
@@ -1353,7 +1385,14 @@ function handleEventSubmit(e) {
   saveForumData();
   filterEvents();
 
-  alert(`🚀 Votre événement "${title}" a été publié avec succès sur le portail !`);
+  let cloudNote = '';
+  try {
+    await cloudAddEvent(newEv);
+    cloudNote = ' Il apparaît immédiatement dans la liste commune : tout le monde le voit.';
+  } catch (err) {
+    cloudNote = ' La liste commune est momentanément indisponible : il reste bien enregistré sur cet appareil. Réessayez plus tard.';
+  }
+  alert(`🚀 Votre événement "${title}" est enregistré sur le portail !${cloudNote}`);
   document.getElementById('formEvent').reset();
   switchTab('agenda');
 }
@@ -1408,6 +1447,7 @@ function deleteEvent(id) {
     saveForumData();
     filterEvents();
     renderAdminTables();
+    cloudRemoveEvent(id).catch(() => {});
   }
 }
 
@@ -1426,8 +1466,19 @@ function exportDataCSV() {
 }
 
 // Initialisation au chargement : reprise des données conservées, sinon création du premier enregistrement
-window.onload = function() {
+window.onload = async function() {
   if (!loadForumData()) saveForumData();
+  try {
+    const cloud = await cloudReadEvents();
+    const examples = eventsData.filter(ev => ev.example);
+    const localReal = eventsData.filter(ev => !ev.example);
+    const inCloud = new Set(cloud.map(ev => String(ev.id)));
+    const missing = localReal.filter(ev => !inCloud.has(String(ev.id)));
+    const merged = missing.length ? cloud.concat(missing) : cloud;
+    eventsData = examples.concat(merged);
+    saveForumData();
+    if (missing.length) cloudWriteEvents(merged).catch(() => {});
+  } catch (e) { /* pas de connexion : la page reste utilisable en local */ }
   renderEvents(eventsData);
   renderAdminTables();
 };
