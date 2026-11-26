@@ -1,0 +1,1281 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Code Prévention</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap">
+<style>
+/* Concept : un code de la route de la prévention. Panneaux ISO (rond bleu, triangle jaune, carré vert) comme repères de chaque module. */
+:root{
+  --bg:#ECEFF1; --surface:#FFFFFF; --surface-2:#F5F7F8; --ink:#12202B; --muted:#55656F; --line:#D2D9DE;
+  --green:#0B7A4B; --green-ink:#FFFFFF; --green-soft:#DDF1E7;
+  --blue:#1B5FA8; --red:#C62828; --red-soft:#FBE4E4; --yellow:#F2B705;
+  --sign-white:#FFFFFF; --sign-dark:#14191D;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --text:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E161C; --surface:#15202A; --surface-2:#1B2833; --ink:#E8EEF2; --muted:#9AAAB6; --line:#27394A;
+    --green:#3FBF88; --green-ink:#06231A; --green-soft:#12332A;
+    --blue:#5E9FE3; --red:#F07070; --red-soft:#3A1C1F; --yellow:#F5C842;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E161C; --surface:#15202A; --surface-2:#1B2833; --ink:#E8EEF2; --muted:#9AAAB6; --line:#27394A;
+  --green:#3FBF88; --green-ink:#06231A; --green-soft:#12332A;
+  --blue:#5E9FE3; --red:#F07070; --red-soft:#3A1C1F; --yellow:#F5C842;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--text); font-size:17px; line-height:1.5;
+  padding-block:0 48px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap{max-width:880px; margin:0 auto}
+h1,h2,h3{font-family:var(--display); line-height:1.08; margin:0; text-wrap:balance; letter-spacing:.005em}
+h1{font-size:clamp(34px,7vw,52px); font-weight:700; text-transform:uppercase}
+h2{font-size:25px; font-weight:600}
+p{margin:0}
+button{font:inherit; color:inherit; cursor:pointer}
+:focus-visible{outline:3px solid var(--blue); outline-offset:2px}
+
+.top{display:flex; align-items:center; gap:12px; padding:18px 0 14px; border-bottom:1px solid var(--line); margin-bottom:22px}
+.brand{font-family:var(--display); font-weight:700; font-size:22px; text-transform:uppercase; letter-spacing:.04em; background:none; border:0; padding:0; display:flex; align-items:center; gap:10px}
+.brand small{font-family:var(--text); font-weight:500; text-transform:none; letter-spacing:0; color:var(--muted); font-size:14px}
+
+/* signes */
+.s-blue{fill:var(--blue)} .s-red{fill:var(--red)} .s-green{fill:var(--green)} .s-yellow{fill:var(--yellow)}
+.s-edge{stroke:var(--sign-dark); stroke-width:3}
+.s-ban{fill:var(--sign-white); stroke:var(--red); stroke-width:5}
+.ban-line{stroke:var(--red); stroke-width:5; stroke-linecap:round; fill:none}
+.g-light{fill:#fff} .g-dark{fill:var(--sign-dark)}
+svg.sign{display:block; flex:none}
+
+.eyebrow{font-family:var(--display); font-weight:600; text-transform:uppercase; letter-spacing:.12em; font-size:14px; color:var(--muted)}
+.lead{color:var(--muted); font-size:18px; max-width:60ch}
+
+.hero{display:grid; gap:14px; margin-bottom:22px}
+.signs{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.signs .mini{opacity:.28; filter:grayscale(1)}
+.signs .mini.on{opacity:1; filter:none}
+.progress-line{font-size:15px; color:var(--muted)}
+.progress-line b{color:var(--ink)}
+
+.grid{display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr)); margin-bottom:26px}
+.mod{display:flex; align-items:center; gap:14px; text-align:left; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; min-width:0; width:100%}
+.mod:hover{border-color:var(--ink)}
+.mod-body{display:grid; gap:2px; min-width:0; flex:1}
+.mod-body b{font-family:var(--display); font-size:21px; font-weight:600; line-height:1.15}
+.mod-body small{color:var(--muted); font-size:14px}
+.tag{font-size:13px; font-weight:600; padding:3px 9px; border-radius:99px; background:var(--surface-2); border:1px solid var(--line); white-space:nowrap}
+.tag.ok{background:var(--green-soft); border-color:transparent; color:var(--green)}
+
+.exam{background:var(--surface); border:2px solid var(--ink); border-radius:10px; padding:20px; display:grid; gap:12px}
+.exam h2{font-size:30px; text-transform:uppercase}
+.facts{display:flex; flex-wrap:wrap; gap:8px 18px; font-family:var(--display); font-size:20px; font-weight:600}
+.facts span{white-space:nowrap}
+.note{font-size:14px; color:var(--muted)}
+
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:48px; padding:10px 20px; border-radius:8px; border:2px solid var(--green); background:var(--green); color:var(--green-ink); font-weight:600; font-size:17px}
+.btn:hover{filter:brightness(1.06)}
+.btn.ghost{background:transparent; color:var(--ink); border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn[disabled]{opacity:.45; cursor:not-allowed; filter:none}
+.actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:18px}
+.back{background:none; border:0; padding:6px 0; color:var(--muted); font-weight:500; margin-bottom:10px}
+.back:hover{color:var(--ink)}
+
+/* module */
+.mhead{display:flex; gap:16px; align-items:center; margin-bottom:22px}
+.mhead>div{min-width:0}
+.block{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:18px; margin-bottom:12px; display:grid; gap:8px}
+.block ul{margin:0; padding-left:20px; display:grid; gap:6px}
+.block li::marker{color:var(--muted)}
+.keep{background:var(--green-soft); border-radius:10px; padding:18px; margin:18px 0 6px}
+.keep h2{color:var(--green); margin-bottom:8px}
+.keep ul{margin:0; padding-left:20px; display:grid; gap:6px}
+.demo{display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin-bottom:12px}
+.demo figure{margin:0; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px 8px; display:grid; justify-items:center; gap:8px; text-align:center}
+.demo figcaption{font-family:var(--display); font-size:18px; font-weight:600; line-height:1.1}
+.demo figcaption small{display:block; font-family:var(--text); font-weight:400; font-size:13px; color:var(--muted)}
+
+/* quiz */
+.qtop{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:10px}
+.bar{height:8px; background:var(--line); border-radius:99px; overflow:hidden; margin-bottom:22px}
+.bar i{display:block; height:100%; background:var(--green)}
+.qtext{font-family:var(--text); font-size:22px; font-weight:600; line-height:1.3; margin-bottom:18px; max-width:46ch}
+.opts{display:grid; gap:10px}
+.opt{display:flex; gap:12px; align-items:flex-start; text-align:left; background:var(--surface); border:2px solid var(--line); border-radius:10px; padding:13px 14px; width:100%; min-width:0}
+.opt:hover:not([disabled]){border-color:var(--ink)}
+.opt .l{font-family:var(--display); font-weight:700; font-size:18px; width:26px; height:26px; border-radius:6px; background:var(--surface-2); display:grid; place-items:center; flex:none}
+.opt .t{flex:1; min-width:0}
+.opt.sel{border-color:var(--blue)}
+.opt.sel .l{background:var(--blue); color:#fff}
+.opt.good{border-color:var(--green); background:var(--green-soft)}
+.opt.bad{border-color:var(--red); background:var(--red-soft)}
+.opt .flag{font-size:13px; font-weight:600}
+.opt.good .flag{color:var(--green)} .opt.bad .flag{color:var(--red)}
+.opt[disabled]{cursor:default}
+.explain{margin-top:14px; padding:14px; border-radius:10px; background:var(--surface); border:1px solid var(--line)}
+.explain b{font-family:var(--display); font-size:19px; font-weight:600; display:block; margin-bottom:2px}
+.quit{background:none; border:0; color:var(--muted); font-weight:500; padding:6px 0}
+.quit:hover{color:var(--ink)}
+.confirm{background:var(--red-soft); border-radius:10px; padding:14px; margin-bottom:16px; display:grid; gap:10px}
+
+/* resultat */
+.score{display:flex; align-items:baseline; gap:10px; margin:6px 0 4px}
+.score b{font-family:var(--display); font-size:84px; font-weight:700; line-height:1}
+.score span{font-family:var(--display); font-size:32px; color:var(--muted); font-weight:600}
+.verdict{display:inline-block; font-family:var(--display); font-weight:700; text-transform:uppercase; letter-spacing:.06em; font-size:18px; padding:4px 12px; border-radius:6px; color:#fff}
+.verdict.ok{background:var(--green); color:var(--green-ink)} .verdict.ko{background:var(--red); color:#fff}
+.bymod{display:grid; gap:8px; margin:20px 0}
+.bymod div{display:grid; grid-template-columns:minmax(0,1fr) 54px; gap:4px 12px; align-items:center; font-size:15px}
+.bymod .meter{grid-column:1/-1; height:6px; background:var(--line); border-radius:99px; overflow:hidden}
+.bymod .meter i{display:block; height:100%; background:var(--green)}
+.bymod .meter i.low{background:var(--red)}
+.bymod strong{text-align:right; font-variant-numeric:tabular-nums}
+.review{display:grid; gap:10px; margin-top:12px}
+.rev{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; display:grid; gap:6px; font-size:16px}
+.rev .q{font-weight:600}
+.rev .no{color:var(--red)} .rev .yes{color:var(--green)}
+
+/* badge */
+.form{display:grid; gap:14px; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:20px; max-width:680px}
+.field{display:grid; gap:5px}
+.field label{font-weight:600; font-size:15px}
+.secset{border:0; padding:0; margin:0; min-width:0}
+.secset legend{font-weight:600; font-size:15px; padding:0; margin-bottom:8px}
+.secgrid{display:grid; gap:8px; grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.sec{position:relative; display:flex; align-items:center; gap:10px; padding:8px 10px; border:2px solid var(--line); border-radius:10px; background:var(--surface-2); cursor:pointer; min-width:0}
+.sec input{position:absolute; opacity:0; pointer-events:none}
+.sec span{font-weight:500; line-height:1.2; min-width:0}
+.sec:hover{border-color:var(--ink)}
+.sec:has(input:checked){border-color:var(--green); background:var(--green-soft)}
+.sec:has(input:focus-visible){outline:3px solid var(--blue); outline-offset:2px}
+fieldset[disabled] .sec{opacity:.6; cursor:default}
+.field input,.field select{font:inherit; padding:11px 12px; border:2px solid var(--line); border-radius:8px; background:var(--surface-2); color:var(--ink); min-height:48px; width:100%}
+.field input:focus,.field select:focus{border-color:var(--blue); outline:none}
+.badge-stage{display:grid; justify-items:start; gap:16px}
+canvas.badge{width:100%; max-width:420px; height:auto; border-radius:14px; display:block}
+.dlnote{font-size:14px; color:var(--muted); max-width:46ch}
+.callout{background:var(--surface); border:2px solid var(--yellow); border-radius:10px; padding:14px 16px; max-width:62ch}
+.callout b{font-family:var(--display); font-size:20px; text-transform:uppercase; letter-spacing:.03em; display:block}
+.by{font-family:var(--display); font-weight:600; font-size:18px; color:var(--muted); letter-spacing:.03em}
+.profile{display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:22px}
+.profile>div{min-width:0}
+.pname{font-family:var(--display); font-size:26px; font-weight:700; line-height:1.1}
+.pschool{color:var(--muted)}
+.profile-form{margin-bottom:24px; display:grid; gap:10px}
+.tabs{display:flex; gap:6px; margin:-8px 0 20px; border-bottom:1px solid var(--line)}
+.tabs button{background:none; border:0; border-bottom:3px solid transparent; margin-bottom:-1px; padding:10px 14px; font-family:var(--display); font-weight:600; font-size:20px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted)}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-current="page"]{color:var(--ink); border-bottom-color:var(--green)}
+.stats{display:flex; flex-wrap:wrap; gap:10px 32px; margin:10px 0 18px}
+.stat b{font-family:var(--display); font-size:46px; font-weight:700; line-height:1; display:block; font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted); font-size:14px}
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:14px; display:grid; gap:10px; max-width:100%}
+.panel textarea{font:inherit; font-size:15px; padding:10px 12px; border:2px solid var(--line); border-radius:8px; background:var(--surface-2); color:var(--ink); width:100%; min-height:84px; resize:vertical}
+.panel textarea:focus{border-color:var(--blue); outline:none}
+.filters{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px}
+.filters input,.filters select{font:inherit; padding:9px 12px; border:2px solid var(--line); border-radius:8px; background:var(--surface-2); color:var(--ink); min-height:44px; min-width:0; flex:1 1 200px}
+.filters input:focus,.filters select:focus{border-color:var(--blue); outline:none}
+.tablewrap{overflow-x:auto; border:1px solid var(--line); border-radius:10px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:860px; font-size:15px}
+th,td{text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); white-space:nowrap}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--display); font-size:16px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); background:var(--surface-2)}
+td.num{font-variant-numeric:tabular-nums}
+.chk{font-weight:600; font-size:13px; padding:2px 8px; border-radius:99px}
+.chk.ok{background:var(--green-soft); color:var(--green)}
+.chk.ko{background:var(--red-soft); color:var(--red)}
+.rowdel{background:none; border:0; color:var(--muted); padding:4px 8px; border-radius:6px}
+.rowdel:hover{color:var(--red)}
+.empty{padding:22px 16px; color:var(--muted)}
+.frise{list-style:none; margin:6px 0 0; padding:0; display:flex}
+.frise .st{flex:1; display:grid; justify-items:center; align-content:start; gap:2px; text-align:center; position:relative; min-width:0; padding:0 2px}
+.frise .st::before{content:""; position:absolute; top:18px; left:-50%; width:100%; height:4px; background:var(--line)}
+.frise .st:first-child::before{display:none}
+.frise .st.done::before,.frise .st.cur::before{background:var(--green)}
+.frise .dot{position:relative; z-index:1; width:40px; height:40px; border-radius:50%; display:grid; place-items:center; font-family:var(--display); font-weight:700; font-size:21px; background:var(--surface); border:3px solid var(--line); color:var(--muted)}
+.frise .done .dot{background:var(--green); border-color:var(--green); color:var(--green-ink)}
+.frise .cur .dot{border-color:var(--green); color:var(--ink); box-shadow:0 0 0 5px var(--green-soft)}
+.frise b{font-family:var(--display); font-size:17px; font-weight:600; text-transform:uppercase; letter-spacing:.02em; margin-top:6px; color:var(--muted); max-width:100%; overflow-wrap:anywhere}
+@media (max-width:480px){.frise b{font-size:14px; letter-spacing:0}.frise small{font-size:12px}}
+.frise .done b,.frise .cur b{color:var(--ink)}
+.frise small{font-size:13px; color:var(--muted); line-height:1.25}
+.frise .here{font-style:normal; font-size:12px; font-weight:600; color:var(--green)}
+.cheer{background:var(--green-soft); border-radius:10px; padding:14px 16px; max-width:62ch}
+.cheer b{font-family:var(--display); font-size:24px; font-weight:700; color:var(--green); display:block; line-height:1.1; margin-bottom:3px}
+.foot{margin-top:34px; padding-top:14px; border-top:1px solid var(--line); font-size:14px; color:var(--muted); max-width:70ch}
+@media (prefers-reduced-motion: reduce){*{transition:none!important; animation:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <button class="brand" data-act="home" aria-label="Retour à l'accueil">
+      <span id="logo"></span>
+      <span>Code Prévention <small>Santé et sécurité en stage</small></span>
+    </button>
+  </header>
+  <nav class="tabs" aria-label="Sections"><button type="button" data-tab="home">Formation</button><button type="button" data-tab="recap">Récapitulatif</button></nav>
+  <main id="app" aria-live="polite"></main>
+  <p class="foot"><b>Outil réalisé par la DAFPIC.</b> Contenu pédagogique d'initiation. Il complète sans la remplacer la présentation des risques que l'entreprise d'accueil doit vous faire sur votre poste. Vérifiez les numéros d'urgence et les règles applicables sur votre territoire.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ---------- Panneaux ---------- */
+var GLYPH={
+  i:'<circle cx="12" cy="6.5" r="2"/><rect x="10.3" y="10" width="3.4" height="9.5" rx="1"/>',
+  bang:'<rect x="10.3" y="4" width="3.4" height="10" rx="1.2"/><circle cx="12" cy="18" r="2"/>',
+  helmet:'<path d="M3.5 15.5a8.5 8.5 0 0 1 17 0z"/><rect x="2.5" y="16.5" width="19" height="3" rx="1.5"/>',
+  lift:'<path d="M12 3l7.5 8.5h-5v8h-5v-8h-5z"/>',
+  flame:'<path d="M12 2.5c1 3.6 5.3 5.6 5.3 10.4a5.3 5.3 0 0 1-10.6 0c0-2.1 1-3.4 2.1-4.4.2 1.5.8 2.3 1.6 2.7C10.2 8.7 11 5.7 12 2.5z"/>',
+  bolt:'<path d="M13.2 2.5L5.8 13.6h5.2L9.8 21.5l8.4-11.4h-5.5z"/>',
+  cross:'<path d="M9.8 4h4.4v5.8H20v4.4h-5.8V20H9.8v-5.8H4V9.8h5.8z"/>',
+  person:'<circle cx="12" cy="7.5" r="3.5"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0z"/>',
+  fork:'<rect x="3.2" y="3" width="1.6" height="8" rx=".8"/><rect x="6.2" y="3" width="1.6" height="8" rx=".8"/><rect x="9.2" y="3" width="1.6" height="8" rx=".8"/><path d="M3.2 10h7.6a3 3 0 0 1-2.6 3.3V21H5.8v-7.7A3 3 0 0 1 3.2 10z"/><path d="M18.5 3c-2.2 1.6-3.5 4.2-3.5 7.5h3.5V21h2.2V3z"/>',
+  basket:'<path d="M3 8.5h18l-2 10.5H5z"/><path d="M8 8.5l3-5.5 1.1.6L9.3 8.5zM16 8.5l-3-5.5-1.1.6 2.8 4.9z"/>',
+  gear:'<rect x="10.5" y="2" width="3" height="20" rx="1"/><rect x="10.5" y="2" width="3" height="20" rx="1" transform="rotate(45 12 12)"/><rect x="10.5" y="2" width="3" height="20" rx="1" transform="rotate(90 12 12)"/><rect x="10.5" y="2" width="3" height="20" rx="1" transform="rotate(135 12 12)"/><circle cx="12" cy="12" r="7.5"/>',
+  house:'<path d="M12 3L2.5 11.5h2.8V20h13.4v-8.5h2.8z"/>',
+  heart:'<path d="M12 20.5C4.5 14.8 3 11.6 3 8.8A4.6 4.6 0 0 1 7.6 4c1.8 0 3.4 1 4.4 2.6C13 5 14.6 4 16.4 4A4.6 4.6 0 0 1 21 8.8c0 2.8-1.5 6-9 11.7z"/>',
+  factory:'<path d="M2.5 21V10l6 3.5V10l6 3.5V4h4v17z"/>',
+  leaf:'<path d="M4.5 19.5C4 10.5 9 4.5 20 4c.5 11-5.5 16.5-12 15.5z"/>',
+  drop:'<path d="M12 3c3.5 4.5 6 7.5 6 10.5a6 6 0 0 1-12 0C6 10.5 8.5 7.5 12 3z"/>',
+  snow:'<rect x="11" y="2" width="2" height="20" rx="1"/><rect x="11" y="2" width="2" height="20" rx="1" transform="rotate(60 12 12)"/><rect x="11" y="2" width="2" height="20" rx="1" transform="rotate(120 12 12)"/>',
+  box:'<path d="M12 2.5l9 4.5v10l-9 4.5-9-4.5V7z"/>',
+  shield:'<path d="M12 2.5l8 3v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10v-6z"/>',
+  shirt:'<path d="M8 3L3 6l2 4 2-1v11h10V9l2 1 2-4-5-3c-.5 1.5-1.8 2.5-4 2.5S8.5 4.5 8 3z"/>',
+  screen:'<rect x="3" y="4" width="18" height="12" rx="1.5"/><rect x="10" y="17" width="4" height="2"/><rect x="7" y="19" width="10" height="2" rx="1"/>'
+};
+function sign(c,size){
+  size=size||48;
+  var body, gcls='g-light', tr='translate(12 12)';
+  if(c.shape==='circle'){ body='<circle class="s-'+c.col+'" cx="24" cy="24" r="23"/>'; }
+  else if(c.shape==='square'){ body='<rect class="s-'+c.col+'" x="2" y="2" width="44" height="44" rx="5"/>'; }
+  else if(c.shape==='tri'){ body='<path class="s-yellow s-edge" d="M24 4L45 41H3Z" stroke-linejoin="round"/>'; gcls='g-dark'; tr='translate(14.4 18.4) scale(.8)'; }
+  else { body='<circle class="s-ban" cx="24" cy="24" r="21"/><path class="ban-line" d="M9.5 38.5L38.5 9.5"/>'; }
+  var g=c.g?'<g class="'+gcls+'" transform="'+tr+'">'+GLYPH[c.g]+'</g>':'';
+  return '<svg class="sign" viewBox="0 0 48 48" width="'+size+'" height="'+size+'" aria-hidden="true">'+body+g+'</svg>';
+}
+
+/* ---------- Modules ---------- */
+var MODS=[
+{id:'m1',t:"Notions, droits et devoirs",min:5,sign:{shape:'circle',col:'blue',g:'i'},
+ lead:"Les bases pour comprendre la prévention et connaître vos droits et devoirs en stage.",
+ lesson:[
+  {h:"Danger et risque",p:"Un danger est une source possible de dommage : un sol mouillé, un produit chimique, une machine. Le risque est la probabilité que ce danger vous blesse, associée à la gravité de la blessure.",ul:["Supprimer le danger quand c'est possible","Sinon réduire le risque : protections collectives, organisation du travail","En dernier recours, se protéger avec un équipement individuel"]},
+  {h:"Ce que doit faire l'entreprise d'accueil",ul:["Vous accueillir et vous présenter les lieux","Vous expliquer les risques de votre poste et les consignes","Vous indiquer les issues, le matériel d'incendie et les secours","Vous désigner un tuteur et vous fournir les protections adaptées"]},
+  {h:"Ce que vous devez faire",ul:["Respecter les consignes et les panneaux","Signaler toute situation dangereuse à votre tuteur","Poser des questions quand vous n'avez pas compris","Ne pas utiliser un équipement pour lequel vous n'avez pas été formé"]},
+  {h:"Le droit de retrait",p:"Face à un danger grave et imminent, vous alertez immédiatement votre responsable et vous vous retirez de la situation. Ce droit ne sert pas à refuser une tâche par confort."}
+ ],
+ key:["Un danger est une source de dommage, le risque en est la probabilité et la gravité.","La sécurité est l'affaire de tous.","Vous signalez, vous demandez, vous respectez les consignes.","Danger grave et imminent : alerter, puis se retirer."]},
+
+{id:'m2',t:"Panneaux et pictogrammes",min:5,sign:{shape:'tri',col:'yellow',g:'bang'},extra:'signs',
+ lead:"Reconnaître la forme et la couleur d'un panneau avant même de le lire.",
+ lesson:[
+  {h:"Les produits chimiques",p:"Sur les étiquettes, un losange blanc à bordure rouge porte un pictogramme :",ul:["Flamme : produit inflammable","Tête de mort : toxique, danger mortel","Corrosion : ronge la peau, les yeux et le métal","Point d'exclamation : irritant ou nocif"]},
+  {h:"Les marquages au sol",p:"Les zones de circulation et les zones dangereuses sont souvent matérialisées par des bandes colorées, par exemple jaune et noir. Ne les franchissez pas sans raison."}
+ ],
+ key:["Rond rouge barré : interdiction.","Rond bleu : obligation.","Triangle jaune : danger.","Carré vert : secours. Carré rouge : incendie."]},
+
+{id:'m3',t:"Équipements de protection",min:4,sign:{shape:'circle',col:'blue',g:'helmet'},
+ lead:"Le bon équipement, bien porté, au bon moment.",
+ lesson:[
+  {h:"Un équipement pour chaque risque",ul:["Tête : casque contre les chocs et les chutes d'objets","Yeux : lunettes ou visière contre projections et poussières","Oreilles : bouchons ou casque contre le bruit","Mains : gants adaptés (coupure, chimie, chaleur)","Pieds : chaussures de sécurité contre écrasement et perforation","Voies respiratoires : masque adapté aux poussières ou vapeurs"]},
+  {h:"Bien utiliser son équipement",ul:["Le porter pendant toute la durée du risque, même pour une tâche rapide","Vérifier son état avant chaque usage","Ne jamais utiliser un équipement fissuré ou usé : le signaler et le remplacer","Attacher cheveux longs, retirer bijoux et vêtements flottants près des machines"]},
+  {h:"Le dernier rempart",p:"Un équipement protège celui qui le porte mais ne supprime pas le danger. On commence toujours par les protections collectives : carter, garde-corps, ventilation."}
+ ],
+ key:["Un équipement adapté à chaque risque.","On le porte tout le temps où le risque existe.","Équipement abîmé : on ne l'utilise pas.","Il ne remplace pas la suppression du danger."]},
+
+{id:'m4',t:"Manutention et postures",min:5,sign:{shape:'circle',col:'blue',g:'lift'},
+ lead:"Protéger son dos et ses articulations, au bureau comme à l'atelier.",
+ lesson:[
+  {h:"Soulever une charge",ul:["Repérer le trajet, le poids et la stabilité de la charge","Pieds écartés, charge près du corps","Fléchir les jambes, dos droit","Se relever en poussant avec les jambes, sans à-coups","Pour tourner, pivoter avec les pieds et jamais avec le dos"]},
+  {h:"Se faire aider",p:"Une charge lourde, volumineuse ou instable se porte à deux ou avec une aide : chariot, diable, transpalette. Demandez avant d'essayer."},
+  {h:"Travail sur écran",ul:["Haut de l'écran à hauteur des yeux","Dos soutenu, pieds au sol, avant-bras à l'horizontale","Pauses régulières pour se lever et regarder au loin"]},
+  {h:"Échelles et escabeaux",ul:["Sol plat et stable, appareil en bon état","Trois points d'appui en permanence","Ne pas se pencher sur le côté : on descend et on déplace l'appareil"]},
+  {h:"Les signaux d'alerte",p:"Des douleurs répétées au dos, au poignet ou à l'épaule annoncent souvent un trouble musculosquelettique. Signalez-les tôt : en parler évite qu'elles s'installent."}
+ ],
+ key:["Dos droit, jambes fléchies, charge près du corps.","Trop lourd : on demande de l'aide.","On tourne avec les pieds, pas avec le dos.","Une douleur répétée se signale tôt."]},
+
+{id:'m5',t:"Incendie et évacuation",min:6,sign:{shape:'square',col:'red',g:'flame'},
+ lead:"Savoir donner l'alerte, agir si c'est sans danger, évacuer sinon.",
+ lesson:[
+  {h:"Le triangle du feu",p:"Un feu a besoin de trois éléments : un combustible (bois, carton, essence), un comburant (l'oxygène de l'air) et de la chaleur. Retirer un seul de ces éléments éteint le feu."},
+  {h:"Départ de feu : les réflexes",ul:["Garder son calme et donner l'alerte : déclencheur, responsable, pompiers (18)","Si le feu est petit et que vous êtes en sécurité, utiliser l'extincteur adapté","Sinon, fermer les portes sans les verrouiller et évacuer"]},
+  {h:"Utiliser un extincteur",ul:["Dos au vent, à distance, avec une sortie derrière soi","Viser la base des flammes, en balayant","Jamais d'eau sur un feu d'origine électrique ni sur un liquide inflammable"]},
+  {h:"Évacuer",ul:["Arrêter ce que vous faites et suivre les issues fléchées en vert","Ne jamais prendre l'ascenseur","Ne pas retourner chercher ses affaires","Rejoindre le point de rassemblement et signaler sa présence","Dans la fumée, se déplacer baissé : l'air y est plus respirable"]}
+ ],
+ key:["Combustible, oxygène, chaleur : les trois éléments du feu.","Alerter d'abord, éteindre seulement si c'est sans danger.","Viser la base des flammes.","Jamais d'ascenseur, rassemblement obligatoire."]},
+
+{id:'m6',t:"Risques électriques et chimiques",min:5,sign:{shape:'tri',col:'yellow',g:'bolt'},
+ lead:"Deux risques qu'on ne voit pas toujours venir.",
+ lesson:[
+  {h:"Risque électrique",ul:["Ne jamais toucher un appareil avec les mains mouillées","Ne pas utiliser un câble dénudé ou une prise cassée : le signaler","Éviter les multiprises montées en série, source de surchauffe","Ne jamais réparer vous-même une installation électrique"]},
+  {h:"Une personne est électrisée",ul:["Ne la touchez pas tant qu'elle est en contact avec le courant","Coupez d'abord l'alimentation","Alertez les secours (15 ou 18) puis portez secours"]},
+  {h:"Produits chimiques",ul:["Lire l'étiquette et consulter la fiche de données de sécurité","Ne jamais transvaser dans une bouteille d'eau ou d'aliment","Ne jamais mélanger deux produits : certains dégagent un gaz toxique, comme l'eau de Javel avec un détartrant","Aérer, porter les protections indiquées, bien refermer et ranger"]},
+  {h:"Projection dans l'œil ou sur la peau",p:"Rincez abondamment à l'eau pendant au moins 10 à 15 minutes, prévenez votre tuteur et demandez un avis médical."}
+ ],
+ key:["Coupez le courant avant de toucher une victime.","Mains mouillées : jamais d'appareil électrique.","Étiquette et fiche de sécurité avant tout produit.","Rinçage long à l'eau, puis avis médical."]},
+
+{id:'m7',t:"Premiers secours",min:6,sign:{shape:'square',col:'green',g:'cross'},
+ lead:"Les gestes simples qui peuvent sauver une vie en attendant les secours.",
+ lesson:[
+  {h:"Protéger, alerter, secourir",ul:["Protéger : écarter le danger sans vous mettre en danger","Alerter : 15 (SAMU) ou 18 (pompiers), ou faire alerter par un collègue","Secourir : agir selon l'état de la victime"]},
+  {h:"Bien alerter",ul:["Dire qui vous êtes et où vous êtes, avec précision","Décrire ce qui s'est passé et l'état de la victime","Répondre aux questions et ne pas raccrocher le premier"]},
+  {h:"Les gestes qui sauvent",ul:["Saignement abondant : appuyer directement sur la plaie avec la main ou une compresse","Inconsciente mais respire : position latérale de sécurité (PLS)","Ne respire pas : alerter, commencer les compressions thoraciques et utiliser un défibrillateur dès qu'il arrive","Brûlure : refroidir à l'eau courante pendant au moins 10 minutes, sans glace","Chute avec douleur à la nuque ou au dos : ne pas déplacer, sauf danger vital"]},
+  {h:"Se former",p:"Une formation de secourisme (SST ou PSC) vous permet d'agir avec plus d'assurance. Demandez à votre organisme de formation."}
+ ],
+ key:["Protéger, alerter, secourir.","15 pour le SAMU, 18 pour les pompiers.","Saignement : j'appuie. Inconscient qui respire : PLS.","Ne respire pas : compressions et défibrillateur."]},
+
+{id:'m8',t:"Accident, trajet et bien-être",min:5,sign:{shape:'circle',col:'blue',g:'person'},
+ lead:"Réagir après un accident et prendre soin de vous pendant tout le stage.",
+ lesson:[
+  {h:"Après un accident, même bénin",ul:["Prévenir tout de suite votre tuteur ou responsable","Vous faire soigner et noter ce qui s'est passé","Prévenir aussi votre organisme de formation pour la déclaration"]},
+  {h:"Sur la route du stage",ul:["Respecter le code de la route","Ne pas téléphoner en conduisant ou à vélo","Partir à temps plutôt que de rouler vite"]},
+  {h:"Chaleur et soleil",ul:["Boire régulièrement, avant d'avoir soif","Se protéger : chapeau, crème, vêtements couvrants","Faire des pauses à l'ombre et signaler un malaise"]},
+  {h:"Respect et vigilance",ul:["Harcèlement, violence ou pression : en parler sans attendre à votre tuteur, à un référent ou à votre organisme de formation","Alcool et substances : aucune consommation et ne pas se présenter sous leur effet","Téléphone : on ne répond pas en manipulant une machine","Fatigue ou malaise : s'arrêter et prévenir"]}
+ ],
+ key:["Tout accident se signale immédiatement.","Respecter le code de la route sur le trajet.","Chaleur : eau, ombre, pauses.","Vous n'avez jamais à subir en silence."]}
+];
+
+var SECTORS=[
+{id:'resto',name:`Restauration & hôtellerie`,g:'fork',
+jobs:`Cuisine, commercialisation et services en restauration, boulanger pâtissier, pâtissier, bar, employé traiteur, accueil réception`,
+lead:`Cuisine, salle, bar ou pâtisserie : chaleur, couteaux, sols glissants et hygiène forment le quotidien du métier.`,
+lesson:[
+{h:`Brûlures et coupures`,ul:[`Prévenez à voix haute en passant avec un plat chaud ou un couteau : « Chaud devant », « Dans votre dos »`,`Utilisez des maniques sèches : un torchon mouillé conduit la chaleur`,`Travaillez avec un couteau bien affûté sur une planche stabilisée, en coupant loin du corps`,`Un couteau qui tombe ne se rattrape jamais : reculez`]},
+{h:`Sols glissants`,ul:[`Essuyez tout de suite une projection d'eau, de graisse ou de sauce`,`Portez des chaussures fermées et antidérapantes`,`Posez un panneau pendant un nettoyage`]},
+{h:`Hygiène et chaîne du froid`,ul:[`Lavez-vous les mains en arrivant, après les toilettes, après un produit cru et après les déchets`,`Séparez le cru et le cuit : planches et couteaux distincts`,`Rangez immédiatement au froid les denrées livrées`,`Respectez les dates limites et l'étiquetage`]},
+{h:`Friteuses, fours et machines`,ul:[`Pas d'eau dans l'huile chaude, et ne surchargez pas la friteuse`,`Débranchez et attendez l'arrêt complet avant de nettoyer un trancheur ou un robot`,`Feu de graisse : coupez la source de chaleur, étouffez avec un couvercle ou une couverture anti-feu, jamais d'eau`]},
+{h:`Gaz et charges`,ul:[`Odeur de gaz : fermez l'arrivée, aérez, n'actionnez aucun interrupteur, évacuez et alertez`,`Sacs de farine, caisses et fûts : chariot ou aide, dos droit`]}
+],
+key:[`Prévenir en passant avec du chaud ou un couteau.`,`Un torchon mouillé ne protège pas de la chaleur.`,`Feu de graisse : étouffer, jamais d'eau.`,`Mains propres, cru et cuit séparés, froid respecté.`],
+qs:[
+[`Vous passez derrière un collègue avec un plat brûlant. Que faites-vous ?`,`Je préviens à voix haute avant de passer`,`Je passe sans rien dire pour aller plus vite`,`Je lui touche l'épaule pour qu'il se pousse`,`Je pose le plat à terre`,`Prévenir évite les collisions, première cause de brûlures en cuisine.`],
+[`Pour saisir un plat sorti du four, vous utilisez :`,`Des maniques sèches`,`Un torchon humide`,`Un gant de cuisine mouillé`,`Vos mains protégées par le tablier`,`L'humidité conduit la chaleur et peut produire de la vapeur brûlante.`],
+[`Une friteuse prend feu. Que faites-vous ?`,`Je coupe la source de chaleur et j'étouffe avec un couvercle ou une couverture anti-feu`,`Je jette de l'eau dessus`,`Je déplace la friteuse en feu`,`Je souffle sur les flammes`,`L'eau sur de l'huile enflammée projette le feu. Il faut priver les flammes d'air.`],
+[`Vous sentez une odeur de gaz en cuisine. Que faites-vous ?`,`Je ferme l'arrivée, j'aère, aucun interrupteur, j'évacue et j'alerte`,`J'allume une flamme pour trouver la fuite`,`J'allume la lumière pour mieux voir`,`Je continue le service en surveillant`,`Une étincelle suffit à provoquer une explosion.`],
+[`Un couteau tombe de votre plan de travail. Que faites-vous ?`,`Je recule et je le laisse tomber`,`Je tente de le rattraper`,`Je le bloque avec le pied`,`Je le rattrape de l'autre main`,`Tenter de rattraper un couteau est une cause fréquente de coupures graves.`],
+[`Quand devez-vous vous laver les mains ?`,`Après avoir manipulé un produit cru, les déchets ou après les toilettes`,`Seulement en fin de service`,`Seulement si elles sont visiblement sales`,`Jamais si je porte des gants`,`Les mains transportent les microbes d'un aliment à l'autre.`],
+[`Comment éviter la contamination entre le cru et le cuit ?`,`Des planches et couteaux distincts, avec nettoyage entre les usages`,`Utiliser la même planche en l'essuyant d'un coup de torchon`,`Rincer à l'eau froide seulement`,`Poser le cuit sur le cru`,`Séparer le cru du cuit limite les intoxications alimentaires.`],
+[`Une livraison de produits frais arrive. Que faites-vous ?`,`Je les range au froid tout de suite`,`Je les laisse sur le plan de travail jusqu'à la fin du service`,`Je les range à la fin de ma tâche en cours`,`Je les pose à côté de la porte`,`Rompre la chaîne du froid favorise le développement des microbes.`],
+[`Une sauce est tombée au sol. Que faites-vous ?`,`Je l'essuie tout de suite et je signale la zone`,`Je passe par-dessus en faisant attention`,`J'attends la fin du service`,`Je pose un torchon et je le laisse`,`Un sol gras provoque des chutes graves.`],
+[`Avant de nettoyer un trancheur à jambon, vous devez :`,`Le débrancher et attendre l'arrêt complet de la lame`,`Le nettoyer en marche pour gagner du temps`,`Retirer le carter de protection`,`Utiliser un chiffon à la main sur la lame`,`Une lame qui tourne encore ou un appareil branché cause des amputations.`]
+]},
+{id:'commerce',name:`Commerce, gestion & accueil`,g:'basket',
+jobs:`Assistance à la gestion des organisations, métiers de l'accueil, métiers du commerce et de la vente, service et relation clients, équipier polyvalent du commerce, assistance conseil vente à distance`,
+lead:`Magasin, bureau ou accueil : manutention, écran, chutes et relation avec le public sont les principaux risques.`,
+lesson:[
+{h:`Mise en rayon et réserve`,ul:[`Charges lourdes en bas, légères en haut, rien d'instable`,`Utilisez un escabeau, jamais une chaise ou un carton`,`Chariot, diable ou transpalette pour les charges lourdes, et demandez de l'aide`]},
+{h:`Poste de caisse, d'accueil ou de bureau`,ul:[`Réglez le siège et l'écran : haut de l'écran à hauteur des yeux`,`Alternez les positions et faites de petites pauses`,`Ne restez pas debout de longues heures sans bouger`]},
+{h:`Chutes et circulation`,ul:[`Gardez les allées et les issues de secours dégagées`,`Ne laissez ni cartons ni câbles au sol`,`Essuyez les liquides renversés et signalez-les`]},
+{h:`Cutters, transpalettes et chariots`,ul:[`Cutter à lame rétractable, coupe loin du corps, lame rentrée après usage`,`Transpalette : restez hors de la trajectoire, pieds protégés`]},
+{h:`Clients difficiles`,ul:[`Restez calme, parlez posément, ne répondez pas à la provocation`,`Face à un vol ou une agression, ne poursuivez pas : alertez votre responsable ou la sécurité`,`Signalez toute agression, même verbale`]}
+],
+key:[`Escabeau et chariot : jamais de bricolage.`,`Allées et issues de secours toujours dégagées.`,`Écran à hauteur des yeux, pauses régulières.`,`Face à un client agressif : calme, alerte, pas de bagarre.`],
+qs:[
+[`Pour atteindre un rayon en hauteur, vous utilisez :`,`Un escabeau stable`,`Une chaise de bureau`,`Un carton retourné`,`Le bord d'une étagère`,`Seul un escabeau en bon état est conçu pour monter en sécurité.`],
+[`Un client agressif élève la voix contre vous. Que faites-vous ?`,`Je reste calme et j'alerte mon responsable si ça continue`,`Je hausse le ton à mon tour`,`Je me moque de lui`,`Je quitte la caisse sans prévenir`,`Garder son calme désamorce la plupart des conflits. Un responsable doit être alerté.`],
+[`Vous remarquez un vol à l'étalage. Que faites-vous ?`,`Je préviens mon responsable ou la sécurité sans poursuivre la personne`,`Je cours après le voleur`,`Je bloque la porte`,`Je fouille la personne`,`Votre sécurité prime sur la marchandise.`],
+[`À la caisse, quelle posture est la plus adaptée ?`,`Siège réglé, dos soutenu, changements de position réguliers`,`Rester debout sans bouger toute la journée`,`Se pencher sur le côté pour attraper les articles`,`S'asseoir très bas`,`Alterner les positions limite les douleurs de dos.`],
+[`Des cartons encombrent le couloir qui mène à l'issue de secours. Que faites-vous ?`,`Je les range et je dégage le passage`,`Je les enjambe en cas de besoin`,`Je les laisse, ils sont temporaires`,`Je ferme la porte de secours`,`Une issue de secours doit rester libre en permanence.`],
+[`Pour couper un carton avec un cutter, vous devez :`,`Couper en éloignant la lame du corps, puis rentrer la lame`,`Couper vers vous pour mieux contrôler`,`Laisser la lame sortie sur le plan de travail`,`Tenir le carton dans la main libre`,`La lame qui glisse blesse la main ou la cuisse.`],
+[`Vous devez déplacer une palette de packs d'eau. Que faites-vous ?`,`J'utilise un transpalette ou je demande de l'aide`,`Je la pousse de toutes mes forces`,`Je la soulève seul`,`Je la tire par les cartons`,`La charge lourde se déplace avec du matériel adapté.`],
+[`Un câble traverse l'allée. Que faites-vous ?`,`Je le range ou je le protège avec un passe-câble`,`Je mets un tapis dessus`,`Je le laisse, tout le monde le voit`,`Je le tends plus fort`,`Les câbles au sol provoquent des chutes.`],
+[`Vous renversez de l'eau devant la caisse. Que faites-vous ?`,`J'essuie et je signale la zone`,`Je continue mon travail`,`J'attends qu'elle sèche`,`Je préviens le client de faire attention`,`Un sol mouillé provoque des chutes de clients et de collègues.`],
+[`Concernant l'écran, quelle règle est bonne ?`,`Le haut de l'écran à hauteur des yeux, avec des pauses régulières`,`L'écran posé sur les genoux`,`Un écran très haut au-dessus de la tête`,`Aucune pause pour ne pas perdre de temps`,`Une mauvaise hauteur d'écran fatigue la nuque et les yeux.`]
+]},
+{id:'maintenance',name:`Maintenance véhicules & matériels`,g:'gear',
+jobs:`Maintenance des véhicules (légers, transport routier, motocycles), maintenance des matériels (agricoles, construction et manutention, espaces verts), maintenance nautique`,
+lead:`Sous un véhicule, au contact des moteurs, des fluides et de l'électricité : les gestes de sécurité évitent les accidents graves.`,
+lesson:[
+{h:`Travailler sous un véhicule`,ul:[`Un cric ne suffit jamais : utilisez des chandelles ou un pont élévateur`,`Vérifiez la stabilité et le verrouillage avant de passer dessous`,`Calez les roues et serrez le frein à main`]},
+{h:`Moteur, chaleur et gaz d'échappement`,ul:[`N'ouvrez jamais un bouchon de radiateur moteur chaud`,`Moteur en marche : à l'extérieur ou avec une aspiration des gaz d'échappement, le monoxyde de carbone est invisible et mortel`,`Pas de flamme ni de cigarette près de l'essence`]},
+{h:`Batteries et électricité du véhicule`,ul:[`Débranchez la borne négative en premier, rebranchez-la en dernier`,`Pas d'outil métallique posé sur la batterie`,`Véhicules hybrides et électriques : haute tension, intervention réservée au personnel habilité`]},
+{h:`Fluides et produits`,ul:[`Huiles, liquide de frein, dégraissants : gants adaptés et étiquette lue`,`Huiles usagées et batteries : récupérées dans un bac, jamais dans l'évier ni dans la terre`]},
+{h:`Outils, bruit et air comprimé`,ul:[`Meuleuse ou perceuse : lunettes, gants adaptés, protections auditives si bruyant`,`L'air comprimé ne se dirige jamais vers soi ou vers un collègue`,`Gonflage de pneus : en sécurité, selon les consignes`]}
+],
+key:[`Sous un véhicule : chandelles ou pont, jamais le cric seul.`,`Gaz d'échappement : dehors ou aspiration.`,`Batterie : borne négative débranchée en premier.`,`Haute tension : habilitation obligatoire.`],
+qs:[
+[`Pour travailler sous un véhicule, vous devez :`,`Le soutenir avec des chandelles ou utiliser un pont élévateur`,`Le soulever avec un simple cric`,`Le caler avec des cartons`,`Rester sur le côté pendant qu'un collègue tient le cric`,`Un cric peut glisser et lâcher : le véhicule ne doit jamais reposer sur lui seul.`],
+[`Dans un atelier fermé, pourquoi ne faut-il pas laisser tourner un moteur ?`,`Les gaz d'échappement contiennent du monoxyde de carbone, un gaz mortel`,`Cela fait trop de bruit seulement`,`Cela use la batterie`,`Cela coûte trop cher en carburant`,`Le monoxyde de carbone est invisible et inodore. Il faut une aspiration ou travailler dehors.`],
+[`Le moteur vient de s'arrêter et le radiateur est chaud. Que faites-vous ?`,`J'attends qu'il refroidisse avant d'ouvrir le bouchon`,`J'ouvre le bouchon doucement`,`J'ouvre avec un chiffon et je m'écarte`,`Je verse de l'eau froide dessus`,`Le liquide sous pression peut jaillir et brûler gravement.`],
+[`Pour débrancher une batterie, vous commencez par :`,`La borne négative`,`La borne positive`,`Les deux en même temps`,`Peu importe`,`Débrancher le négatif d'abord évite un court-circuit avec la carrosserie.`],
+[`On vous demande d'intervenir sur un véhicule électrique. Que faites-vous ?`,`Je vérifie que l'intervenant est habilité et je n'agis pas sans autorisation`,`Je débranche le premier câble orange que je vois`,`Je fais comme sur un véhicule thermique`,`Je commence seul pour gagner du temps`,`La haute tension de ces véhicules peut tuer. L'habilitation est indispensable.`],
+[`Où se jette une huile moteur usagée ?`,`Dans un bac de récupération prévu`,`Dans l'évier`,`Dans la terre derrière l'atelier`,`Dans la poubelle ordinaire`,`Une huile usagée pollue l'eau et les sols. Elle suit une filière spécifique.`],
+[`L'air comprimé peut être dirigé vers :`,`Uniquement la pièce à nettoyer, jamais vers une personne`,`Un collègue pour le dépoussiérer`,`Mes vêtements pour les nettoyer`,`Mon visage pour le rafraîchir`,`L'air comprimé peut perforer la peau ou blesser les yeux.`],
+[`Avant d'utiliser une meuleuse, vous portez :`,`Lunettes ou visière, gants adaptés et protections auditives si besoin`,`Rien, si le travail est court`,`Des lunettes de soleil`,`Des gants en tissu fin`,`Étincelles et éclats atteignent très vite les yeux et les mains.`],
+[`Vous utilisez un solvant dégraissant. Que faites-vous ?`,`Je lis l'étiquette, je porte des gants et j'aère`,`Je le sens pour vérifier`,`Je nettoie mes mains avec`,`Je le transvase dans une bouteille d'eau`,`Les solvants irritent la peau et dégagent des vapeurs nocives.`],
+[`Vous travaillez près d'un réservoir d'essence. Quelle règle respectez-vous ?`,`Aucune flamme ni cigarette, et j'aère`,`Je peux fumer à deux mètres`,`Je peux utiliser une meuleuse tout près`,`Je ferme l'atelier pour garder la chaleur`,`Les vapeurs d'essence s'enflamment avec une étincelle.`]
+]},
+{id:'batiment',name:`Bâtiment & bois`,g:'house',
+jobs:`Maçon, organisation et réalisation du gros œuvre, charpentier bois, menuisier fabricant, technicien menuisier agenceur, technicien constructeur bois, peintre applicateur, monteur en installations sanitaires, ouvrages du bâtiment métallerie, technicien d'études du bâtiment`,
+lead:`Chantier ou atelier : hauteur, charges, machines et poussières. Les protections collectives passent avant tout.`,
+lesson:[
+{h:`Travail en hauteur`,ul:[`Échafaudage monté par des personnes formées, avec garde-corps complets`,`Échelle : sol stable, trois points d'appui, pas de poste de travail prolongé`,`Harnais seulement avec un point d'ancrage solide, et après formation`]},
+{h:`Équipements de chantier`,ul:[`Casque, chaussures de sécurité, gants, lunettes`,`Protections auditives et masque anti-poussières selon la tâche`,`Gilet haute visibilité dans les zones d'engins`]},
+{h:`Machines à bois et à métal`,ul:[`Ne retirez jamais un carter ou une protection`,`Arrêt complet de la machine avant tout réglage ou nettoyage`,`Poussières de bois : aspiration et masque, cheveux attachés`]},
+{h:`Poussières et produits`,ul:[`Découpe de béton, carrelage ou briques : à l'eau ou avec aspiration, masque adapté`,`Peintures, colles, solvants : aérer, étiquette, gants`,`Matériaux anciens suspects (plaques ondulées, flocages) : ne percez pas, ne cassez pas, signalez`]},
+{h:`Charges, engins, tranchées`,ul:[`Ne passez jamais sous une charge levée`,`Restez hors du rayon d'action d'un engin`,`Ne descendez pas dans une tranchée non protégée`]}
+],
+key:[`Casque et chaussures de sécurité sur chantier.`,`Garde-corps avant tout travail en hauteur.`,`Jamais sous une charge levée.`,`Protections de machine toujours en place.`],
+qs:[
+[`Sur un chantier, quel équipement porte-t-on toujours ?`,`Casque et chaussures de sécurité`,`Casquette et baskets`,`Lunettes de soleil seulement`,`Rien, si l'on reste au sol`,`Chutes d'objets et clous au sol sont des dangers permanents.`],
+[`Un échafaudage n'a pas de garde-corps. Que faites-vous ?`,`Je ne monte pas et je le signale`,`Je monte en faisant attention`,`Je monte avec un collègue`,`Je tiens la barre de l'échafaudage`,`Sans garde-corps, la chute est possible. Le montage doit être conforme.`],
+[`Sur une échelle, vous devez :`,`Garder trois points d'appui`,`Tenir un outil dans chaque main`,`Me pencher pour atteindre plus loin`,`Travailler plusieurs heures dessus`,`Trois points d'appui limitent la chute.`],
+[`Vous coupez du béton à la disqueuse. Pour limiter les poussières, vous :`,`Coupez à l'eau ou avec aspiration et portez un masque adapté`,`Coupez à sec sans protection`,`Soufflez sur la poussière`,`Retirez le masque pour mieux respirer`,`La silice des poussières de béton abîme durablement les poumons.`],
+[`Vous trouvez des plaques anciennes en fibro-ciment. Que faites-vous ?`,`Je n'y touche pas et je préviens mon tuteur`,`Je les perce pour vérifier`,`Je les casse pour les jeter`,`Je les ponce`,`Certains matériaux anciens contiennent de l'amiante. Ne pas les abîmer.`],
+[`Le carter d'une scie circulaire vous gêne. Que faites-vous ?`,`Je le laisse en place et je demande de l'aide`,`Je le retire`,`Je le bloque en position ouverte`,`Je le remplace par du ruban adhésif`,`Un carter retiré expose directement la lame.`],
+[`Une charge est suspendue à une grue. Où vous placez-vous ?`,`Jamais sous la charge`,`Juste dessous pour guider`,`Dessous si elle est légère`,`Dessous, avec un casque`,`Une charge qui tombe tue même si le casque protège la tête.`],
+[`Il fait très chaud sur le chantier. Que faites-vous ?`,`Je bois régulièrement, je me protège du soleil et je fais des pauses à l'ombre`,`J'attends d'avoir soif pour boire`,`Je retire casque et chemise`,`Je travaille plus vite pour finir tôt`,`La déshydratation et le coup de chaleur arrivent vite.`],
+[`Une rallonge électrique a sa gaine abîmée. Que faites-vous ?`,`Je ne l'utilise pas et je la signale`,`Je l'utilise en évitant la zone abîmée`,`Je répare avec du ruban adhésif`,`Je la laisse au sol pour qu'on la voie`,`Câble abîmé et humidité peuvent provoquer une électrisation.`],
+[`Une tranchée est creusée sans blindage ni étais. Que faites-vous ?`,`Je n'y descends pas et je préviens mon responsable`,`Je descends rapidement pour travailler`,`Je descends avec un collègue en surveillance`,`Je me tiens au bord pour voir`,`Un éboulement peut ensevelir en quelques secondes.`]
+]},
+{id:'services',name:`Services à la personne`,g:'heart',
+jobs:`Accompagnement soins et services à la personne, animation enfance et personnes âgées, accompagnant éducatif petite enfance, aide à domicile, services aux personnes et vente en espace rural`,
+lead:`Au contact d'enfants, de personnes âgées ou fragiles : gestes de manutention, hygiène et vigilance sont essentiels.`,
+lesson:[
+{h:`Aider une personne à se déplacer`,ul:[`Utilisez les aides techniques : lève-personne, drap de glisse, ceinture de transfert`,`Ne soulevez jamais seul une personne : demandez de l'aide et une formation aux gestes`,`Expliquez à la personne ce que vous allez faire`]},
+{h:`Hygiène et risque infectieux`,ul:[`Lavez-vous les mains ou utilisez une solution hydroalcoolique avant et après chaque soin`,`Gants à usage unique, changés entre deux personnes`,`Objets piquants et coupants : dans un collecteur, sans recapuchonner`,`Exposition à du sang : laver à l'eau et au savon, rincer, désinfecter et consulter rapidement`]},
+{h:`Enfants`,ul:[`Ne laissez jamais un enfant seul, surtout sur une table à langer, près de l'eau ou en escalier`,`Rangez hors de portée produits, médicaments et petits objets`,`Vérifiez la sécurité des jeux et du matériel`]},
+{h:`Produits et médicaments`,ul:[`Ne donnez jamais de médicament sans autorisation et sans prescription`,`Ne mélangez pas les produits d'entretien`]},
+{h:`Violence, fatigue et discrétion`,ul:[`Face à un comportement agressif : restez calme, protégez-vous et alertez, ne restez pas seul`,`Parlez de votre fatigue ou d'une situation difficile à votre tuteur`,`Respectez le secret : ce que vous apprenez sur une personne reste confidentiel`]}
+],
+key:[`Aides techniques pour déplacer, jamais seul.`,`Lavage des mains avant et après chaque soin.`,`Un enfant ne reste jamais seul sur une table à langer.`,`Médicament : jamais sans autorisation.`],
+qs:[
+[`Une personne doit être transférée du lit au fauteuil. Que faites-vous ?`,`J'utilise le matériel prévu (lève-personne, drap de glisse) et je demande de l'aide`,`Je la soulève seul en la serrant fort`,`Je la tire par les bras`,`Je lui demande de se débrouiller`,`Soulever à mains nues blesse la personne et votre dos.`],
+[`Quand se désinfecte-t-on les mains ?`,`Avant et après chaque soin`,`Seulement à la fin de la journée`,`Seulement après les repas`,`Jamais si l'on porte des gants`,`Les mains sont la première source de transmission de microbes.`],
+[`Vous vous piquez avec une aiguille usagée. Que faites-vous ?`,`Je lave à l'eau et au savon, je rince, je désinfecte et je préviens aussitôt`,`Je serre la peau sans rien dire`,`Je continue mon travail`,`Je ne dis rien pour éviter les ennuis`,`Il faut agir vite et déclarer l'accident.`],
+[`Où met-on une aiguille usagée ?`,`Dans un collecteur pour objets piquants, sans recapuchonner`,`Dans une poubelle ordinaire`,`Dans un sac plastique`,`Sous le lit`,`Une aiguille mal jetée blesse la personne qui ramasse les déchets.`],
+[`Vous changez un bébé sur une table à langer. Le téléphone sonne. Que faites-vous ?`,`Je garde une main sur l'enfant ou je l'emmène avec moi`,`Je m'éloigne deux secondes`,`Je laisse l'enfant seul, il est tranquille`,`Je cours décrocher`,`Un enfant peut tomber en quelques secondes. Il ne reste jamais seul.`],
+[`Une personne âgée vous demande un médicament. Que faites-vous ?`,`Je ne le donne que si cela est autorisé et prescrit, sinon j'alerte mon responsable`,`Je lui donne le comprimé pour l'aider`,`Je double la dose si elle a mal`,`Je lui donne un médicament que j'ai chez moi`,`Un mauvais médicament peut mettre la vie en danger.`],
+[`On vous propose de mélanger deux produits d'entretien. Que faites-vous ?`,`Je refuse et je lis les étiquettes`,`Je les mélange pour plus d'efficacité`,`Je les mélange avec de l'eau chaude`,`Je les mélange en aérant`,`Certains mélanges dégagent un gaz toxique.`],
+[`Une personne devient agressive. Que faites-vous ?`,`Je reste calme, je garde mes distances et j'alerte`,`Je la maîtrise physiquement`,`Je réponds en criant`,`Je quitte les lieux sans rien dire`,`Il faut se protéger et alerter plutôt que de s'opposer.`],
+[`Un collègue vous demande des détails sur la vie d'une personne suivie. Que faites-vous ?`,`Je n'en dis rien si cela ne concerne pas son travail`,`Je lui raconte tout`,`Je publie sur les réseaux sociaux`,`Je lui montre des photos`,`Le secret professionnel protège la dignité des personnes.`],
+[`Vous êtes très fatigué après plusieurs journées chargées. Que faites-vous ?`,`J'en parle à mon tuteur`,`Je ne dis rien pour ne pas passer pour faible`,`Je force pour tenir`,`Je prends des excitants`,`La fatigue augmente le risque d'erreur et de blessure.`]
+]},
+{id:'industrie',name:`Industrie & métallerie`,g:'factory',
+jobs:`Réalisations industrielles en chaudronnerie ou soudage, technicien en chaudronnerie industrielle, métallier, pilote de ligne de production, maintenance des systèmes de production connectés, maintenance des installations oléohydrauliques et pneumatiques`,
+lead:`Machines, soudure, pièces chaudes et énergies sous pression : la consignation et les protections sont vitales.`,
+lesson:[
+{h:`Souder en sécurité`,ul:[`Masque de soudage, gants, tablier et vêtements non synthétiques`,`Ne regardez jamais l'arc à l'œil nu, et protégez les personnes autour`,`Fumées : aspiration à la source ou ventilation`,`Éloignez les produits inflammables, gardez un extincteur à portée`]},
+{h:`Machines et protections`,ul:[`Les carters et protections restent en place`,`Cheveux attachés, pas de bijoux ni vêtements flottants`,`Arrêt complet avant réglage ou nettoyage`]},
+{h:`Consignation`,p:`Avant d'intervenir sur une machine, on la met hors énergie en toute sécurité :`,ul:[`Séparer la machine de toutes ses sources d'énergie`,`Condamner : cadenas et étiquette, pour que personne ne la remette en route`,`Vérifier l'absence d'énergie`,`Seule la personne qui a posé son cadenas le retire`]},
+{h:`Hydraulique et pneumatique`,ul:[`Mettre le circuit à l'air libre ou à pression nulle avant de démonter`,`Ne cherchez jamais une fuite à la main : un jet d'huile sous pression perce la peau`]},
+{h:`Pièces lourdes, chaudes et bruit`,ul:[`Pont roulant et élingues : jamais sous la charge`,`Pièce chaude : gants, signalez-la`,`Bruit : protections auditives dans les zones signalées`]}
+],
+key:[`Machine arrêtée et consignée avant toute intervention.`,`Masque de soudage, gants et vêtements non synthétiques.`,`Fuite hydraulique : jamais à la main.`,`Carters et protections toujours en place.`],
+qs:[
+[`Pour souder, vous portez :`,`Un masque de soudage, des gants et des vêtements adaptés`,`Des lunettes de soleil`,`Un simple tablier`,`Rien, pour mieux voir`,`L'arc brûle les yeux et la peau en quelques secondes.`],
+[`Avant de dépanner une machine, vous devez :`,`Couper et verrouiller l'énergie avec un cadenas, puis vérifier qu'elle est hors énergie`,`Simplement appuyer sur l'arrêt d'urgence`,`Demander à un collègue de surveiller`,`Intervenir vite avant la reprise de production`,`Une machine non consignée peut redémarrer par erreur.`],
+[`Qui retire un cadenas de consignation ?`,`La personne qui l'a posé`,`N'importe quel collègue`,`Le premier arrivé le matin`,`Personne, on le coupe`,`Le cadenas garantit que la personne qui intervient est protégée.`],
+[`Vous soupçonnez une fuite d'huile sous pression. Que faites-vous ?`,`Je mets le circuit hors pression et je préviens, je ne cherche jamais à la main`,`Je passe la main près du tuyau`,`Je tape sur le tuyau`,`Je cache la fuite avec un chiffon`,`Un jet d'huile sous pression peut perforer la peau.`],
+[`Vous recevez des bouteilles de gaz pour le soudage. Comment les stocker ?`,`Debout, arrimées, à l'abri de la chaleur`,`Couchées sur le sol`,`Posées près d'un feu`,`Appuyées contre un mur sans retenue`,`Une bouteille qui tombe peut devenir un projectile.`],
+[`Le carter de protection d'une machine vous gêne. Que faites-vous ?`,`Je ne le retire pas et je préviens mon tuteur`,`Je le retire`,`Je le laisse ouvert`,`Je l'enlève pour le nettoyage en marche`,`Le carter protège les mains des pièces en mouvement.`],
+[`Une charge est suspendue au pont roulant. Où vous placez-vous ?`,`À l'écart de sa trajectoire, jamais dessous`,`Dessous pour la guider`,`Dessous si je porte un casque`,`Juste à côté de la charge, à quelques centimètres`,`La chute d'une charge est mortelle.`],
+[`Quelle matière de vêtement choisir pour souder ?`,`Du coton ou du cuir, non synthétique`,`Du polyester`,`Du nylon`,`N'importe lequel`,`Les étincelles font fondre les matières synthétiques sur la peau.`],
+[`Vous respirez des fumées de soudage. Que faites-vous ?`,`J'utilise l'aspiration et la ventilation prévues`,`Je retire mon masque pour mieux voir`,`Je souffle sur la fumée`,`J'attends d'avoir mal à la gorge`,`Les fumées de soudage sont nocives pour les poumons.`],
+[`Vous venez de couper une pièce métallique. Que faites-vous ?`,`Je la considère comme chaude, je mets des gants et je la signale`,`Je la saisis à mains nues`,`Je la laisse sur l'établi sans rien dire`,`Je la pose sur une surface en plastique`,`Une pièce coupée garde longtemps sa chaleur et peut brûler gravement.`]
+]},
+{id:'agri',name:`Agriculture & paysage`,g:'leaf',
+jobs:`Conduite et gestion de l'entreprise agricole, production végétale horticole, aménagements paysagers, gestion des milieux naturels et de la faune, jardinier paysagiste, agricultures des régions chaudes, maraîchage`,
+lead:`Au grand air, avec des machines, des outils coupants, des produits et des animaux : le soleil et les produits demandent de la rigueur.`,
+lesson:[
+{h:`Produits phytosanitaires`,ul:[`Lisez l'étiquette : dose, protections et délai avant retour dans la parcelle`,`Gants, combinaison et masque adaptés, jamais de traitement sans consigne`,`Pas de pulvérisation par vent fort`,`Stockage dans un local fermé, emballages vides rincés et jamais réutilisés`]},
+{h:`Tracteurs et machines`,ul:[`Ne montez que si vous avez été formé et autorisé`,`Arrêt du moteur avant toute intervention`,`Prise de force et courroies : protections en place, vêtements ajustés`,`En pente, risque de renversement : ceinture et vitesse réduite`]},
+{h:`Outils coupants et motorisés`,ul:[`Tronçonneuse et débroussailleuse : casque avec visière, protections auditives, pantalon anti-coupure, chaussures de sécurité`,`Gardez une distance de sécurité avec les autres personnes`,`Moteur arrêté pour le nettoyage et le réglage`]},
+{h:`Chaleur et soleil`,ul:[`Eau en quantité, chapeau, vêtements couvrants, crème`,`Pauses à l'ombre, signalez un malaise`]},
+{h:`Plaies, piqûres et animaux`,ul:[`Vérifiez que votre vaccin contre le tétanos est à jour`,`Une plaie souillée se nettoie et se désinfecte vite, consultez en cas de doute`,`Piqûres d'insectes ou morsures : protection, signalement, avis médical si réaction`]}
+],
+key:[`Étiquette lue et protections portées avant un traitement.`,`Moteur arrêté avant toute intervention.`,`Tronçonneuse : équipement complet.`,`Chaleur : eau, ombre, pauses.`],
+qs:[
+[`Avant d'utiliser un produit de traitement, vous devez :`,`Lire l'étiquette et porter les protections indiquées`,`Le sentir pour reconnaître`,`Le mélanger avec un autre pour renforcer son effet`,`Le diluer à l'œil`,`L'étiquette indique les doses, les protections et les précautions.`],
+[`Vous voulez pulvériser un produit alors qu'il y a beaucoup de vent. Que faites-vous ?`,`Je reporte le traitement`,`Je traite en me plaçant dos au vent`,`Je traite plus vite`,`Je double la dose`,`Le vent disperse le produit sur vous, les voisins et les cultures.`],
+[`Pour utiliser une tronçonneuse, vous portez :`,`Casque avec visière, protections auditives, pantalon anti-coupure et chaussures de sécurité`,`Un short et des sandales`,`Des lunettes de soleil`,`Un simple chapeau`,`Les projections, le bruit et la coupure sont des risques majeurs.`],
+[`Un outil est bloqué dans une machine. Que faites-vous ?`,`J'arrête le moteur avant d'intervenir`,`Je le dégage moteur en marche`,`Je le dégage avec un bâton`,`Je laisse un collègue le faire en marche`,`Un moteur en marche peut entraîner la main ou le bras.`],
+[`Autour d'une prise de force en marche, vous devez :`,`Garder les protections en place et éviter les vêtements flottants`,`Les retirer pour le nettoyage`,`Passer rapidement à côté`,`Les remplacer par une corde`,`Une prise de force happe les vêtements et les membres.`],
+[`Vous conduisez un tracteur sur une pente. Que faites-vous ?`,`Je réduis la vitesse, j'attache ma ceinture et je reste vigilant`,`J'accélère pour passer`,`Je descends en roue libre`,`Je tourne brusquement`,`Le renversement est la première cause d'accident mortel de tracteur.`],
+[`Il fait 35 °C et vous travaillez en plein soleil. Que faites-vous ?`,`Je bois régulièrement, je mets un chapeau et je fais des pauses à l'ombre`,`J'attends d'avoir soif pour boire`,`Je travaille torse nu`,`Je saute les pauses pour finir`,`La chaleur provoque épuisement et coup de chaleur.`],
+[`Vous vous blessez avec un outil rouillé. Que faites-vous ?`,`Je nettoie, je désinfecte, je préviens et je vérifie mon vaccin contre le tétanos`,`Je ne fais rien`,`Je mets un pansement sans nettoyer`,`Je continue à travailler`,`Une plaie souillée peut provoquer un tétanos.`],
+[`Où ranger les produits phytosanitaires ?`,`Dans un local fermé, hors de portée des enfants et des animaux`,`Dans une bouteille d'eau`,`Dans la cuisine`,`À l'air libre derrière la maison`,`Un produit mal rangé peut causer une intoxication grave.`],
+[`Vous utilisez une débroussailleuse. Quelle distance respectez-vous avec les autres ?`,`Une distance de sécurité d'au moins quelques mètres`,`Je travaille collé à un collègue`,`Une distance d'un mètre`,`Peu importe`,`Les projections de cailloux et de débris peuvent blesser gravement.`]
+]},
+{id:'proprete',name:`Propreté & hygiène`,g:'drop',
+jobs:`Hygiène propreté stérilisation, maintenance environnementale et propreté des espaces urbains, valorisation des matières et propreté des espaces urbains, métiers de l'entretien des textiles option blanchisserie`,
+lead:`Produits, déchets et linge souillé : la protection individuelle et la méthode font toute la différence.`,
+lesson:[
+{h:`Produits d'entretien`,ul:[`Lisez l'étiquette, respectez le dosage et portez gants et lunettes si besoin`,`Ne mélangez jamais deux produits : l'eau de Javel avec un détartrant ou de l'ammoniaque dégage un gaz toxique`,`Ne transvasez jamais un produit dans un contenant alimentaire`]},
+{h:`Déchets et risque biologique`,ul:[`Objets piquants et coupants dans un collecteur, sans recapuchonner`,`Gants à usage unique et mains lavées après chaque tâche`,`Ne tassez pas un sac poubelle à la main ni au pied`]},
+{h:`Stérilisation`,ul:[`Respectez le circuit : du sale vers le propre, sans retour`,`Autoclave : vapeur sous pression et chaleur, attendez la fin du cycle et le refroidissement`,`Ouvrez prudemment : la vapeur brûle`]},
+{h:`Espaces urbains et voirie`,ul:[`Gilet haute visibilité et signalisation de chantier mobile`,`Ne montez jamais sur une benne en mouvement et restez hors des zones de marche arrière`,`Seringue ou objet piquant trouvé : ne touchez pas à mains nues, utilisez une pince et un collecteur, signalez`]},
+{h:`Linge et blanchisserie`,ul:[`Linge souillé : gants, ne le secouez pas, ne le plaquez pas contre vous`,`Machines : arrêt complet avant d'ouvrir ou de nettoyer`,`Chaleur et sols humides : chaussures antidérapantes, hydratation`]}
+],
+key:[`Jamais deux produits mélangés.`,`Objet piquant : collecteur, jamais à la main.`,`Circuit de stérilisation : du sale au propre.`,`Gilet haute visibilité sur la voie publique.`],
+qs:[
+[`Peut-on mélanger de l'eau de Javel et un détartrant ?`,`Non, cela dégage un gaz toxique`,`Oui, pour un meilleur nettoyage`,`Oui, si on aère`,`Oui, avec des gants`,`Ce mélange produit du chlore gazeux dangereux pour les poumons.`],
+[`Vous trouvez une seringue sur le trottoir. Que faites-vous ?`,`Je ne la touche pas à mains nues : pince, collecteur, et je signale`,`Je la ramasse avec un mouchoir`,`Je la pousse du pied`,`Je la laisse en place sans rien dire`,`Une piqûre expose à des infections graves.`],
+[`Après usage, une aiguille doit être :`,`Jetée directement dans un collecteur sans recapuchonner`,`Recapuchonnée`,`Cassée`,`Mise dans la poubelle ordinaire`,`Le recapuchonnage est une cause fréquente de piqûres.`],
+[`En stérilisation, le circuit doit aller :`,`Du sale vers le propre, sans retour`,`Du propre vers le sale`,`Dans les deux sens`,`Au hasard`,`Cela évite de recontaminer le matériel stérilisé.`],
+[`Vous ouvrez un autoclave. Que faites-vous ?`,`J'attends la fin du cycle et le refroidissement, puis j'ouvre prudemment`,`J'ouvre immédiatement`,`Je mets mon visage près de la porte`,`J'arrête le cycle en cours`,`La vapeur et le matériel chaud brûlent.`],
+[`Sur la voie publique, vous portez :`,`Un gilet haute visibilité`,`Un vêtement sombre`,`Un casque de vélo`,`Rien de particulier`,`Les automobilistes doivent vous voir à distance.`],
+[`Vous manipulez du linge souillé. Que faites-vous ?`,`Je porte des gants et je ne le secoue pas`,`Je le serre contre moi`,`Je le secoue pour le trier`,`Je le manipule à mains nues`,`Secouer le linge disperse les microbes dans l'air.`],
+[`Un produit n'a pas d'étiquette. Que faites-vous ?`,`Je ne l'utilise pas et je préviens mon tuteur`,`Je le sens pour deviner`,`Je l'utilise en petite quantité`,`Je le mélange avec un autre`,`Un produit non identifié peut être dangereux.`],
+[`Un camion benne fait marche arrière. Que faites-vous ?`,`Je me place hors de la zone et je suis visible du conducteur`,`Je passe derrière en vitesse`,`Je monte sur le marchepied`,`Je guide en restant derrière`,`La marche arrière est une cause d'accidents graves.`],
+[`Un sac poubelle est très plein. Que faites-vous ?`,`Je ne le tasse pas avec les mains et je le ferme sans le comprimer`,`Je le tasse avec le pied`,`Je le tasse à main nue`,`Je le secoue`,`Il peut contenir des objets coupants ou piquants.`]
+]},
+{id:'electricite',name:`Électricité`,g:'bolt',
+jobs:`Électricien, métiers de l'électricité et de ses environnements connectés, maintenance et efficacité énergétique`,
+lead:`Un courant que l'on ne voit pas peut tuer. Le stagiaire n'intervient jamais seul ni sans habilitation.`,
+lesson:[
+{h:`Habilitation`,ul:[`Sans habilitation adaptée, vous n'intervenez pas sur une installation`,`Le stagiaire travaille sous la conduite d'une personne habilitée, dans les limites autorisées`,`En cas de doute : on s'arrête et on demande`]},
+{h:`Mettre hors tension en sécurité`,p:`La séquence de consignation avant un travail :`,ul:[`Séparer l'installation de toute source d'énergie`,`Condamner l'ouverture : cadenas, étiquette`,`Identifier l'ouvrage sur lequel on intervient`,`Vérifier l'absence de tension avec un détecteur adapté, testé avant et après`,`Mettre à la terre et en court-circuit si nécessaire`]},
+{h:`Matériel`,ul:[`Outils isolés, détecteur et gants isolants contrôlés avant usage`,`Un tournevis non isolé n'a pas sa place sur un circuit`,`Ne vous fiez jamais à un ancien schéma ni à une étiquette : vérifiez`]},
+{h:`Dangers de l'électricité`,ul:[`Électrisation, brûlures, arc électrique et chutes de hauteur`,`L'humidité et l'eau aggravent le danger`,`Câble dénudé, prise cassée : ne touchez pas, signalez`]},
+{h:`Personne électrisée`,ul:[`Ne la touchez pas tant qu'elle est en contact avec le courant`,`Coupez d'abord l'alimentation`,`Alertez les secours (15 ou 18) et portez secours`]}
+],
+key:[`Sans habilitation, on n'intervient pas.`,`Séparer, condamner, identifier, vérifier l'absence de tension.`,`Outils isolés et contrôlés.`,`Électrisé : couper avant de toucher.`],
+qs:[
+[`Vous n'avez pas d'habilitation électrique. Que pouvez-vous faire ?`,`Observer et aider sous la conduite d'une personne habilitée, sans intervenir seul`,`Intervenir sur une installation qui semble hors tension`,`Dépanner seul un tableau électrique`,`Changer un disjoncteur sans prévenir`,`L'habilitation est obligatoire pour intervenir sur une installation.`],
+[`Quelle est la première étape de la mise hors tension ?`,`Séparer l'installation de toutes ses sources d'énergie`,`Vérifier l'absence de tension`,`Mettre à la terre`,`Ouvrir le coffret`,`On sépare d'abord, puis on condamne, on identifie et on vérifie.`],
+[`Pourquoi condamne-t-on un circuit avec un cadenas ?`,`Pour empêcher toute remise sous tension par erreur`,`Pour l'identifier`,`Pour le protéger de la pluie`,`Pour gagner de la place`,`Une remise sous tension involontaire peut tuer.`],
+[`Avant et après une vérification d'absence de tension, vous :`,`Contrôlez que le détecteur fonctionne sur une source connue`,`Faites confiance à un détecteur non testé`,`Touchez le fil du doigt`,`Utilisez un tournevis`,`Un détecteur défectueux donnerait une fausse sécurité.`],
+[`Pour travailler sur un circuit, vous utilisez :`,`Des outils isolés contrôlés`,`N'importe quel tournevis`,`Des outils humides`,`Des outils abîmés`,`Un outil non isolé peut transmettre le courant.`],
+[`Un ancien schéma indique que le circuit est hors tension. Que faites-vous ?`,`Je vérifie moi-même l'absence de tension`,`Je me fie au schéma`,`Je me fie à l'étiquette`,`Je me fie à un collègue`,`Les schémas peuvent être faux ou périmés.`],
+[`Une personne est électrisée. Que faites-vous en premier ?`,`Je coupe l'alimentation, puis j'alerte les secours`,`Je la saisis à mains nues`,`Je jette de l'eau`,`Je la secoue`,`La toucher sous tension vous électriserait aussi.`],
+[`Vous voyez un fil dénudé. Que faites-vous ?`,`Je n'y touche pas et je signale`,`Je l'entoure de ruban adhésif`,`Je le coupe`,`Je le replie`,`Seule une personne habilitée peut réparer.`],
+[`Un local est humide et vous devez brancher un appareil. Que faites-vous ?`,`Je demande l'avis d'une personne habilitée et je vérifie le matériel`,`Je branche en faisant attention`,`Je branche pieds nus`,`J'utilise une rallonge abîmée`,`L'eau diminue la résistance de la peau et augmente le danger.`],
+[`Vous travaillez en hauteur sur un luminaire. Quel est le danger supplémentaire ?`,`La chute, car l'électrisation peut provoquer un mouvement brusque`,`Aucun`,`Le bruit`,`La chaleur seulement`,`Une électrisation sur une échelle peut entraîner une chute grave.`]
+]},
+{id:'froid',name:`Froid & énergie`,g:'snow',
+jobs:`Installateur en froid et conditionnement d'air, métiers du froid et des énergies renouvelables, installateur en chauffage climatisation et énergies renouvelables`,
+lead:`Fluides frigorigènes, électricité, toitures et brasage : des risques techniques qui demandent formation et méthode.`,
+lesson:[
+{h:`Fluides frigorigènes`,ul:[`Seul le personnel qualifié manipule les fluides frigorigènes`,`Jamais de rejet dans l'air : le fluide se récupère`,`La détente d'un fluide provoque des gelures sur la peau et les yeux`,`Dans un local fermé, un fluide plus lourd que l'air peut asphyxier : aérez et évacuez en cas de fuite`]},
+{h:`Électricité et énergies renouvelables`,ul:[`Une intervention électrique exige une habilitation`,`Des panneaux photovoltaïques produisent du courant dès qu'ils reçoivent de la lumière, même déconnectés`,`Batteries et onduleurs : risques de brûlure et d'électrisation`]},
+{h:`Brasage et flamme`,ul:[`Bouteilles debout et arrimées, extincteur à portée`,`Éloignez les matériaux inflammables et protégez-vous les yeux et les mains`]},
+{h:`Toitures et hauteur`,ul:[`Garde-corps ou ligne de vie avant de monter sur une toiture`,`Les plaques sont fragiles : ne marchez pas dessus sans protection`,`Chaleur : eau et pauses`]},
+{h:`Charges et chambres froides`,ul:[`Groupes et unités extérieures lourds : aide, sangles, matériel de levage`,`Chambre froide : vérifiez que la porte s'ouvre de l'intérieur, ne restez pas enfermé, portez des vêtements chauds`]}
+],
+key:[`Fluides frigorigènes : qualification obligatoire.`,`Panneau solaire : toujours sous tension à la lumière.`,`Toiture : protection contre les chutes avant de monter.`,`Chambre froide : sortie possible de l'intérieur.`],
+qs:[
+[`Qui peut manipuler un fluide frigorigène ?`,`Une personne qualifiée, ou un stagiaire encadré`,`N'importe qui`,`Un stagiaire seul`,`Un client`,`Les fluides exigent une qualification pour éviter fuites et accidents.`],
+[`Un fluide frigorigène fuit dans un local fermé. Que faites-vous ?`,`J'aère, j'évacue et j'alerte`,`Je ferme la porte`,`Je reste pour boucher la fuite`,`Je cherche la fuite avec une flamme`,`Un fluide plus lourd que l'air peut asphyxier.`],
+[`Peut-on rejeter un fluide frigorigène dans l'air ?`,`Non, il se récupère`,`Oui, en petite quantité`,`Oui, dehors`,`Oui, s'il est vieux`,`Ces fluides nuisent à l'environnement.`],
+[`Un fluide qui se détend brusquement sur la peau :`,`Provoque des gelures`,`Réchauffe la peau`,`Est sans danger`,`Provoque seulement une rougeur`,`La détente refroidit très fortement.`],
+[`Un panneau photovoltaïque est déconnecté, mais il fait grand jour. Que pensez-vous ?`,`Il produit encore du courant, je reste prudent`,`Il ne produit plus rien`,`Il est inoffensif`,`Il est sans courant s'il est propre`,`Il produit du courant dès qu'il reçoit de la lumière.`],
+[`Avant de monter sur une toiture, vous vérifiez :`,`La protection contre les chutes (garde-corps ou ligne de vie)`,`La couleur des tuiles`,`La météo seulement`,`Rien, si c'est rapide`,`Une chute de toit est souvent grave.`],
+[`Vous devez poser un groupe extérieur de 60 kg. Que faites-vous ?`,`J'utilise un moyen de levage ou je demande de l'aide`,`Je le porte seul`,`Je le fais rouler sur le dos`,`Je le tire avec une corde`,`Les charges lourdes demandent du matériel et plusieurs personnes.`],
+[`Vous entrez dans une chambre froide. Que vérifiez-vous ?`,`Que la porte s'ouvre de l'intérieur`,`La couleur des murs`,`Rien`,`Que la porte est bien fermée de l'extérieur`,`Rester enfermé dans une chambre froide est un danger vital.`],
+[`Avant un brasage, vous :`,`Éloignez les matériaux inflammables et gardez un extincteur à portée`,`Brasez près du carton`,`Retirez les gants`,`Brasez sans protection`,`La flamme met facilement le feu aux matériaux voisins.`],
+[`Vous constatez un onduleur qui chauffe et sent le brûlé. Que faites-vous ?`,`Je coupe si c'est possible en sécurité, je m'éloigne et j'alerte`,`Je le touche pour vérifier`,`Je jette de l'eau dessus`,`Je continue mon travail`,`Une surchauffe peut provoquer un incendie.`]
+]},
+{id:'logistique',name:`Logistique`,g:'box',
+jobs:`Métiers de la logistique, organisation de transport de marchandises, opérateur logistique`,
+lead:`Entrepôt, quai et chariots : circulation, manutention et stockage sont les principales sources d'accident.`,
+lesson:[
+{h:`Chariots et transpalettes`,ul:[`Conduite autorisée seulement avec une formation et une autorisation de conduite`,`Fourches basses pour rouler, vitesse adaptée, klaxon aux croisements`,`Ne transportez jamais de passager sur les fourches`]},
+{h:`Stockage et rayonnages`,ul:[`Charges lourdes en bas, palettes stables et alignées`,`Respectez la charge maximale indiquée sur le rayonnage`,`Ne grimpez jamais sur un rayonnage`,`Palette abîmée : écartez-la et signalez`]},
+{h:`Manutention`,ul:[`Dos droit, jambes fléchies, charge près du corps`,`Charge lourde ou encombrante : aide ou aide mécanique`,`Utilisez des sangles et filets pour arrimer`]},
+{h:`Quais et circulation`,ul:[`Calez les camions et vérifiez la plateforme avant d'entrer`,`Restez loin du bord du quai`,`Gilet haute visibilité, piétons sur les allées prévues`,`Marche arrière : demandez un guidage`]},
+{h:`Colis et marchandises dangereuses`,ul:[`Lisez les étiquettes de danger`,`Colis endommagé ou fuite : ne touchez pas, éloignez-vous, alertez`]}
+],
+key:[`Pas de chariot sans autorisation.`,`Charges lourdes en bas, rayonnage respecté.`,`Camion calé avant le chargement.`,`Piétons et chariots : allées séparées.`],
+qs:[
+[`Qui peut conduire un chariot élévateur ?`,`Une personne formée et autorisée`,`Tout stagiaire`,`Tout le monde s'il est prudent`,`Toute personne majeure`,`La conduite exige une formation et une autorisation de conduite.`],
+[`Pour rouler avec un chariot chargé, les fourches sont :`,`Basses, à quelques centimètres du sol`,`Hautes pour mieux voir`,`Inclinées vers l'avant`,`Très hautes`,`Fourches basses = charge stable, centre de gravité bas.`],
+[`Peut-on transporter une personne sur les fourches d'un chariot ?`,`Non, jamais`,`Oui, pour atteindre un rayon`,`Oui, sur une palette`,`Oui, si elle est assise`,`C'est interdit. Il existe des nacelles homologuées.`],
+[`Où place-t-on les charges les plus lourdes sur un rayonnage ?`,`En bas`,`En haut`,`Au milieu`,`Là où il reste de la place`,`Une charge lourde en hauteur menace de basculer.`],
+[`Un camion est à quai. Que vérifiez-vous avant d'y entrer ?`,`Qu'il est calé et que la plateforme est stable`,`La couleur du camion`,`Rien, le chauffeur gère`,`Que le moteur tourne`,`Un camion qui avance ou s'éloigne du quai provoque des chutes.`],
+[`Vous devez soulever un colis lourd. Que faites-vous ?`,`Je plie les jambes, je garde le dos droit et je demande de l'aide si besoin`,`Je plie le dos`,`Je le soulève d'un coup`,`Je tourne le buste en portant`,`Le dos se protège avec la bonne technique.`],
+[`Une palette est cassée. Que faites-vous ?`,`Je l'écarte et je la signale`,`Je la réutilise`,`Je la remets au stock`,`Je la renforce avec du ruban adhésif`,`Une palette abîmée peut céder.`],
+[`Un chariot recule dans l'allée. Que faites-vous ?`,`Je reste visible, je m'écarte et je porte un gilet`,`Je passe derrière`,`Je traverse en courant`,`Je me place derrière pour guider`,`La marche arrière réduit fortement la visibilité du conducteur.`],
+[`Un colis fuit et une odeur forte s'en dégage. Que faites-vous ?`,`Je m'éloigne, je ne le touche pas et j'alerte`,`Je l'ouvre pour voir`,`Je le renifle`,`Je le déplace`,`Un colis qui fuit peut contenir un produit dangereux.`],
+[`Vous avez besoin d'un objet en haut du rayonnage. Que faites-vous ?`,`J'utilise un escabeau ou une plateforme prévue`,`J'escalade les montants`,`Je monte sur une palette`,`Je saute`,`Un rayonnage n'est pas une échelle.`]
+]},
+{id:'securite',name:`Sécurité`,g:'shield',
+jobs:`Métiers de la sécurité, agent de sécurité`,
+lead:`Observer, prévenir, alerter : l'agent de sécurité protège les biens et les personnes dans un cadre précis, sans se mettre en danger.`,
+lesson:[
+{h:`Votre rôle et ses limites`,ul:[`Vous observez, vous prévenez et vous alertez`,`Votre action s'exerce dans un cadre légal : pas de violence, pas de fouille sans accord`,`Un stagiaire n'intervient jamais seul dans une situation risquée`]},
+{h:`Gérer un conflit`,ul:[`Restez calme, distance de sécurité, voix posée`,`Ne provoquez pas, ne répondez pas aux insultes`,`Demandez des renforts ou appelez les forces de l'ordre si nécessaire`]},
+{h:`Rondes et travail isolé`,ul:[`Gardez un moyen d'alerte : radio ou téléphone chargé`,`Signalez votre position et vos horaires`,`Éclairage, escaliers et zones isolées : vigilance accrue`]},
+{h:`Incendie et évacuation`,ul:[`Connaissez les issues, les extincteurs et le point de rassemblement`,`Donnez l'alerte, puis aidez à l'évacuation sans vous mettre en danger`]},
+{h:`Fatigue, nuit et secours`,ul:[`Les horaires de nuit fatiguent : reposez-vous, restez vigilant`,`Apprenez les gestes de premiers secours et repérez le défibrillateur`,`Respect, discrétion et confidentialité envers les personnes`]}
+],
+key:[`Observer, prévenir, alerter.`,`Jamais seul face à un danger.`,`Calme et distance dans un conflit.`,`Un moyen d'alerte toujours chargé.`],
+qs:[
+[`Quel est le rôle principal d'un agent de sécurité ?`,`Observer, prévenir et alerter`,`Remplacer la police`,`Punir les personnes`,`Poursuivre les voleurs`,`L'agent agit dans un cadre légal, sans se substituer aux forces de l'ordre.`],
+[`Une personne agressive vous insulte. Que faites-vous ?`,`Je reste calme, je garde mes distances et je demande du renfort`,`Je réponds sur le même ton`,`Je la bouscule`,`Je la fouille`,`Le calme désamorce la tension. La violence est interdite.`],
+[`Vous voyez plusieurs personnes en train de dégrader un lieu. Que faites-vous ?`,`J'alerte mon responsable et les secours ou la police`,`J'interviens seul`,`Je les poursuis`,`Je prends un objet pour me défendre`,`Face au nombre, la sécurité passe par l'alerte.`],
+[`Lors d'une ronde de nuit, vous devez avoir :`,`Un moyen d'alerte chargé et une lampe`,`Rien, pour rester discret`,`Seulement une lampe`,`Un téléphone éteint`,`Un moyen d'alerte permet d'appeler des secours si besoin.`],
+[`Peut-on fouiller le sac d'une personne sans son accord ?`,`Non, sauf cadre légal précis`,`Oui, par principe`,`Oui, si elle a l'air suspecte`,`Oui, si le client le demande`,`Une fouille exige un cadre légal et l'accord de la personne.`],
+[`Vous êtes seul de nuit et une alarme se déclenche. Que faites-vous ?`,`J'alerte, j'observe de loin et je n'entre pas seul si le danger est possible`,`J'entre immédiatement`,`J'éteins l'alarme sans regarder`,`Je rentre chez moi`,`Votre sécurité passe avant tout.`],
+[`Un incendie se déclare. Que faites-vous ?`,`Je donne l'alerte, j'aide à l'évacuation sans me mettre en danger`,`Je cherche la cause`,`J'ouvre toutes les fenêtres`,`J'utilise l'ascenseur`,`Alerte et évacuation sont les priorités.`],
+[`Vous êtes très fatigué au milieu de la nuit. Que faites-vous ?`,`Je préviens mon responsable et je prends une pause`,`Je m'endors à mon poste`,`Je bois beaucoup de café`,`Je cache ma fatigue`,`La fatigue réduit la vigilance et augmente le risque d'accident.`],
+[`Une personne fait un malaise devant vous. Que faites-vous ?`,`J'alerte les secours, je protège et j'applique les gestes de premiers secours`,`Je m'éloigne`,`Je lui donne à boire`,`J'attends qu'elle se relève`,`Alerter les secours et agir vite peut sauver la personne.`],
+[`Un collègue vous demande de ne pas signaler un incident. Que faites-vous ?`,`Je le signale quand même à mon responsable`,`Je me tais`,`Je le fais à sa place`,`J'attends`,`Un incident non signalé laisse le danger en place.`]
+]},
+{id:'mode',name:`Mode & arts appliqués`,g:'shirt',
+jobs:`Métiers de la mode vêtement flou, artisanat et métiers d'art option communication visuelle plurimédia`,
+lead:`Atelier de couture ou de création visuelle : outils coupants, postures prolongées, colles et écrans.`,
+lesson:[
+{h:`Machines à coudre, ciseaux et aiguilles`,ul:[`Gardez les doigts loin de l'aiguille et du pied-de-biche`,`Débranchez la machine avant de la nettoyer`,`Aiguilles et épingles rangées dans une pelote ou une boîte, jamais dans la bouche`]},
+{h:`Découpe et cutters`,ul:[`Plan de coupe stable, cutter à lame rétractable`,`Coupez loin du corps et lame rentrée après usage`,`Ciseaux : passez-les pointes vers le bas`]},
+{h:`Posture prolongée`,ul:[`Siège réglé, dos soutenu, éclairage suffisant`,`Pauses régulières pour se lever et reposer les yeux`,`Alternez les tâches si possible`]},
+{h:`Colles, encres et solvants`,ul:[`Lisez l'étiquette, aérez, portez des gants`,`Ne mangez ni ne buvez à votre poste`,`Chiffons imprégnés de solvant : récipient fermé, loin des sources de chaleur`]},
+{h:`Fer à repasser, électricité et incendie`,ul:[`Posez le fer sur son talon et débranchez-le après usage`,`Câbles propres et rangés, prises non surchargées`,`Les tissus et le papier s'enflamment vite : gardez les sorties dégagées`]}
+],
+key:[`Débrancher avant de nettoyer la machine.`,`Cutter : lame rentrée, coupe loin du corps.`,`Fer débranché après usage.`,`Colles et solvants : étiquette, aération, gants.`],
+qs:[
+[`Avant de nettoyer une machine à coudre, vous devez :`,`La débrancher`,`La laisser allumée`,`Retirer l'aiguille en marche`,`Nettoyer avec la main`,`Un démarrage accidentel blesse les doigts.`],
+[`Où ranger les aiguilles et les épingles ?`,`Dans une pelote ou une boîte`,`Dans la bouche`,`Dans la poche`,`Sur la table`,`Elles piquent, se perdent et peuvent être avalées.`],
+[`Pour couper avec un cutter, vous :`,`Coupez loin de votre corps et rentrez la lame après usage`,`Coupez vers vous`,`Laissez la lame sortie`,`Tenez le tissu avec la main libre au ras de la lame`,`La lame qui dérape blesse la main ou la cuisse.`],
+[`Votre fer à repasser reste chaud. Que faites-vous après usage ?`,`Je le débranche et le pose sur son talon`,`Je le laisse branché`,`Je le pose sur le tissu`,`Je le range chaud dans un tiroir`,`Un fer chaud peut brûler ou mettre le feu.`],
+[`Vous utilisez une colle avec solvant. Que faites-vous ?`,`J'aère, je lis l'étiquette et je porte des gants`,`Je la sens pour vérifier`,`Je ferme les fenêtres`,`J'en mets sur les mains`,`Les vapeurs irritent et peuvent donner des maux de tête.`],
+[`Peut-on manger à son poste de travail ?`,`Non, surtout avec des colles ou des encres`,`Oui, si les mains sont propres`,`Oui, un petit en-cas`,`Oui, du moment qu'on ne tache pas`,`Les produits peuvent contaminer les aliments.`],
+[`Des chiffons imbibés de solvant doivent être :`,`Rangés dans un récipient fermé, loin des sources de chaleur`,`Laissés en tas`,`Jetés dans la poubelle commune`,`Posés sur un radiateur`,`Ils s'enflamment facilement.`],
+[`Vous passez de longues heures assis à la machine. Que faites-vous ?`,`Je règle mon siège et je fais des pauses`,`Je ne bouge pas`,`Je me penche vers l'ouvrage`,`Je saute les pauses`,`Une mauvaise posture et un éclairage insuffisant fatiguent le dos et les yeux.`],
+[`Une prise est surchargée de multiprises. Que faites-vous ?`,`Je débranche et je signale`,`Je la laisse`,`J'ajoute une multiprise`,`Je la couvre`,`Une prise surchargée chauffe et peut provoquer un incendie.`],
+[`Vous passez des ciseaux à une collègue. Comment ?`,`Pointes vers le bas, manche vers elle`,`Pointes vers elle`,`Lancés`,`Fermés ou ouverts, peu importe`,`Cela évite de la blesser.`]
+]},
+{id:'numerique',name:`Numérique`,g:'screen',
+jobs:`Cybersécurité informatique et réseaux électronique, cybersécurité, service numérique aux organisations`,
+lead:`Écrans, câbles, baies et données : le métier mêle confort au poste, électricité et sécurité des informations.`,
+lesson:[
+{h:`Poste de travail`,ul:[`Haut de l'écran à hauteur des yeux, dos soutenu, pieds au sol`,`Toutes les 20 minutes environ, regardez au loin quelques secondes`,`Pause régulière pour se lever et bouger`]},
+{h:`Câbles et électricité`,ul:[`Câbles rangés, jamais au sol dans un passage`,`Ne surchargez pas les multiprises`,`Débranchez avant d'ouvrir un équipement, et reliez-vous à la masse pour limiter l'électricité statique`]},
+{h:`Salle serveur et baies`,ul:[`Bruit, froid et ventilation : protections auditives si nécessaire`,`Équipements lourds (onduleurs, serveurs, batteries) : aide et matériel de levage`,`Connaissez la procédure d'alarme et d'évacuation de la salle`]},
+{h:`Hygiène numérique`,ul:[`Mot de passe personnel, jamais partagé`,`Méfiez-vous des courriels qui demandent des informations ou un clic urgent (hameçonnage)`,`Ne branchez jamais une clé USB inconnue`,`Signalez tout incident ou doute à votre responsable`]},
+{h:`Travail en hauteur`,ul:[`Chemins de câbles et faux plafonds : échelle stable, trois points d'appui`,`Coupez l'alimentation avant de toucher à un câble ou à un équipement inconnu`]}
+],
+key:[`Écran à hauteur des yeux, pauses régulières.`,`Débrancher avant d'ouvrir un équipement.`,`Mot de passe jamais partagé.`,`Clé USB inconnue : jamais.`],
+qs:[
+[`Vous recevez un courriel urgent qui demande votre mot de passe. Que faites-vous ?`,`Je ne réponds pas et je le signale`,`Je donne mon mot de passe`,`Je clique sur le lien pour vérifier`,`Je transfère à mes collègues`,`C'est une tentative d'hameçonnage classique.`],
+[`Vous trouvez une clé USB sur le parking. Que faites-vous ?`,`Je ne la branche pas et je la remets à mon responsable`,`Je la branche pour trouver son propriétaire`,`Je la branche sur un ordinateur isolé`,`Je la garde`,`Une clé inconnue peut contenir un logiciel malveillant.`],
+[`Peut-on prêter son mot de passe à un collègue ?`,`Non, il est personnel`,`Oui, pour dépanner`,`Oui, si on le connaît bien`,`Oui, si on le change après`,`Un mot de passe partagé empêche de savoir qui a fait quoi.`],
+[`Avant d'ouvrir un équipement électronique, vous :`,`Le débranchez et vous déchargez l'électricité statique`,`Le laissez allumé`,`Utilisez un tournevis métallique sur les composants`,`Touchez les composants sans précaution`,`Un équipement sous tension peut électriser et l'électricité statique abîme les composants.`],
+[`Quelle est la hauteur idéale de l'écran ?`,`Le haut de l'écran à hauteur des yeux`,`Au niveau des genoux`,`Au-dessus de la tête`,`Sur le côté`,`Cela évite de plier la nuque et fatigue moins les yeux.`],
+[`Pour reposer les yeux, vous :`,`Regardez au loin quelques secondes régulièrement`,`Fixez l'écran sans interruption`,`Augmentez la luminosité au maximum`,`Cessez de cligner`,`Une pause visuelle limite la fatigue des yeux.`],
+[`Dans la salle serveur, l'alarme d'extinction se déclenche. Que faites-vous ?`,`J'évacue immédiatement par la sortie prévue`,`Je termine mon travail`,`Je ferme la porte et je reste`,`Je désactive l'alarme`,`Les gaz d'extinction peuvent être dangereux à respirer.`],
+[`Vous devez déplacer un onduleur de 40 kg. Que faites-vous ?`,`J'utilise un chariot ou je demande de l'aide`,`Je le porte seul`,`Je le tire par les câbles`,`Je le fais rouler sur le dos`,`Les onduleurs sont très lourds.`],
+[`Un câble réseau traverse un couloir. Que faites-vous ?`,`Je le range ou je le protège`,`Je le laisse`,`Je le tends`,`Je le recouvre d'un tapis`,`Un câble au sol provoque des chutes.`],
+[`Vous pensez avoir cliqué sur un lien suspect. Que faites-vous ?`,`Je préviens tout de suite mon responsable`,`Je ne dis rien`,`Je redémarre l'ordinateur et j'attends`,`J'efface le courriel et je continue`,`Signaler rapidement limite les dégâts.`]
+]}
+
+];
+var SECT={}; SECTORS.forEach(function(x){SECT[x.id]=x;});
+var SECTMOD={};
+function sectorMod(x){
+  if(!SECTMOD[x.id]){ SECTMOD[x.id]={id:'s_'+x.id,t:x.name,min:5,sign:{shape:'circle',col:'blue',g:x.g},lead:x.lead,lesson:x.lesson,key:x.key,jobs:x.jobs,sector:true}; }
+  return SECTMOD[x.id];
+}
+function mods(){
+  var l=MODS.slice(); var x=(typeof S!=='undefined'&&S&&S.profile&&SECT[S.profile.sector])?SECT[S.profile.sector]:null;
+  if(x) l.push(sectorMod(x)); return l;
+}
+
+/* ---------- Questions : bonne réponse en premier, mélangées à l'affichage ---------- */
+function Q(m,q,a,b,c,d,e){return {m:m,q:q,o:[a,b,c,d],e:e};}
+var BANK=[
+Q('m1',`Qu'est-ce qu'un danger ?`,`Une source possible de dommage pour la santé`,`La probabilité d'avoir un accident`,`Un accident déjà survenu`,`Une règle écrite dans l'entreprise`,`Le danger est la source (sol glissant, produit, machine). Le risque est la probabilité d'être touché, avec sa gravité.`),
+Q('m1',`À votre arrivée en stage, que doit faire l'entreprise d'accueil ?`,`Vous présenter les risques du poste et les consignes de sécurité`,`Vous laisser découvrir le poste seul`,`Donner les consignes seulement si vous les demandez`,`Rien, la sécurité ne concerne que les salariés`,`L'accueil sécurité est la première mesure de prévention : risques, consignes, issues, secours.`),
+Q('m1',`Quel est votre rôle de stagiaire en matière de sécurité ?`,`Respecter les consignes et signaler les situations dangereuses`,`Aucun, c'est le travail de l'entreprise`,`Régler seul les problèmes de sécurité`,`Ne rien dire pour ne pas déranger`,`La sécurité est l'affaire de tous : vous appliquez les règles et vous alertez.`),
+Q('m1',`Vous voyez un câble électrique dénudé au sol. Que faites-vous ?`,`Je préviens immédiatement mon tuteur ou responsable`,`Je le contourne et je continue`,`Je le répare avec du ruban adhésif`,`J'attends la fin de la journée pour en parler`,`Un danger se signale tout de suite et ne se bricole pas.`),
+Q('m1',`Que signifie le droit de retrait ?`,`Se retirer d'une situation de danger grave et imminent, après avoir alerté`,`Refuser une tâche qui ne plaît pas`,`Partir sans prévenir quand on est fatigué`,`Quitter son poste pour une pause supplémentaire`,`Il s'exerce face à un danger grave et imminent, avec une alerte immédiate. Ce n'est pas un refus de tâche par confort.`),
+Q('m1',`En quoi consiste la prévention ?`,`À supprimer ou réduire les risques avant qu'ils causent un accident`,`À réparer les dégâts après un accident`,`À sanctionner les fautes`,`À remplir des documents administratifs`,`La prévention agit avant l'accident, en s'attaquant d'abord à la source du danger.`),
+Q('m1',`Vous ne comprenez pas une consigne de sécurité. Que faites-vous ?`,`Je demande des explications avant d'agir`,`Je fais comme je pense que c'est bien`,`J'imite un collègue sans rien demander`,`Je ne fais rien et j'attends`,`Une question coûte quelques secondes, un accident coûte beaucoup plus.`),
+Q('m1',`On vous demande d'utiliser une machine que vous ne connaissez pas. Que faites-vous ?`,`Je dis que je n'ai pas été formé et je demande une formation et une autorisation`,`J'essaie en observant ce qui se passe`,`J'accepte pour faire bonne impression`,`Je demande à un autre stagiaire de me montrer`,`On n'utilise un équipement dangereux qu'après formation et autorisation.`),
+
+Q('m2',`Que signifie un panneau rond bleu ?`,`Une obligation`,`Une interdiction`,`Un avertissement de danger`,`Une sortie de secours`,`Rond bleu : obligation (port du casque, des lunettes, des gants).`),
+Q('m2',`Un panneau rond rouge barré d'une diagonale indique :`,`Une interdiction`,`Une obligation`,`Un danger`,`Un poste de secours`,`Rond rouge barré : interdiction (interdit de fumer, d'entrer).`),
+Q('m2',`Un triangle jaune à bordure noire signale :`,`Un danger`,`Une obligation`,`Une interdiction`,`Une issue de secours`,`Triangle jaune : avertissement d'un danger (électricité, chute, charge suspendue).`),
+Q('m2',`De quelle couleur sont les panneaux de secours et d'issue de secours ?`,`Vert`,`Rouge`,`Bleu`,`Jaune`,`Carré ou rectangle vert : secours, issue de secours, douche de sécurité.`),
+Q('m2',`Un panneau vert montrant une personne qui court vers une porte indique :`,`Une issue de secours`,`Un danger de chute`,`Une obligation de courir`,`Une zone interdite`,`Les issues de secours sont fléchées en blanc sur fond vert.`),
+Q('m2',`Un losange blanc à bordure rouge avec une flamme sur une étiquette signifie :`,`Produit inflammable`,`Produit alimentaire`,`Produit sans danger`,`Produit recyclable`,`La flamme du pictogramme de danger indique un produit inflammable : loin des sources de chaleur.`),
+Q('m2',`Le pictogramme d'une tête de mort sur une étiquette indique :`,`Une toxicité pouvant être mortelle`,`Un produit uniquement salissant`,`Un produit périmé`,`Un risque d'incendie`,`Il signale une toxicité aiguë : ne pas respirer, ne pas avaler, protections obligatoires.`),
+Q('m2',`Un carré rouge avec un extincteur indique :`,`Le matériel de lutte contre l'incendie`,`Une interdiction d'éteindre un feu`,`Un danger d'explosion`,`Un poste de secours`,`Le rouge sert aussi à signaler le matériel d'incendie : extincteur, robinet d'incendie armé, alarme.`),
+
+Q('m3',`EPI signifie :`,`Équipement de Protection Individuelle`,`Équipement Pour Intervention`,`Entretien et Prévention Industrielle`,`Évaluation des Postes Internes`,`Un EPI protège la personne qui le porte contre un risque précis.`),
+Q('m3',`Qui doit mettre à votre disposition les équipements adaptés à votre poste ?`,`L'entreprise d'accueil`,`Vous, à vos frais`,`Vos collègues, de façon informelle`,`Personne, le stagiaire n'en a pas besoin`,`Les équipements adaptés aux risques du poste sont fournis par l'entreprise. Demandez-les avant de commencer.`),
+Q('m3',`Les chaussures de sécurité protègent surtout contre :`,`L'écrasement, la chute d'objets et la perforation`,`Le bruit`,`Les poussières`,`Le soleil`,`Elles ont un embout renforcé et une semelle anti-perforation.`),
+Q('m3',`Le bruit est très fort dans l'atelier. Que portez-vous ?`,`Des bouchons d'oreilles ou un casque antibruit`,`Un casque de chantier`,`Des gants`,`Rien, on s'habitue`,`Le bruit abîme l'audition de façon irréversible : protections auditives dès que c'est indiqué.`),
+Q('m3',`Les lunettes de protection servent à éviter :`,`Les projections et les poussières dans les yeux`,`La fatigue visuelle devant un écran`,`Le froid`,`Les coups de soleil au bureau`,`Les yeux sont fragiles : copeaux, éclats et produits chimiques les atteignent en une fraction de seconde.`),
+Q('m3',`Votre casque est fissuré. Que faites-vous ?`,`Je ne l'utilise pas, je le signale et je le fais remplacer`,`Je continue, il reste utilisable`,`Je le colle avec du ruban adhésif`,`Je le garde pour les petites tâches`,`Un équipement endommagé ne protège plus. Il se remplace.`),
+Q('m3',`Quand porter un équipement de protection ?`,`Pendant toute la durée où le risque existe, même pour une tâche rapide`,`Seulement si un responsable regarde`,`Seulement pour les longues tâches`,`Jamais, si l'on est prudent`,`La plupart des accidents arrivent sur des tâches rapides faites sans protection.`),
+Q('m3',`Cheveux longs, bijoux et manches larges près d'une machine en rotation. Que faire ?`,`Attacher les cheveux, retirer les bijoux, ajuster les vêtements`,`Rien, tant qu'on fait attention`,`Tenir les cheveux avec la main`,`Les cacher sous le col`,`Ils peuvent être happés par la machine. Tout doit être attaché ou retiré.`),
+
+Q('m4',`Pour soulever une charge, la bonne position est :`,`Dos droit, jambes fléchies, charge près du corps`,`Dos rond, jambes tendues`,`Bras tendus, charge loin du corps`,`Une seule main, dos penché`,`Le poids doit passer par les jambes, pas par le dos.`),
+Q('m4',`La charge est lourde et volumineuse. Que faites-vous ?`,`Je demande de l'aide ou j'utilise un chariot`,`Je la porte vite pour en finir`,`Je la fais glisser en tirant en arrière avec le dos`,`Je la soulève d'un coup`,`Aide humaine ou mécanique : l'effort partagé évite les blessures du dos.`),
+Q('m4',`Vous portez une charge et devez changer de direction. Comment tourner ?`,`En pivotant avec les pieds`,`En tournant le buste`,`En se penchant sur le côté`,`En lançant la charge`,`Tourner le buste avec une charge tord la colonne. Les pieds font le virage.`),
+Q('m4',`Avant de soulever, que vérifier ?`,`Le trajet dégagé et la stabilité de la charge`,`Rien, on gagne du temps`,`Seulement la couleur du carton`,`Que personne ne regarde`,`Un passage encombré ou une charge qui bascule sont des causes fréquentes de chute.`),
+Q('m4',`Au poste informatique, l'écran doit être :`,`Le haut à hauteur des yeux`,`Très haut, au-dessus de la tête`,`Posé sur les genoux`,`Sur le côté`,`Un écran trop bas ou trop haut fatigue la nuque et les épaules.`),
+Q('m4',`Sur un escabeau, que faut-il respecter ?`,`Un sol stable et trois points d'appui en permanence`,`Se pencher pour atteindre plus loin`,`Monter avec une charge dans chaque main`,`Le poser sur un carton pour gagner en hauteur`,`Les chutes de hauteur sont une cause majeure d'accidents. On descend et on déplace l'appareil.`),
+Q('m4',`Vous ressentez des douleurs répétées au dos ou au poignet. Que faites-vous ?`,`Je le signale tôt à mon tuteur et je consulte`,`J'attends que ça passe`,`Je prends des médicaments sans rien dire`,`Je ne dis rien pour ne pas passer pour fragile`,`Les troubles musculosquelettiques s'aggravent quand on les ignore.`),
+Q('m4',`Pourquoi varier les postures et faire des pauses ?`,`Pour réduire la fatigue et les troubles musculosquelettiques`,`Pour allonger la journée`,`Pour avoir moins de travail`,`Uniquement pour discuter`,`Alterner les gestes et les positions soulage les articulations et les muscles.`),
+
+Q('m5',`Quels sont les trois éléments du triangle du feu ?`,`Combustible, oxygène, chaleur`,`Eau, air, terre`,`Bois, essence, gaz`,`Fumée, flamme, cendre`,`Supprimer un des trois éléments éteint le feu.`),
+Q('m5',`Vous remarquez un départ de feu. Que faites-vous en premier ?`,`Je donne l'alerte, puis j'éteins seulement si c'est petit et sans danger`,`Je cours chercher mes affaires`,`J'ouvre grand les fenêtres`,`Je jette un seau d'eau, quoi qu'il brûle`,`L'alerte vient en premier. L'extincteur n'est utilisé que si le feu est petit et que vous pouvez fuir.`),
+Q('m5',`Avec un extincteur, il faut viser :`,`La base des flammes`,`Le haut des flammes`,`La fumée`,`Le plafond`,`C'est le combustible, à la base, qu'il faut atteindre.`),
+Q('m5',`Sur un feu d'origine électrique, on n'utilise jamais :`,`Un jet d'eau`,`Un extincteur au CO2`,`Une coupure du courant`,`Une alerte`,`L'eau conduit l'électricité et expose à l'électrisation.`),
+Q('m5',`L'alarme d'évacuation retentit. Que faites-vous ?`,`J'arrête ce que je fais et je rejoins le point de rassemblement par l'itinéraire prévu`,`Je termine d'abord ma tâche`,`Je cherche l'origine de l'alarme`,`Je reste à mon poste`,`Une alarme se suit immédiatement. Chaque minute compte.`),
+Q('m5',`Pendant une évacuation, l'ascenseur :`,`Ne s'utilise jamais`,`S'utilise s'il est proche`,`S'utilise pour les charges lourdes`,`S'utilise si l'on est pressé`,`En cas d'incendie, l'ascenseur peut se bloquer et conduire dans les fumées.`),
+Q('m5',`Dans un couloir rempli de fumée, il faut :`,`Se déplacer baissé et se protéger le nez et la bouche`,`Courir debout le plus vite possible`,`Respirer à pleins poumons`,`Rester immobile`,`L'air respirable se trouve près du sol : les fumées montent.`),
+Q('m5',`Une fois dehors, que faites-vous ?`,`Je reste au point de rassemblement et je signale ma présence`,`Je retourne chercher mon téléphone`,`Je rentre chez moi sans prévenir`,`Je m'éloigne sans rien dire`,`Le responsable doit vérifier que tout le monde est sorti. Personne ne rentre sans autorisation.`),
+
+Q('m6',`Une prise est cassée ou un câble est abîmé. Que faites-vous ?`,`Je ne l'utilise pas et je le signale`,`Je l'utilise prudemment`,`Je le répare avec du ruban adhésif`,`Je le branche dans une autre prise`,`Un matériel électrique défectueux provoque électrisation ou incendie.`),
+Q('m6',`Avec les mains mouillées, vous :`,`Ne touchez jamais un appareil électrique`,`Pouvez brancher un appareil rapidement`,`Pouvez toucher une prise si elle est neuve`,`Pouvez toucher un câble isolé`,`L'eau abaisse fortement la résistance de la peau et augmente le danger.`),
+Q('m6',`Une personne est électrisée et reste en contact avec l'appareil. Que faites-vous d'abord ?`,`Je coupe l'alimentation avant de la toucher`,`Je la tire immédiatement à mains nues`,`Je lui jette de l'eau`,`Je pars chercher quelqu'un sans rien couper`,`Si vous la touchez sous tension, vous serez électrisé à votre tour.`),
+Q('m6',`Brancher plusieurs multiprises les unes sur les autres :`,`Est à éviter : risque de surchauffe et d'incendie`,`Est sans danger`,`Est utile pour gagner de la place`,`Est conseillé pour les gros appareils`,`Une prise a une puissance limitée. On la respecte.`),
+Q('m6',`Avant d'utiliser un produit chimique, vous devez :`,`Lire l'étiquette et la fiche de données de sécurité`,`Le sentir pour le reconnaître`,`Demander à un collègue de goûter`,`Le mélanger à un autre pour plus d'efficacité`,`L'étiquette et la fiche indiquent dangers, protections et premiers secours.`),
+Q('m6',`Peut-on transvaser un produit dans une bouteille d'eau ?`,`Non, jamais : risque de confusion et d'ingestion`,`Oui, si on met un feutre pour écrire dessus`,`Oui, si la bouteille est propre`,`Oui, pour les petites quantités`,`Les accidents domestiques et professionnels viennent souvent de produits pris pour de l'eau.`),
+Q('m6',`Eau de Javel et détartrant : peut-on les mélanger pour mieux nettoyer ?`,`Non, cela dégage un gaz toxique`,`Oui, c'est plus efficace`,`Oui, en aérant à peine`,`Oui, si l'on met des gants`,`Certains mélanges produisent des gaz dangereux pour les poumons. Ne mélangez jamais deux produits.`),
+Q('m6',`Un produit chimique est projeté dans votre œil. Que faites-vous ?`,`Je rince abondamment à l'eau pendant au moins 10 à 15 minutes et je demande un avis médical`,`Je frotte l'œil`,`Je mets une compresse sèche sans rincer`,`J'attends que la douleur passe`,`Le rinçage immédiat et prolongé limite les lésions. Un avis médical reste nécessaire.`),
+
+Q('m7',`Dans quel ordre agit-on devant un accident ?`,`Protéger, alerter, secourir`,`Secourir, protéger, alerter`,`Alerter, partir, revenir`,`Déplacer, secourir, alerter`,`On commence par se protéger et protéger la victime du danger, puis on donne l'alerte.`),
+Q('m7',`Quel numéro appeler pour joindre le SAMU ?`,`15`,`17`,`19`,`12`,`Le 15 joint le SAMU, le 18 les pompiers. Vérifiez les numéros de votre territoire.`),
+Q('m7',`Une victime est inconsciente mais respire. Que faites-vous ?`,`Je la mets en position latérale de sécurité et j'alerte`,`Je la fais boire`,`Je la laisse sur le dos`,`Je la secoue pour la réveiller`,`La PLS libère les voies respiratoires et évite l'étouffement.`),
+Q('m7',`Face à un saignement abondant, que faites-vous ?`,`J'appuie directement sur la plaie avec la main ou une compresse et j'alerte`,`Je pose un garrot sans formation`,`Je lave la plaie à grande eau en attendant`,`J'attends l'arrivée des secours sans rien faire`,`La compression directe arrête la plupart des hémorragies.`),
+Q('m7',`Après une brûlure, il faut :`,`Refroidir à l'eau courante pendant au moins 10 minutes`,`Mettre de la glace directement`,`Percer les cloques`,`Appliquer du beurre ou de l'huile`,`L'eau refroidit la peau et limite l'aggravation. La glace seule agresse la peau.`),
+Q('m7',`Une victime ne respire plus. Que faites-vous ?`,`J'alerte, je fais des compressions thoraciques et j'utilise un défibrillateur dès qu'il arrive`,`J'attends les secours sans la toucher`,`Je lui donne à boire`,`Je la secoue vigoureusement`,`Chaque minute sans massage réduit les chances de survie. Les compressions et le défibrillateur sont déterminants.`),
+Q('m7',`Au téléphone avec les secours, vous devez :`,`Indiquer votre identité, le lieu précis, ce qui s'est passé, l'état de la victime`,`Raccrocher dès que vous avez donné l'adresse`,`Donner seulement votre prénom`,`Rester vague pour ne pas se tromper`,`Les secours ont besoin d'informations précises et de vos réponses. Ne raccrochez pas le premier.`),
+Q('m7',`Après une chute avec douleur à la nuque, que faites-vous ?`,`Je ne déplace pas la victime, sauf danger vital, et j'attends les secours`,`Je la relève pour qu'elle marche`,`Je lui tourne la tête pour vérifier`,`Je l'assieds contre un mur`,`Un déplacement peut aggraver une lésion de la colonne vertébrale.`),
+
+Q('m8',`Vous vous blessez légèrement. Que faites-vous ?`,`Je préviens aussitôt mon tuteur et je me fais soigner`,`Je ne dis rien, ce n'est pas grave`,`J'en parle à la fin du stage`,`Je rentre sans prévenir`,`Un accident, même bénin, se déclare tout de suite pour être pris en charge.`),
+Q('m8',`Sur la route du lieu de stage, vous devez :`,`Respecter le code de la route et ne pas téléphoner en conduisant`,`Rouler plus vite pour arriver à l'heure`,`Téléphoner si c'est urgent`,`Ne pas attacher la ceinture sur un petit trajet`,`Les accidents de la route restent une cause importante d'accidents liés au travail.`),
+Q('m8',`Par forte chaleur et soleil, il faut :`,`Boire régulièrement, se protéger du soleil et faire des pauses à l'ombre`,`Attendre d'avoir soif pour boire`,`Éviter de boire pour ne pas transpirer`,`Travailler plus vite pour finir plus tôt`,`Boire avant la soif et se protéger évite coup de chaleur et déshydratation.`),
+Q('m8',`Vous vous sentez très fatigué ou pris de malaise. Que faites-vous ?`,`J'arrête, je préviens et je me repose`,`Je continue sans rien dire`,`Je prends un café et je force`,`Je cache mon état`,`Fatigue et malaise multiplient les risques d'accident. Mieux vaut le dire.`),
+Q('m8',`Un collègue vous harcèle. Que faites-vous ?`,`J'en parle sans attendre à mon tuteur, à un référent ou à mon organisme de formation`,`Je me tais pour ne pas faire de vagues`,`Je réponds par la même violence`,`J'abandonne mon stage sans rien dire`,`Harcèlement et violence ne se subissent pas en silence. Des personnes sont là pour vous aider.`),
+Q('m8',`Concernant l'alcool et les substances au poste de travail :`,`Aucune consommation, et on ne vient pas travailler sous leur effet`,`Un verre le midi ne pose pas de problème`,`C'est permis si l'on se sent bien`,`C'est permis après les heures de travail sur place`,`Ils altèrent l'attention et les réflexes, pour vous et pour les autres.`),
+Q('m8',`Votre téléphone sonne alors que vous utilisez une machine. Que faites-vous ?`,`Je ne réponds pas, je termine ou j'arrête la machine en sécurité`,`Je réponds en continuant`,`Je coince le téléphone contre l'épaule`,`Je regarde l'écran en continuant`,`Un moment d'inattention suffit à provoquer un accident grave.`),
+Q('m8',`Un collègue vous demande de ne pas signaler un accident pour éviter des ennuis. Que faites-vous ?`,`Je préviens quand même mon tuteur ou mon organisme de formation`,`Je me tais pour lui faire plaisir`,`J'attends de voir si ça s'arrange`,`Je note l'accident et je le garde pour moi`,`Taire un accident prive la personne de soins et de prise en charge, et laisse le danger en place.`)
+];
+
+SECTORS.forEach(function(x){ x.qs.forEach(function(q){ BANK.push(Q('s_'+x.id,q[0],q[1],q[2],q[3],q[4],q[5])); }); });
+
+/* ---------- Etat et stockage ---------- */
+var KEY='code-prevention-v1';
+function blank(){return {read:{},train:{},attempts:[],passed:null,profile:null,badgeSeen:false};}
+function load(){try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);return Object.assign(blank(),o);}}catch(e){}return blank();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+var S=load();
+var view={name:'home'}, run=null;
+
+var app=document.getElementById('app');
+document.getElementById('logo').innerHTML=sign({shape:'square',col:'green',g:'cross'},34);
+
+/* ---------- Utilitaires ---------- */
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function modById(id){return MODS.concat(SECTORS.map(sectorMod)).filter(function(m){return m.id===id;})[0];}
+function inst(x){
+  var opts=shuffle([{t:x.o[0],ok:true}].concat(x.o.slice(1).map(function(t){return {t:t,ok:false};})));
+  return {m:x.m,q:x.q,opts:opts,e:x.e};
+}
+function go(v){if(v&&v.name==='badge'&&S.passed&&!S.badgeSeen){S.badgeSeen=true;save();} view=v;render();window.scrollTo(0,0);}
+function hasProfile(){return !!(S.profile&&S.profile.sector&&SECT[S.profile.sector]);}
+function frDate(iso){return new Date(iso).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});}
+var EXAM_N=40, EXAM_PASS=35, PER_MOD=4, SEC_N=8, TRAIN_N=8;
+
+/* ---------- Vues ---------- */
+function viewHome(){
+  var read=mods().filter(function(m){return S.read[m.id];}).length;
+  var signs=mods().map(function(m){return '<span class="mini'+(S.read[m.id]?' on':'')+'" title="'+esc(m.t)+'">'+sign(m.sign,34)+'</span>';}).join('');
+  var modCards=mods().map(function(m,i){
+    var tr=S.train[m.id];
+    var tag=S.read[m.id]?'<span class="tag ok">Lu</span>':'<span class="tag">À lire</span>';
+    var sub=(m.sector?'Votre secteur · ':'')+m.min+' min de lecture · '+TRAIN_N+' questions'+(tr?' · meilleur score '+tr.best+'/'+tr.total:'');
+    return '<button class="mod" data-act="open" data-id="'+m.id+'">'+sign(m.sign,52)+'<span class="mod-body"><b>'+esc(m.t)+'</b><small>'+sub+'</small></span>'+tag+'</button>';
+  }).join('');
+  var last=S.attempts.length?S.attempts[S.attempts.length-1]:null;
+  var Pf=S.profile, profile;
+  if(hasProfile() && !view.editProfile){
+    profile='<section class="profile"><div><p class="eyebrow">Stagiaire</p><p class="pname">'+esc(Pf.first+' '+Pf.last)+'</p><p class="pschool">'+esc(Pf.school)+' · '+esc(SECT[Pf.sector].name)+'</p></div><button class="btn ghost" data-act="editprofile">Modifier</button></section>';
+  } else {
+    profile='<section class="profile-form"><h2>Qui êtes-vous ?</h2><p class="note">Ces informations figureront sur votre attestation nominative. Renseignez-les avant de passer l\'examen.</p>'+
+      '<form class="form" id="profform" novalidate>'+
+      '<div class="field"><label for="p-first">Prénom</label><input id="p-first" autocomplete="given-name" value="'+esc(Pf?Pf.first:'')+'" maxlength="40"></div>'+
+      '<div class="field"><label for="p-last">Nom</label><input id="p-last" autocomplete="family-name" value="'+esc(Pf?Pf.last:'')+'" maxlength="40"></div>'+
+      '<div class="field"><label for="p-school">Établissement</label><input id="p-school" placeholder="Nom de votre lycée, CFA ou centre de formation" value="'+esc(Pf?Pf.school:'')+'" maxlength="70"></div>'+
+      '<fieldset class="field secset"'+(S.passed?' disabled':'')+'><legend>Secteur d\'activité de votre formation</legend><div class="secgrid">'+SECTORS.map(function(x){return '<label class="sec"><input type="radio" name="sector" value="'+x.id+'"'+(Pf&&Pf.sector===x.id?' checked':'')+'>'+sign({shape:'circle',col:'blue',g:x.g},36)+'<span>'+esc(x.name)+'</span></label>';}).join('')+'</div></fieldset>'+
+      '<p class="note" id="p-jobs"></p>'+
+      '<p class="note" id="p-err" role="alert" style="color:var(--red)"></p>'+
+      '<div class="actions" style="margin:0"><button class="btn" type="submit">Enregistrer</button>'+(hasProfile()?'<button class="btn ghost" type="button" data-act="home">Annuler</button>':'')+'</div></form></section>';
+  }
+  var examBody;
+  if(S.passed){
+    examBody='<p><span class="verdict ok">Examen validé</span></p><p>Vous avez obtenu '+S.passed.score+' sur '+EXAM_N+' le '+frDate(S.passed.date)+'.</p>'+
+      '<div class="actions" style="margin:0"><button class="btn" data-act="badge">Voir mon badge</button><button class="btn ghost" data-act="exam">Repasser l\'examen</button></div>';
+  } else {
+    examBody='<div class="facts"><span>'+EXAM_N+' questions</span><span>'+EXAM_PASS+' bonnes réponses pour réussir</span></div>'+
+      (hasProfile()?'':'<p class="note" style="color:var(--red)">Renseignez d\'abord votre identité, votre établissement et votre secteur pour passer l\'examen.</p>')+
+      '<p class="note">'+(read<mods().length?'Conseil : lisez d\'abord les '+mods().length+' modules ('+read+' lus). ':'Vous avez lu tous les modules. ')+
+      'Les corrections s\'affichent à la fin de l\'examen.'+(last?' Dernier essai : '+last.score+'/'+EXAM_N+'.':'')+'</p>'+
+      '<div class="actions" style="margin:0"><button class="btn" data-act="exam"'+(hasProfile()?'':' disabled')+'>Passer l\'examen</button></div>';
+  }
+  var steps=[
+    {k:'Identité',sub:hasProfile()?'Enregistrée':'À renseigner',done:hasProfile()},
+    {k:'Modules',sub:read+' / '+mods().length+' lus',done:read===mods().length},
+    {k:'Examen',sub:S.passed?S.passed.score+' / '+EXAM_N:(last?'Dernier essai '+last.score+' / '+EXAM_N:EXAM_N+' questions'),done:!!S.passed},
+    {k:'Badge',sub:S.passed?(S.badgeSeen?'Obtenu':'Prêt à retirer'):'À obtenir',done:!!S.badgeSeen}
+  ];
+  var cur=-1; for(var si=0;si<steps.length;si++){ if(!steps[si].done){cur=si;break;} }
+  var frise='<ol class="frise" aria-label="Votre progression">'+steps.map(function(x,i){
+    return '<li class="st'+(x.done?' done':(i===cur?' cur':''))+'"'+(i===cur?' aria-current="step"':'')+'><span class="dot">'+(x.done?'✓':(i+1))+'</span><b>'+x.k+'</b><small>'+esc(x.sub)+'</small>'+(i===cur?'<em class="here">Vous êtes ici</em>':'')+'</li>';
+  }).join('')+'</ol>';
+  var nm=S.profile?esc(S.profile.first):'', ct, cx;
+  if(S.passed && S.badgeSeen){ ct='Vous êtes prêt pour le stage !'; cx='Vous avez validé votre formation en santé et sécurité. Bon stage, et gardez toujours les bons réflexes.'; }
+  else if(S.passed){ ct='Félicitations'+(nm?', '+nm:'')+' !'; cx='Vous avez réussi l\'examen. Votre badge vous attend.'; }
+  else if(S.attempts.length){ ct='Ne lâchez rien !'; cx='Un examen manqué n\'est pas un échec. Relisez les modules où il y avait des erreurs et recommencez : chaque essai vous fait progresser.'; }
+  else if(read===mods().length){ ct='Tous les modules sont lus, bravo !'; cx='Entraînez-vous encore un peu si vous le souhaitez, puis lancez-vous dans l\'examen. Vous êtes prêt.'; }
+  else if(read>=4){ ct='Plus de la moitié du chemin !'; cx='Vous y êtes presque. Quelques modules encore, puis vous serez prêt pour l\'examen.'; }
+  else if(read>=1){ ct='Bien parti !'; cx='Chaque module lu vous rend plus sûr de vous sur le terrain'+(nm?', '+nm:'')+'. Continuez comme ça.'; }
+  else if(hasProfile()){ ct='Bienvenue, '+nm+' !'; cx='Le plus dur, c\'est de commencer. Ouvrez le premier module : cinq minutes suffisent.'; }
+  else { ct='Bienvenue !'; cx='Prenez un instant pour vous présenter, puis avancez à votre rythme. Chaque module se lit en cinq minutes environ.'; }
+  var cheerHtml='<aside class="cheer" role="note"><b>'+ct+'</b>'+cx+'</aside>';
+  return '<section class="hero"><p class="eyebrow">Avant votre stage</p><h1>Le code de la prévention</h1>'+
+    '<p class="by">Outil réalisé par la DAFPIC</p>'+
+    '<p class="lead">Huit modules communs et un module propre à votre secteur d\'activité, des questions d\'entraînement, puis un examen final de 40 questions. Si vous le réussissez, vous recevez un badge et une attestation nominative qui prouvent vos connaissances en santé et sécurité.</p>'+
+    '<p class="callout"><b>À faire avant le stage</b>Votre attestation doit être obtenue avant le début de votre stage. Prenez le temps de lire les modules et de passer l\'examen à l\'avance.</p>'+
+    profile+frise+cheerHtml+
+    '<div class="signs" aria-hidden="true">'+signs+'</div></section>'+
+    '<h2 style="margin-bottom:12px">Les modules</h2><div class="grid">'+modCards+'</div>'+
+    '<section class="exam"><p class="eyebrow">Étape finale</p><h2>Examen et badge</h2>'+examBody+'</section>';
+}
+
+function signsDemo(){
+  var it=[
+    [{shape:'ban'},'Interdiction','rond rouge barré'],
+    [{shape:'circle',col:'blue',g:'helmet'},'Obligation','rond bleu'],
+    [{shape:'tri',col:'yellow',g:'bolt'},'Danger','triangle jaune'],
+    [{shape:'square',col:'green',g:'cross'},'Secours','carré vert'],
+    [{shape:'square',col:'red',g:'flame'},'Incendie','carré rouge']
+  ];
+  return '<div class="demo">'+it.map(function(x){return '<figure>'+sign(x[0],64)+'<figcaption>'+x[1]+'<small>'+x[2]+'</small></figcaption></figure>';}).join('')+'</div>';
+}
+
+function viewModule(m){
+  var idx=mods().indexOf(m), n=idx+1, done=!!S.read[m.id], next=mods()[idx+1];
+  var blocks=m.lesson.map(function(b){
+    return '<section class="block"><h2>'+b.h+'</h2>'+(b.p?'<p>'+b.p+'</p>':'')+(b.ul?'<ul>'+b.ul.map(function(li){return '<li>'+li+'</li>';}).join('')+'</ul>':'')+'</section>';
+  }).join('');
+  return '<button class="back" data-act="home">← Tous les modules</button>'+
+    '<div class="mhead">'+sign(m.sign,68)+'<div><p class="eyebrow">'+(m.sector?'Module de votre secteur':'Module '+n+' sur '+mods().length)+'</p><h1>'+esc(m.t)+'</h1></div></div>'+
+    '<p class="lead" style="margin-bottom:18px">'+m.lead+'</p>'+
+    (m.jobs?'<p class="callout" style="margin-bottom:14px"><b>Métiers concernés</b>'+esc(m.jobs)+'. Ce module complète la présentation des risques que votre entreprise d\'accueil doit vous faire.</p>':'')+
+    (m.extra==='signs'?signsDemo():'')+blocks+
+    '<aside class="keep"><h2>À retenir</h2><ul>'+m.key.map(function(k){return '<li>'+k+'</li>';}).join('')+'</ul></aside>'+
+    '<div class="actions"><button class="btn" data-act="train" data-id="'+m.id+'">S\'entraîner · '+TRAIN_N+' questions</button>'+
+    '<button class="btn ghost" data-act="toggleread" data-id="'+m.id+'">'+(done?'Module lu ✓':'Marquer comme lu')+'</button>'+
+    (next?'<button class="btn ghost" data-act="open" data-id="'+next.id+'">Module suivant →</button>':'')+'</div>';
+}
+
+function viewQuiz(){
+  var it=run.items[run.i], total=run.items.length, exam=run.mode==='exam';
+  var letters=['A','B','C','D'];
+  var answered=run.locked;
+  var opts=it.opts.map(function(o,k){
+    var cls='opt', flag='';
+    if(exam){ if(run.sel===k) cls+=' sel'; }
+    else if(answered){
+      if(o.ok){cls+=' good';flag='<span class="flag">Bonne réponse</span>';}
+      else if(run.sel===k){cls+=' bad';flag='<span class="flag">Votre réponse</span>';}
+    }
+    return '<button class="'+cls+'" data-act="pick" data-k="'+k+'"'+(answered&&!exam?' disabled':'')+' aria-pressed="'+(run.sel===k)+'"><span class="l">'+letters[k]+'</span><span class="t">'+esc(o.t)+(flag?'<br>'+flag:'')+'</span></button>';
+  }).join('');
+  var title=exam?'Examen':('Entraînement · '+modById(run.modId).t);
+  var feedback='';
+  if(!exam&&answered){
+    var ok=it.opts[run.sel].ok;
+    feedback='<div class="explain"><b>'+(ok?'Correct':'Pas tout à fait')+'</b>'+esc(it.e)+'</div>';
+  }
+  var last=run.i===total-1;
+  var action;
+  if(exam){
+    action='<button class="btn" data-act="next"'+(run.sel===null?' disabled':'')+'>'+(last?'Terminer l\'examen':'Question suivante')+'</button>';
+  } else {
+    action=answered?'<button class="btn" data-act="next">'+(last?'Voir mon résultat':'Question suivante')+'</button>':'';
+  }
+  var quit=run.confirmQuit?
+    '<div class="confirm"><p><b>Quitter '+(exam?'l\'examen':'l\'entraînement')+' ?</b> Votre progression sera perdue.</p><div class="actions" style="margin:0"><button class="btn ghost" data-act="quitno">Continuer</button><button class="btn" style="background:var(--red);border-color:var(--red);color:#fff" data-act="quityes">Oui, quitter</button></div></div>':'';
+  return '<div class="qtop"><p class="eyebrow">'+esc(title)+' · '+(run.i+1)+' / '+total+'</p><button class="quit" data-act="quit">Quitter</button></div>'+
+    '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="'+total+'" aria-valuenow="'+(run.i+(answered?1:0))+'"><i style="width:'+Math.round((run.i+(answered?1:0))/total*100)+'%"></i></div>'+
+    quit+
+    '<p class="qtext">'+esc(it.q)+'</p><div class="opts">'+opts+'</div>'+feedback+'<div class="actions">'+action+'</div>';
+}
+
+function reviewHtml(items,ans){
+  var bad=[];
+  items.forEach(function(it,i){ if(!it.opts[ans[i]].ok) bad.push(i); });
+  if(!bad.length) return '';
+  return '<h2 style="margin-top:26px">À revoir ('+bad.length+')</h2><div class="review">'+bad.map(function(i){
+    var it=items[i], good=it.opts.filter(function(o){return o.ok;})[0];
+    return '<div class="rev"><p class="q">'+esc(it.q)+'</p><p class="no">Votre réponse : '+esc(it.opts[ans[i]].t)+'</p><p class="yes">Bonne réponse : '+esc(good.t)+'</p><p>'+esc(it.e)+'</p></div>';
+  }).join('')+'</div>';
+}
+
+function viewResult(){
+  var r=run.result, exam=r.mode==='exam';
+  var head, body='';
+  if(exam){
+    var pass=r.score>=EXAM_PASS;
+    head='<p class="eyebrow">Résultat de l\'examen</p><div class="score"><b>'+r.score+'</b><span>/ '+r.total+'</span></div>'+
+      '<p><span class="verdict '+(pass?'ok':'ko')+'">'+(pass?'Examen réussi':'Examen non validé')+'</span></p>'+
+      '<p class="lead" style="margin-top:10px">'+(pass?'Bravo, vous avez atteint le seuil de '+EXAM_PASS+' bonnes réponses. Votre badge est prêt.':'Il vous manque '+(EXAM_PASS-r.score)+' bonne'+(EXAM_PASS-r.score>1?'s':'')+' réponse'+(EXAM_PASS-r.score>1?'s':'')+' pour atteindre le seuil de '+EXAM_PASS+'. Relisez les modules signalés en rouge, puis recommencez. Ne vous découragez pas, chaque essai vous fait progresser.')+'</p>';
+    body='<div class="bymod">'+r.byMod.map(function(b){
+      var m=modById(b.id), low=b.ok<b.n-1;
+      return '<div><span>'+esc(m.t)+'</span><strong>'+b.ok+'/'+b.n+'</strong><span class="meter"><i class="'+(low?'low':'')+'" style="width:'+Math.round(b.ok/b.n*100)+'%"></i></span></div>';
+    }).join('')+'</div>';
+    body+='<div class="actions">'+(pass?'<button class="btn" data-act="badge">Obtenir mon badge</button>':'<button class="btn" data-act="exam">Repasser l\'examen</button>')+'<button class="btn ghost" data-act="home">Retour aux modules</button></div>';
+  } else {
+    var m=modById(r.modId);
+    head='<p class="eyebrow">Entraînement · '+esc(m.t)+'</p><div class="score"><b>'+r.score+'</b><span>/ '+r.total+'</span></div>'+
+      '<p class="lead">'+(r.score>=r.total-1?'Très bien, ce module est acquis.':'Relisez le module, puis recommencez : vous allez y arriver.')+'</p>';
+    body='<div class="actions"><button class="btn" data-act="train" data-id="'+m.id+'">Recommencer</button><button class="btn ghost" data-act="open" data-id="'+m.id+'">Relire le module</button><button class="btn ghost" data-act="home">Tous les modules</button></div>';
+  }
+  return head+body+reviewHtml(run.items,run.ans);
+}
+
+function viewBadge(){
+  if(!S.passed || !S.passed.name){ return '<p>Réussissez d\'abord l\'examen pour obtenir votre badge.</p><div class="actions"><button class="btn" data-act="home">Retour</button></div>'; }
+  var P=S.passed;
+  return '<button class="back" data-act="home">← Accueil</button><p class="eyebrow">Attestation délivrée le '+frDate(P.date)+'</p><h1 style="margin-bottom:16px">Votre badge</h1>'+
+    '<div class="badge-stage"><canvas class="badge" id="badge" role="img" aria-label="Badge Santé et Sécurité de '+esc(P.name)+', '+esc(P.org)+(P.sector&&SECT[P.sector]?', secteur '+esc(SECT[P.sector].name):'')+', score '+P.score+' sur '+EXAM_N+'"></canvas>'+
+    '<div class="actions" style="margin:0"><button class="btn" id="dl" data-act="download">Télécharger le badge (PNG)</button><button class="btn ghost" data-act="editprofile">Modifier mon identité</button></div>'+
+    '<p class="dlnote" id="dlnote">Référence du badge : <b>'+esc(P.ref)+'</b>. Conservez-la : elle permet de retrouver votre résultat. Rappel : l\'attestation doit être obtenue avant le début du stage.</p>'+
+    '<div class="panel" style="max-width:520px"><h2>Code de résultat</h2><p class="note">Transmettez ce code à la DAFPIC, ou à votre établissement qui le lui fera parvenir, pour que votre attestation soit enregistrée.</p>'+
+    '<textarea id="code" readonly rows="3" aria-label="Code de résultat">'+esc(encodeCode(P))+'</textarea>'+
+    '<div class="actions" style="margin:0"><button class="btn ghost" data-act="copycode">Copier le code</button></div><p class="note" id="cmsg" role="status"></p></div></div>';
+}
+
+function render(){
+  var h='';
+  if(view.name==='home') h=viewHome();
+  else if(view.name==='module') h=viewModule(modById(view.id));
+  else if(view.name==='quiz') h=viewQuiz();
+  else if(view.name==='result') h=viewResult();
+  else if(view.name==='badge') h=viewBadge();
+  else if(view.name==='recap') h=viewRecap();
+  app.innerHTML=h;
+  if(view.name==='badge' && S.passed && S.passed.name){ drawBadge(document.getElementById('badge'),S.passed); initDownload(); }
+  var f=document.getElementById('profform');
+  if(f){ f.addEventListener('submit',submitProfile);
+    var hint=document.getElementById('p-jobs');
+    var upd=function(){ var c=f.querySelector('input[name="sector"]:checked'), x=c?SECT[c.value]:null; hint.textContent=x?('Métiers concernés : '+x.jobs+'.'):(S.passed?'Le secteur ne peut plus être modifié après l\'examen.':'Choisissez le secteur qui correspond à votre formation.'); };
+    Array.prototype.forEach.call(f.querySelectorAll('input[name="sector"]'),function(r){r.addEventListener('change',upd);}); upd();
+  }
+  updateTabs();
+  if(view.name==='recap') bindRecap();
+}
+
+/* ---------- Actions ---------- */
+function startQuiz(mode,modId){
+  var items;
+  if(mode==='train'){ items=shuffle(BANK.filter(function(x){return x.m===modId;})).slice(0,TRAIN_N).map(inst); }
+  else { items=shuffle(mods().reduce(function(acc,m){return acc.concat(shuffle(BANK.filter(function(x){return x.m===m.id;})).slice(0,m.sector?SEC_N:PER_MOD));},[])).map(inst); }
+  run={mode:mode,modId:modId,items:items,i:0,ans:[],sel:null,locked:false,confirmQuit:false,result:null};
+  go({name:'quiz'});
+}
+function finishQuiz(){
+  var items=run.items, ans=run.ans;
+  var score=items.filter(function(it,i){return it.opts[ans[i]].ok;}).length;
+  var r={mode:run.mode,modId:run.modId,score:score,total:items.length};
+  if(run.mode==='exam'){
+    r.byMod=mods().map(function(m){
+      var ok=0,n=0; items.forEach(function(it,i){ if(it.m===m.id){ n++; if(it.opts[ans[i]].ok) ok++; } });
+      return {id:m.id,ok:ok,n:n};
+    });
+    var iso=new Date().toISOString();
+    S.attempts.push({score:score,date:iso});
+    if(score>=EXAM_PASS && (!S.passed || score>=S.passed.score)){
+      var pf=S.profile||{first:'',last:'',school:'',sector:''}, nm=(pf.first+' '+pf.last).trim();
+      S.passed={score:score,date:iso,first:pf.first,last:pf.last,org:pf.school,sector:pf.sector,name:nm,ref:makeRef(nm.toLowerCase()+'|'+iso+'|'+score+(pf.sector?'|'+pf.sector:''))};
+    }
+  } else {
+    var t=S.train[run.modId]; if(!t||score>t.best){ S.train[run.modId]={best:score,total:items.length}; }
+  }
+  save(); run.result=r; go({name:'result'});
+}
+function makeRef(s){
+  var h1=2166136261,h2=5381;
+  for(var i=0;i<s.length;i++){var c=s.charCodeAt(i);h1=Math.imul(h1^c,16777619)>>>0;h2=(Math.imul(h2,33)+c)>>>0;}
+  var t=(h1.toString(36)+h2.toString(36)).toUpperCase().replace(/[^A-Z0-9]/g,'');
+  t=(t+'00000000').slice(0,8); return t.slice(0,4)+'-'+t.slice(4);
+}
+function submitProfile(ev){
+  ev.preventDefault();
+  var first=document.getElementById('p-first').value.trim(), last=document.getElementById('p-last').value.trim(), school=document.getElementById('p-school').value.trim();
+  var sector=S.passed&&S.passed.sector?S.passed.sector:(document.querySelector('input[name="sector"]:checked')||{}).value;
+  if(!first||!last||!school||!SECT[sector]){ document.getElementById('p-err').textContent='Renseignez votre prénom, votre nom, votre établissement et votre secteur.'; return; }
+  S.profile={first:first,last:last,school:school,sector:sector};
+  if(S.passed){ var P=S.passed; P.first=first; P.last=last; P.org=school; P.name=first+' '+last; P.ref=makeRef(P.name.toLowerCase()+'|'+P.date+'|'+P.score+(P.sector?'|'+P.sector:'')); }
+  save(); go({name:'home'});
+}
+
+app.addEventListener('click',function(ev){
+  var el=ev.target.closest('[data-act]'); if(!el) return;
+  var a=el.getAttribute('data-act'), id=el.getAttribute('data-id');
+  if(a==='open') go({name:'module',id:id});
+  else if(a==='toggleread'){ if(S.read[id]) delete S.read[id]; else S.read[id]=true; save(); render(); }
+  else if(a==='train') startQuiz('train',id);
+  else if(a==='exam'){ if(hasProfile()) startQuiz('exam'); }
+  else if(a==='badge') go({name:'badge'});
+  else if(a==='home') go({name:'home'});
+  else if(a==='editprofile') go({name:'home',editProfile:true});
+  else if(a==='quit'){ run.confirmQuit=true; render(); }
+  else if(a==='quitno'){ run.confirmQuit=false; render(); }
+  else if(a==='quityes'){ run=null; go({name:'home'}); }
+  else if(a==='pick'){
+    var k=parseInt(el.getAttribute('data-k'),10);
+    if(run.mode==='exam'){ run.sel=k; render(); }
+    else if(!run.locked){ run.sel=k; run.locked=true; render(); }
+  }
+  else if(a==='next'){
+    if(run.sel===null) return;
+    run.ans[run.i]=run.sel;
+    if(run.i===run.items.length-1){ finishQuiz(); return; }
+    run.i++; run.sel=null; run.locked=false; render(); window.scrollTo(0,0);
+  }
+  else if(a==='download') doDownload();
+});
+document.querySelector('.brand').addEventListener('click',function(){ go({name:'home'}); });
+
+/* ---------- Badge (canvas) ---------- */
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.arcTo(x+w,y,x+w,y+r,r);c.lineTo(x+w,y+h-r);c.arcTo(x+w,y+h,x+w-r,y+h,r);c.lineTo(x+r,y+h);c.arcTo(x,y+h,x,y+h-r,r);c.lineTo(x,y+r);c.arcTo(x,y,x+r,y,r);c.closePath();}
+function fit(c,txt,weight,family,max,start){var s=start;do{c.font=weight+' '+s+'px '+family;s-=2;}while(c.measureText(txt).width>max&&s>16);}
+async function drawBadge(cv,P){
+  try{ await Promise.all([document.fonts.load('700 80px "Barlow Condensed"'),document.fonts.load('600 40px "Barlow Condensed"'),document.fonts.load('500 40px "Barlow"')]); }catch(e){}
+  var W=1080,H=1350,c=cv.getContext('2d'); cv.width=W; cv.height=H;
+  var DISP='"Barlow Condensed","Arial Narrow",Arial,sans-serif', TXT='"Barlow",Arial,sans-serif';
+  c.fillStyle='#0B7A4B'; rr(c,0,0,W,H,90); c.fill();
+  c.strokeStyle='#FFFFFF'; c.lineWidth=12; rr(c,40,40,W-80,H-80,58); c.stroke();
+  c.textAlign='center'; c.textBaseline='alphabetic';
+  try{c.letterSpacing='6px';}catch(e){}
+  c.fillStyle='rgba(255,255,255,.82)'; c.font='600 38px '+DISP; c.fillText('CODE PRÉVENTION · STAGIAIRES',W/2,125);
+  try{c.letterSpacing='0px';}catch(e){}
+  c.fillStyle='#FFFFFF'; c.beginPath(); c.arc(W/2,385,175,0,Math.PI*2); c.fill();
+  c.strokeStyle='#0B7A4B'; c.lineWidth=40; c.lineCap='round'; c.lineJoin='round';
+  c.beginPath(); c.moveTo(W/2-95,390); c.lineTo(W/2-25,460); c.lineTo(W/2+105,310); c.stroke();
+  c.fillStyle='#FFFFFF'; fit(c,'BADGE SANTÉ ET SÉCURITÉ',700,DISP,900,118); c.fillText('BADGE SANTÉ ET SÉCURITÉ',W/2,730);
+  c.fillStyle='rgba(255,255,255,.45)'; c.fillRect(W/2-120,775,240,4);
+  c.fillStyle='rgba(255,255,255,.85)'; c.font='500 38px '+TXT; c.fillText('Décerné à',W/2,850);
+  c.fillStyle='#FFFFFF'; fit(c,P.name,700,DISP,880,128); c.fillText(P.name,W/2,975);
+  if(P.org){ c.fillStyle='rgba(255,255,255,.9)'; fit(c,P.org,500,TXT,860,42); c.fillText(P.org,W/2,1035); }
+  var sn=(P.sector&&SECT[P.sector])?('Secteur : '+SECT[P.sector].name):'';
+  if(sn){ c.fillStyle='#FFFFFF'; fit(c,sn,600,DISP,860,46); c.fillText(sn,W/2,1093); }
+  c.fillStyle='rgba(255,255,255,.9)'; var line='a validé les modules de prévention et l\'examen final';
+  fit(c,line,500,TXT,880,36); c.fillText(line,W/2,1150);
+  c.fillStyle='#FFFFFF'; c.font='700 52px '+DISP; c.fillText('Score '+P.score+' / '+EXAM_N+'  ·  '+frDate(P.date),W/2,1207);
+  c.fillStyle='rgba(255,255,255,.8)'; c.font='500 32px '+TXT; c.fillText('Réf. '+P.ref,W/2,1252);
+  c.fillStyle='rgba(255,255,255,.7)'; c.font='600 30px '+DISP; try{c.letterSpacing='3px';}catch(e){} c.fillText('OUTIL RÉALISÉ PAR LA DAFPIC',W/2,1294); try{c.letterSpacing='0px';}catch(e){}
+}
+var dlApi=null;
+async function initDownload(){
+  try{ dlApi=(window.claude&&window.claude.use)?await window.claude.use('downloads'):null; }catch(e){ dlApi=null; }
+}
+function doDownload(){
+  var cv=document.getElementById('badge'), note=document.getElementById('dlnote'); if(!cv) return;
+  cv.toBlob(function(b){
+    if(!b) return;
+    var slug=(S.passed.name||'stagiaire').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    var fname='badge-securite-'+slug+'.png';
+    if(dlApi){
+      dlApi.save({filename:fname,data:b}).then(function(){ if(note) note.innerHTML='Badge enregistré. Référence : <b>'+esc(S.passed.ref)+'</b>.'; })
+        .catch(function(err){ if(note&&err&&err.code!=='declined') note.innerHTML+=' Le téléchargement a échoué : faites une capture d\'écran du badge.'; });
+    } else {
+      var u=URL.createObjectURL(b), a=document.createElement('a'); a.href=u; a.download=fname; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){URL.revokeObjectURL(u);},4000);
+      if(note) note.innerHTML='Badge téléchargé. Référence : <b>'+esc(S.passed.ref)+'</b>.';
+    }
+  },'image/png');
+}
+
+/* ---------- Récapitulatif DAFPIC ---------- */
+var PW_SHA='2e58d014d5680280efcad397e8e7d00ae99e3871f4a48f1c9b11a2af9716aa3d', PW_WEAK='wtepd9.e9jjx3';
+var R={ok:false,list:[],mode:'local',db:null,q:'',flt:'',fk:'',loaded:false,confirmClear:false,note:''};
+var LSKEY='cp-recap-v1';
+function lsLoad(){try{var r=localStorage.getItem(LSKEY);return r?JSON.parse(r):[];}catch(e){return [];}}
+function lsSave(l){try{localStorage.setItem(LSKEY,JSON.stringify(l));}catch(e){}}
+function weak(t){var h1=2166136261,h2=5381;for(var i=0;i<t.length;i++){var c=t.charCodeAt(i);h1=Math.imul(h1^c,16777619)>>>0;h2=(Math.imul(h2,33)+c)>>>0;}return h1.toString(36)+'.'+h2.toString(36);}
+async function sha(t){
+  try{ if(window.crypto&&crypto.subtle){ var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)); return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0');}).join(''); } }catch(e){}
+  return null;
+}
+function encodeCode(P){
+  var j=JSON.stringify({f:P.first,l:P.last,e:P.org,k:P.sector||'',s:P.score,d:P.date,r:P.ref});
+  return 'CP2.'+btoa(unescape(encodeURIComponent(j))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function decodeCode(t){
+  var m=t.match(/CP[12]\.([A-Za-z0-9_-]+)/); if(!m) return null;
+  try{
+    var b=m[1].replace(/-/g,'+').replace(/_/g,'/'); while(b.length%4) b+='=';
+    var j=JSON.parse(decodeURIComponent(escape(atob(b))));
+    if(!j||!j.f||!j.l||!j.e||typeof j.s!=='number'||!j.d||!j.r) return null;
+    j.k=j.k||''; j.ok=(makeRef((j.f+' '+j.l).toLowerCase()+'|'+j.d+'|'+j.s+(j.k?'|'+j.k:''))===j.r)&&j.s>=EXAM_PASS&&j.s<=EXAM_N;
+    return j;
+  }catch(e){ return null; }
+}
+function mergeByRef(a,b){var seen={},out=[];a.concat(b).forEach(function(x){if(!seen[x.r]){seen[x.r]=1;out.push(x);}});return out;}
+async function recapLoad(){
+  R.note=''; R.db=null; R.mode='local';
+  var db=null; try{ db=(window.claude&&window.claude.use)?await window.claude.use('db'):null; }catch(e){ db=null; }
+  if(db){ try{ var snap=await db.collection('recap').limit(1000).get(); R.list=snap.docs.map(function(d){return d.data();}); R.db=db; R.mode='db'; }catch(e){ R.db=null; } }
+  if(R.mode==='local'){ R.list=lsLoad(); }
+  R.loaded=true;
+}
+async function recapPut(rec){
+  if(R.mode==='db'){ try{ await R.db.doc('recap/'+rec.r).set(rec); return; }catch(e){ R.mode='local'; R.note='L\'enregistrement partagé est indisponible : la liste est conservée sur cet appareil.'; R.list=mergeByRef(lsLoad(),R.list); } }
+}
+async function recapDel(ref){
+  if(R.mode==='db'){ try{ await R.db.doc('recap/'+ref).delete(); }catch(e){} }
+  R.list=R.list.filter(function(x){return x.r!==ref;});
+  if(R.mode==='local') lsSave(R.list);
+}
+function sortedList(){return R.list.slice().sort(function(a,b){return a.d<b.d?1:a.d>b.d?-1:(a.l+a.f).localeCompare(b.l+b.f);});}
+function filteredList(){
+  var q=R.q.trim().toLowerCase();
+  return sortedList().filter(function(x){
+    if(R.flt && x.e!==R.flt) return false;
+    if(R.fk && (x.k||'')!==R.fk) return false;
+    if(q && (x.f+' '+x.l+' '+x.e+' '+x.r).toLowerCase().indexOf(q)<0) return false;
+    return true;
+  });
+}
+function schoolsList(){var o={};R.list.forEach(function(x){o[x.e]=1;});return Object.keys(o).sort();}
+function secName(k){return SECT[k]?SECT[k].name:'—';}
+function usedSectors(){var o={};R.list.forEach(function(x){if(x.k) o[x.k]=1;});return Object.keys(o).sort(function(a,b){return secName(a).localeCompare(secName(b));});}
+function fmtD(iso){return new Date(iso).toLocaleDateString('fr-FR');}
+
+function viewRecap(){
+  if(!R.ok){
+    return '<p class="eyebrow">Espace DAFPIC</p><h1 style="margin-bottom:12px">Récapitulatif</h1>'+
+      '<p class="lead" style="margin-bottom:16px">Accès réservé. Saisissez le mot de passe pour consulter la liste des jeunes formés.</p>'+
+      '<form class="form" id="gate" novalidate><div class="field"><label for="pw">Mot de passe</label><input id="pw" type="password" autocomplete="off"></div>'+
+      '<p class="note" id="pw-err" role="alert" style="color:var(--red)"></p><button class="btn" type="submit">Accéder</button></form>';
+  }
+  var n=R.list.length, sc=schoolsList(), ko=R.list.filter(function(x){return !x.ok;}).length;
+  var opts='<option value="">Tous les établissements</option>'+sc.map(function(e){return '<option value="'+esc(e)+'"'+(R.flt===e?' selected':'')+'>'+esc(e)+'</option>';}).join('');
+  var clear=R.confirmClear?
+    '<div class="confirm"><p><b>Vider toute la liste ?</b> Les '+n+' enregistrements seront supprimés. Exportez-les d\'abord si besoin.</p><div class="actions" style="margin:0"><button class="btn ghost" data-act="clearno">Annuler</button><button class="btn" style="background:var(--red);border-color:var(--red);color:#fff" data-act="clearyes">Oui, tout supprimer</button></div></div>':'';
+  return '<p class="eyebrow">Espace DAFPIC</p><h1>Récapitulatif</h1>'+
+    '<div class="stats"><div class="stat"><b>'+n+'</b><span>jeune'+(n>1?'s':'')+' formé'+(n>1?'s':'')+'</span></div><div class="stat"><b>'+sc.length+'</b><span>établissement'+(sc.length>1?'s':'')+'</span></div><div class="stat"><b>'+usedSectors().length+'</b><span>secteur'+(usedSectors().length>1?'s':'')+'</span></div>'+(ko?'<div class="stat"><b>'+ko+'</b><span>à vérifier</span></div>':'')+'</div>'+
+    '<p class="note" style="margin-bottom:14px">'+(R.mode==='db'?'Liste enregistrée dans l\'espace protégé de ce document, accessible depuis tous vos appareils.':'Liste enregistrée sur cet appareil uniquement. Exportez-la régulièrement en Excel.')+(R.note?' '+esc(R.note):'')+'</p>'+
+    '<div class="panel"><h2>Ajouter des résultats</h2><p class="note">Chaque jeune qui réussit l\'examen reçoit un code de résultat. Collez ici les codes reçus, un par ligne.</p>'+
+    '<textarea id="codes" placeholder="CP2...." aria-label="Codes de résultat"></textarea>'+
+    '<div class="actions" style="margin:0"><button class="btn" data-act="import">Ajouter à la liste</button></div><p class="msg" id="rmsg" role="status"></p></div>'+
+    '<div class="filters"><select id="flt" aria-label="Filtrer par établissement">'+opts+'</select><select id="fk" aria-label="Filtrer par secteur"><option value="">Tous les secteurs</option>'+usedSectors().map(function(k){return '<option value="'+k+'"'+(R.fk===k?' selected':'')+'>'+esc(secName(k))+'</option>';}).join('')+'</select><input id="q" type="search" placeholder="Rechercher un nom" value="'+esc(R.q)+'" aria-label="Rechercher"></div>'+
+    '<div id="rt"></div>'+clear+
+    '<div class="actions"><button class="btn" data-act="export"'+(n?'':' disabled')+'>Exporter en Excel</button>'+(n?'<button class="btn ghost" data-act="clearask">Vider la liste</button>':'')+'</div>';
+}
+function renderTable(){
+  var box=document.getElementById('rt'); if(!box) return;
+  var l=filteredList();
+  if(!l.length){ box.innerHTML='<div class="tablewrap"><p class="empty">'+(R.list.length?'Aucun résultat pour ce filtre.':'Aucun jeune enregistré pour le moment. Collez les codes de résultat reçus ci-dessus.')+'</p></div>'; return; }
+  box.innerHTML='<div class="tablewrap"><table><thead><tr><th>Nom</th><th>Prénom</th><th>Établissement</th><th>Secteur</th><th>Score</th><th>Date</th><th>Réf.</th><th>Contrôle</th><th><span class="sr" style="position:absolute;left:-9999px">Supprimer</span></th></tr></thead><tbody>'+
+    l.map(function(x){return '<tr><td>'+esc(x.l)+'</td><td>'+esc(x.f)+'</td><td>'+esc(x.e)+'</td><td>'+esc(secName(x.k))+'</td><td class="num">'+x.s+' / '+EXAM_N+'</td><td class="num">'+fmtD(x.d)+'</td><td class="num">'+esc(x.r)+'</td><td><span class="chk '+(x.ok?'ok':'ko')+'">'+(x.ok?'Conforme':'À vérifier')+'</span></td><td><button class="rowdel" data-act="delrow" data-id="'+esc(x.r)+'" aria-label="Supprimer '+esc(x.f+' '+x.l)+'">Supprimer</button></td></tr>';}).join('')+
+    '</tbody></table></div><p class="note" style="margin-top:6px">'+l.length+' ligne'+(l.length>1?'s':'')+' affichée'+(l.length>1?'s':'')+'.</p>';
+}
+function setMsg(t){var m=document.getElementById('rmsg'); if(m) m.textContent=t;}
+function bindRecap(){
+  var g=document.getElementById('gate'); if(g) g.addEventListener('submit',submitGate);
+  var q=document.getElementById('q'), f=document.getElementById('flt');
+  if(q) q.addEventListener('input',function(){R.q=q.value;renderTable();});
+  if(f) f.addEventListener('change',function(){R.flt=f.value;renderTable();});
+  var fk=document.getElementById('fk'); if(fk) fk.addEventListener('change',function(){R.fk=fk.value;renderTable();});
+  if(R.ok) renderTable();
+}
+async function submitGate(ev){
+  ev.preventDefault();
+  var pw=document.getElementById('pw').value, err=document.getElementById('pw-err');
+  var h=await sha(pw), good=h?(h===PW_SHA):(weak(pw)===PW_WEAK);
+  if(!good){ err.textContent='Mot de passe incorrect.'; return; }
+  R.ok=true; err.textContent='Chargement…'; await recapLoad(); render();
+}
+async function doImport(){
+  var ta=document.getElementById('codes'); if(!ta) return;
+  var found=ta.value.match(/CP[12]\.[A-Za-z0-9_-]+/g)||[];
+  if(!found.length){ setMsg('Aucun code reconnu. Un code commence par CP.'); return; }
+  var add=0,dup=0,bad=0;
+  for(var i=0;i<found.length;i++){
+    var j=decodeCode(found[i]);
+    if(!j){bad++;continue;}
+    if(R.list.some(function(x){return x.r===j.r;})){dup++;continue;}
+    var rec={r:j.r,f:j.f,l:j.l,e:j.e,k:j.k||'',s:j.s,d:j.d,ok:j.ok,t:new Date().toISOString()};
+    await recapPut(rec); R.list.push(rec); add++;
+  }
+  if(R.mode==='local') lsSave(R.list);
+  var msg=add+' ajouté'+(add>1?'s':'')+(dup?', '+dup+' déjà présent'+(dup>1?'s':''):'')+(bad?', '+bad+' illisible'+(bad>1?'s':''):'')+'.';
+  render(); setMsg(msg);
+}
+async function saveBlob(blob,fname){
+  if(!dlApi){ try{ dlApi=(window.claude&&window.claude.use)?await window.claude.use('downloads'):null; }catch(e){ dlApi=null; } }
+  if(dlApi){ try{ await dlApi.save({filename:fname,data:blob}); return 'saved'; }catch(err){ return (err&&err.code==='declined')?'declined':'error'; } }
+  var u=URL.createObjectURL(blob), a=document.createElement('a'); a.href=u; a.download=fname; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){URL.revokeObjectURL(u);},4000); return 'saved';
+}
+async function doExport(){
+  var list=sortedList(); if(!list.length) return;
+  var head=['Nom','Prénom','Établissement','Secteur','Score','Sur','Date de réussite','Référence','Contrôle'];
+  var rows=[head].concat(list.map(function(x){return [x.l,x.f,x.e,secName(x.k),x.s,EXAM_N,fmtD(x.d),x.r,x.ok?'Conforme':'À vérifier'];}));
+  var by={}; list.forEach(function(x){by[x.e]=(by[x.e]||0)+1;});
+  var rows2=[['Établissement','Jeunes formés']].concat(Object.keys(by).sort().map(function(k){return [k,by[k]];}));
+  var bs={}; list.forEach(function(x){var n=secName(x.k); bs[n]=(bs[n]||0)+1;});
+  var rows3=[['Secteur','Jeunes formés']].concat(Object.keys(bs).sort().map(function(k){return [k,bs[k]];}));
+  var stamp=new Date().toISOString().slice(0,10), blob, name;
+  if(window.XLSX){
+    var ws=XLSX.utils.aoa_to_sheet(rows); ws['!cols']=[{wch:20},{wch:18},{wch:34},{wch:32},{wch:8},{wch:6},{wch:16},{wch:12},{wch:14}];
+    var ws2=XLSX.utils.aoa_to_sheet(rows2); ws2['!cols']=[{wch:40},{wch:14}];
+    var wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Jeunes formés'); XLSX.utils.book_append_sheet(wb,ws2,'Par établissement'); var ws3=XLSX.utils.aoa_to_sheet(rows3); ws3['!cols']=[{wch:40},{wch:14}]; XLSX.utils.book_append_sheet(wb,ws3,'Par secteur');
+    blob=new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    name='recapitulatif-code-prevention-'+stamp+'.xlsx';
+  } else {
+    var esc2=function(v){v=String(v);if(/^[=+\-@]/.test(v)) v="'"+v; return '"'+v.replace(/"/g,'""')+'"';};
+    blob=new Blob(['﻿'+rows.map(function(r){return r.map(esc2).join(';');}).join('\r\n')],{type:'text/csv'});
+    name='recapitulatif-code-prevention-'+stamp+'.csv';
+  }
+  var r=await saveBlob(blob,name);
+  setMsg(r==='saved'?'Fichier exporté : '+name:(r==='declined'?'Export annulé.':'L\'export a échoué. Réessayez.'));
+}
+function updateTabs(){
+  var cur=view.name==='recap'?'recap':'home';
+  Array.prototype.forEach.call(document.querySelectorAll('.tabs button'),function(b){
+    if(b.getAttribute('data-tab')===cur) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+  });
+}
+document.querySelector('.tabs').addEventListener('click',function(ev){
+  var b=ev.target.closest('button[data-tab]'); if(!b) return;
+  if(b.getAttribute('data-tab')==='home'){ go({name:'home'}); return; }
+  go({name:'recap'});
+  if(R.ok && !R.loaded){ recapLoad().then(function(){ if(view.name==='recap') render(); }); }
+});
+app.addEventListener('click',function(ev){
+  var el=ev.target.closest('[data-act]'); if(!el) return;
+  var a=el.getAttribute('data-act'), id=el.getAttribute('data-id');
+  if(a==='import') doImport();
+  else if(a==='export') doExport();
+  else if(a==='delrow'){ recapDel(id).then(function(){ render(); }); }
+  else if(a==='clearask'){ R.confirmClear=true; render(); }
+  else if(a==='clearno'){ R.confirmClear=false; render(); }
+  else if(a==='clearyes'){
+    var ids=R.list.map(function(x){return x.r;}); R.confirmClear=false;
+    (async function(){ for(var i=0;i<ids.length;i++){ await recapDel(ids[i]); } render(); })();
+  }
+  else if(a==='copycode'){
+    var ta=document.getElementById('code'), m=document.getElementById('cmsg'); if(!ta) return;
+    ta.select();
+    var fb=function(){ try{document.execCommand('copy');}catch(e){} if(m) m.textContent='Code sélectionné. Copiez-le avec le menu de votre appareil.'; };
+    try{ navigator.clipboard.writeText(ta.value).then(function(){ if(m) m.textContent='Code copié.'; }).catch(fb); }catch(e){ fb(); }
+  }
+});
+
+render();
+})();
+</script>
+
+</body></html>
