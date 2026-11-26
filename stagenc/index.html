@@ -133,74 +133,19 @@
     </div>
 
     <!-- MODAL DE CANDIDATURE RAPIDE -->
-    <div id="apply-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4 no-print overflow-y-auto">
+    <div id="contact-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4 no-print overflow-y-auto">
         <div class="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 fade-in my-8">
             <div class="flex justify-between items-start mb-4">
                 <div>
-                    <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-pacifique/15 text-lagon mb-2">Candidature & Convention</span>
-                    <h3 id="apply-offer-title" class="text-xl font-bold text-slate-900">Titre de l'offre</h3>
-                    <p id="apply-offer-company" class="text-sm text-slate-500 font-medium">Entreprise • Commune</p>
+                    <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-pacifique/15 text-lagon mb-2">Postuler en direct</span>
+                    <h3 id="contact-offer-title" class="text-xl font-bold text-slate-900">Titre de l'offre</h3>
+                    <p id="contact-offer-company" class="text-sm text-slate-500 font-medium">Entreprise • Commune</p>
                 </div>
-                <button onclick="closeApplyModal()" class="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition">
+                <button onclick="closeContactModal()" class="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-
-            <form id="apply-form" onsubmit="submitApplication(event)" class="space-y-4">
-                <input type="hidden" id="apply-offer-id">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Prénom de l'élève *</label>
-                        <input type="text" id="apply-firstname" required placeholder="Ex: Maëva" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-pacifique focus:ring-2 focus:ring-pacifique/20 outline-none text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Nom de l'élève *</label>
-                        <input type="text" id="apply-lastname" required placeholder="Ex: Waimo" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-pacifique focus:ring-2 focus:ring-pacifique/20 outline-none text-sm">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Établissement scolaire *</label>
-                        <input type="text" id="apply-school" required placeholder="Ex: Lycée Jules Garnier" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-pacifique focus:ring-2 focus:ring-pacifique/20 outline-none text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Classe / Formation *</label>
-                        <input type="text" id="apply-class" required placeholder="Ex: 1ère Bac Pro MELEC" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-pacifique focus:ring-2 focus:ring-pacifique/20 outline-none text-sm">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Téléphone (élève ou parent) *</label>
-                        <input type="tel" id="apply-phone" required placeholder="Ex: 78.45.12" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-pacifique focus:ring-2 focus:ring-pacifique/20 outline-none text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Courriel *</label>
-                        <input type="email" id="apply-email" required placeholder="Ex: maeva.waimo@eleve.nc" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-pacifique focus:ring-2 focus:ring-pacifique/20 outline-none text-sm">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Message de motivation (court)</label>
-                    <textarea id="apply-message" rows="3" placeholder="Bonjour, je suis très motivé(e) pour réaliser mon stage au sein de votre entreprise..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-pacifique focus:ring-2 focus:ring-pacifique/20 outline-none text-sm"></textarea>
-                </div>
-
-                <div class="bg-sky-50 border border-sky-100 rounded-xl p-3.5 flex items-start gap-3">
-                    <i data-lucide="file-check" class="w-5 h-5 text-lagon shrink-0 mt-0.5"></i>
-                    <p class="text-xs text-slate-700">
-                        En validant, votre candidature est enregistrée dans <strong>"Mes candidatures"</strong> et votre <strong>convention officielle du Vice-rectorat de la NC</strong> est automatiquement pré-remplie avec les coordonnées de l'entreprise !
-                    </p>
-                </div>
-
-                <div class="flex flex-col sm:flex-row justify-end gap-3 pt-2">
-                    <button type="button" onclick="closeApplyModal()" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition">Fermer</button>
-                    <button type="submit" class="px-5 py-2.5 rounded-xl text-sm font-semibold bg-corail text-white hover:bg-corailHover transition shadow-md flex items-center justify-center gap-2">
-                        <span>Envoyer & Ouvrir ma convention</span>
-                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            </form>
+            <div id="contact-offer-body"></div>
         </div>
     </div>
 
@@ -277,27 +222,15 @@
                 </div>
             </div>
 
-            <!-- Sous-navigation Jeunes : Offres vs Mes candidatures -->
+            <!-- Accès direct à la convention -->
             <div class="flex flex-wrap items-center justify-between gap-4">
-                <div class="inline-flex bg-white p-1.5 rounded-2xl shadow-sm border border-slate-200/80">
-                    <button id="subtab-offers-btn" onclick="switchJeunesSubtab('offers')" class="px-4 py-2 rounded-xl text-sm font-semibold bg-lagon text-white transition flex items-center gap-2">
-                        <i data-lucide="briefcase" class="w-4 h-4"></i>
-                        <span>Offres de stages disponibles</span>
-                    </button>
-                    <button id="subtab-apps-btn" onclick="switchJeunesSubtab('apps')" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-lagon transition flex items-center gap-2">
-                        <i data-lucide="bookmark-check" class="w-4 h-4"></i>
-                        <span>Mes candidatures</span>
-                        <span id="badge-apps-count" class="px-2 py-0.5 text-xs rounded-full bg-corail text-white font-bold">0</span>
-                    </button>
-                </div>
-
                 <button onclick="switchTab('convention')" class="text-sm font-semibold text-lagon hover:text-pacifique flex items-center gap-1.5 bg-white px-4 py-2.5 rounded-2xl border border-slate-200 shadow-sm transition">
                     <i data-lucide="file-plus-2" class="w-4 h-4 text-corail"></i>
                     <span>J'ai déjà mon entreprise : remplir ma convention</span>
                 </button>
             </div>
 
-            <!-- VUE A : CATALOGUE DES OFFRES -->
+                        <!-- VUE A : CATALOGUE DES OFFRES -->
             <div id="jeunes-offers-view" class="space-y-6">
                 <!-- Barre de filtres ergonomique -->
                 <div class="bg-white p-4 sm:p-5 rounded-3xl shadow-sm border border-slate-200/80">
@@ -374,22 +307,32 @@
                     </div>
                 </div>
 
+                                <!-- Bandeau : offres d'exemple + RGPD -->
+                <div id="example-banner" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="info" class="w-5 h-5 text-amber-500 shrink-0 mt-0.5"></i>
+                        <p class="text-xs sm:text-sm text-amber-800">
+                            <strong>Les offres affichées sont des exemples</strong> de démonstration : effacez-les, puis publiez les offres réelles de votre établissement (les vraies offres déposées ne portent pas la mention « Exemple »).
+                        </p>
+                    </div>
+                    <button onclick="clearExampleOffers()" class="shrink-0 px-4 py-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold transition flex items-center gap-2">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        <span id="example-clear-count">Effacer les offres d'exemple (8)</span>
+                    </button>
+                </div>
+                <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-start gap-3">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+                    <p class="text-xs sm:text-sm text-emerald-800">
+                        <strong>Vos données sont protégées (RGPD) :</strong> les jeunes postulent en direct auprès des entreprises, par téléphone ou courriel. Cet outil ne collecte ni ne conserve aucune donnée personnelle des stagiaires.
+                    </p>
+                </div>
+
                 <!-- Grille des cartes d'offres -->
                 <div id="offers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                     <!-- Généré dynamiquement par JS -->
                 </div>
             </div>
 
-            <!-- VUE B : MES CANDIDATURES -->
-            <div id="jeunes-apps-view" class="hidden space-y-4">
-                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80">
-                    <h3 class="text-lg font-bold text-slate-900 mb-1">Suivi de mes démarches de stage</h3>
-                    <p class="text-sm text-slate-500 mb-6">Retrouve ici les entreprises auxquelles tu as postulé et accède directement à ta convention pré-remplie.</p>
-                    <div id="applications-list" class="space-y-3">
-                        <!-- Généré par JS -->
-                    </div>
-                </div>
-            </div>
         </section>
 
         <!-- ========================================================= -->
@@ -559,6 +502,12 @@
                                     <label class="block text-xs font-semibold text-slate-700 mb-1">Durée / Période souhaitée *</label>
                                     <input type="text" id="ent-period" required placeholder="Ex: 1 à 4 semaines (Toute l'année)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-pacifique outline-none text-sm">
                                 </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Date du dépôt de l'offre</label>
+                                <input type="date" id="ent-datedepot" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-pacifique outline-none text-sm bg-white">
+                                <p class="text-[11px] text-slate-400 mt-1">Affichée aux jeunes sur la carte de l'offre. Si elle n'est pas renseignée, la date du jour est utilisée automatiquement.</p>
                             </div>
 
                             <div>
@@ -1285,6 +1234,7 @@
         const DEFAULT_OFFERS = [
             {
                 id: 'nc-1',
+                example: true,
                 title: 'Stagiaire Maintenance Industrielle & Électrotechnique',
                 companyName: 'SLN — Site Métallurgique de Doniambo',
                 ridet: '0 102 345.001',
@@ -1307,6 +1257,7 @@
             },
             {
                 id: 'nc-2',
+                example: true,
                 title: 'Découverte Accueil, Réception & Tourisme Lagonaire',
                 companyName: 'Hôtel Le Méridien Nouméa Resort & Spa',
                 ridet: '0 456 789.001',
@@ -1329,6 +1280,7 @@
             },
             {
                 id: 'nc-3',
+                example: true,
                 title: 'Stagiaire Mécanique Automobile & Véhicules Légers',
                 companyName: 'Atelier Méca-Sud Ducos',
                 ridet: '0 882 190.001',
@@ -1351,6 +1303,7 @@
             },
             {
                 id: 'nc-4',
+                example: true,
                 title: 'Développement Web, Réseaux & Support Numérique',
                 companyName: 'Calédonie Digital Solutions (CDS)',
                 ridet: '1 129 404.001',
@@ -1373,6 +1326,7 @@
             },
             {
                 id: 'nc-5',
+                example: true,
                 title: 'Initiation Cuisine & Pâtisserie Tropicale',
                 companyName: 'Boulangerie-Pâtisserie & Traiteur Le Mont-Dore',
                 ridet: '0 731 512.001',
@@ -1395,6 +1349,7 @@
             },
             {
                 id: 'nc-6',
+                example: true,
                 title: 'Suivi de Chantier BTP, Topographie & Génie Civil',
                 companyName: 'Pacifique Travaux & Terrassement (PTT)',
                 ridet: '0 993 211.001',
@@ -1417,6 +1372,7 @@
             },
             {
                 id: 'nc-7',
+                example: true,
                 title: 'Assistant(e) Gestion Administrative, Comptabilité & Accueil',
                 companyName: 'Société de Gestion du Nord (SGN)',
                 ridet: '0 654 321.001',
@@ -1439,6 +1395,7 @@
             },
             {
                 id: 'nc-8',
+                example: true,
                 title: 'Découverte Commerce, Mise en Rayon & Relation Client',
                 companyName: 'Supermarché Lagon Frais Dumbéa',
                 ridet: '0 512 874.001',
@@ -1543,7 +1500,6 @@
         // 3. ÉTAT DE L'APPLICATION & PERSISTANCE LOCALSTORAGE
         // =========================================================================
         let offers = [];
-        let applications = [];
         let currentConvType = 'obs_college';
 
         // Horaires par défaut (Lundi à Vendredi)
@@ -1569,14 +1525,11 @@
                 saveOffers();
             }
 
-            const savedApps = localStorage.getItem('stage_nc_applications');
-            if (savedApps) {
-                try {
-                    applications = JSON.parse(savedApps);
-                } catch (e) {
-                    applications = [];
-                }
-            }
+            offers.forEach(o => {
+                if (DEFAULT_OFFERS.some(d => d.id === o.id)) o.example = true;
+            });
+
+            try { localStorage.removeItem('stage_nc_applications'); } catch (e) {}
 
             const savedDraft = localStorage.getItem('stage_nc_conv_draft');
             if (savedDraft) {
@@ -1605,11 +1558,6 @@
             document.getElementById('badge-offers-count').textContent = offers.length;
         }
 
-        function saveApplications() {
-            localStorage.setItem('stage_nc_applications', JSON.stringify(applications));
-            document.getElementById('badge-apps-count').textContent = applications.length;
-        }
-
         // =========================================================================
         // 4. NAVIGATION & NOTIFICATIONS UI
         // =========================================================================
@@ -1632,26 +1580,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function switchJeunesSubtab(subtab) {
-            const offersView = document.getElementById('jeunes-offers-view');
-            const appsView = document.getElementById('jeunes-apps-view');
-            const offersBtn = document.getElementById('subtab-offers-btn');
-            const appsBtn = document.getElementById('subtab-apps-btn');
-
-            if (subtab === 'offers') {
-                offersView.classList.remove('hidden');
-                appsView.classList.add('hidden');
-                offersBtn.className = 'px-4 py-2 rounded-xl text-sm font-semibold bg-lagon text-white transition flex items-center gap-2';
-                appsBtn.className = 'px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-lagon transition flex items-center gap-2';
-            } else {
-                offersView.classList.add('hidden');
-                appsView.classList.remove('hidden');
-                appsBtn.className = 'px-4 py-2 rounded-xl text-sm font-semibold bg-lagon text-white transition flex items-center gap-2';
-                offersBtn.className = 'px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-lagon transition flex items-center gap-2';
-                renderApplications();
-            }
-        }
-
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -1668,7 +1596,7 @@
         }
 
         // =========================================================================
-        // 5. ESPACE JEUNES : AFFICHAGE DES OFFRES & CANDIDATURE
+        // 5. ESPACE JEUNES : OFFRES D'EXEMPLE & CANDIDATURE EN DIRECT (RGPD)
         // =========================================================================
         function renderOffers() {
             const search = document.getElementById('filter-search').value.toLowerCase().trim();
@@ -1690,6 +1618,14 @@
 
             document.getElementById('offers-result-text').textContent =
                 `${filtered.length} offre${filtered.length > 1 ? 's' : ''} de stage disponible${filtered.length > 1 ? 's' : ''} en Nouvelle-Calédonie`;
+
+            const exampleBanner = document.getElementById('example-banner');
+            const examplesCount = offers.filter(o => o.example).length;
+            if (exampleBanner) {
+                exampleBanner.classList.toggle('hidden', examplesCount === 0);
+                const btnClear = document.getElementById('example-clear-count');
+                if (btnClear) btnClear.textContent = `Effacer les offres d'exemple (${examplesCount})`;
+            }
 
             const grid = document.getElementById('offers-grid');
             if (filtered.length === 0) {
@@ -1720,7 +1656,7 @@
                                     <i data-lucide="map-pin" class="w-3.5 h-3.5 text-pacifique"></i>
                                     ${escapeHtml(offer.commune)}
                                 </span>
-                                <span class="text-[11px] font-semibold text-slate-400">${escapeHtml(offer.sector)}</span>
+                                <span class="flex items-center gap-1.5">${offer.example ? '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-700 border border-amber-200/90">Exemple</span>' : ''}<span class="text-[11px] font-semibold text-slate-400">${escapeHtml(offer.sector)}</span><button onclick="deleteOffer('${offer.id}')" title="Effacer cette offre" class="p-1.5 rounded-lg text-slate-300 hover:text-corail hover:bg-corail/10 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button></span>
                             </div>
 
                             <h3 class="text-base sm:text-lg font-extrabold text-slate-900 leading-snug mb-1">${escapeHtml(offer.title)}</h3>
@@ -1733,6 +1669,10 @@
                             </div>
 
                             <div class="space-y-1.5 text-xs text-slate-600 bg-slate-50 p-3 rounded-2xl border border-slate-100 mb-4">
+                                ${offer.dateDepot ? `<div class="flex items-center gap-2">
+                                    <i data-lucide="calendar-plus" class="w-3.5 h-3.5 text-corail shrink-0"></i>
+                                    <span><strong>Déposée le :</strong> ${fmtIsoDate(offer.dateDepot)}</span>
+                                </div>` : ''}
                                 <div class="flex items-center gap-2">
                                     <i data-lucide="calendar" class="w-3.5 h-3.5 text-lagon shrink-0"></i>
                                     <span><strong>Durée :</strong> ${escapeHtml(offer.period)}</span>
@@ -1744,8 +1684,8 @@
                             </div>
                         </div>
 
-                        <button onclick="openApplyModal('${offer.id}')" class="w-full py-3 px-4 rounded-2xl bg-corail hover:bg-corailHover text-white font-bold text-xs sm:text-sm shadow-sm transition flex items-center justify-center gap-2">
-                            <span>Postuler & Préparer ma convention</span>
+                        <button onclick="openContactModal('${offer.id}')" class="w-full py-3 px-4 rounded-2xl bg-corail hover:bg-corailHover text-white font-bold text-xs sm:text-sm shadow-sm transition flex items-center justify-center gap-2">
+                            <span>Postuler en direct — Voir le contact</span>
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </button>
                     </article>
@@ -1763,98 +1703,130 @@
             renderOffers();
         }
 
-        function openApplyModal(offerId) {
+        function fmtIsoDate(iso) {
+            if (!iso) return '';
+            const parts = iso.split('-');
+            return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : iso;
+        }
+
+        function localIsoToday() {
+            const d = new Date();
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+
+        function openContactModal(offerId) {
             const offer = offers.find(o => o.id === offerId);
             if (!offer) return;
 
-            document.getElementById('apply-offer-id').value = offer.id;
-            document.getElementById('apply-offer-title').textContent = offer.title;
-            document.getElementById('apply-offer-company').textContent = `${offer.companyName} • ${offer.commune}`;
+            document.getElementById('contact-offer-title').textContent = offer.title;
+            document.getElementById('contact-offer-company').textContent = `${offer.companyName} • ${offer.commune}`;
 
-            const modal = document.getElementById('apply-modal');
+            const tel = offer.phone ? `
+                <a href="tel:${escapeHtml(offer.phone)}" class="flex items-center gap-2.5 p-3.5 rounded-2xl bg-slate-50 hover:bg-sky-50 border border-slate-200 transition group">
+                    <i data-lucide="phone" class="w-4 h-4 text-pacifique shrink-0"></i>
+                    <span class="text-sm font-semibold text-slate-700 group-hover:text-lagon">${escapeHtml(offer.phone)}</span>
+                </a>` : '';
+            const mail = offer.repEmail ? `
+                <a href="mailto:${escapeHtml(offer.repEmail)}?subject=${encodeURIComponent('Candidature stage : ' + offer.title)}" class="flex items-center gap-2.5 p-3.5 rounded-2xl bg-slate-50 hover:bg-sky-50 border border-slate-200 transition group">
+                    <i data-lucide="mail" class="w-4 h-4 text-pacifique shrink-0"></i>
+                    <span class="text-sm font-semibold text-slate-700 group-hover:text-lagon break-all">${escapeHtml(offer.repEmail)}${offer.repName ? ` <span class="font-normal text-slate-500">(${escapeHtml(offer.repName)}${offer.repRole ? ' — ' + escapeHtml(offer.repRole) : ''})</span>` : ''}</span>
+                </a>` : '';
+            const addr = offer.address ? `
+                <div class="flex items-center gap-2.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-lagon shrink-0"></i>
+                    <span class="text-sm text-slate-700">${escapeHtml(offer.address)}</span>
+                </div>` : '';
+
+            document.getElementById('contact-offer-body').innerHTML = `
+                <div class="space-y-2.5">
+                    ${tel}
+                    ${mail}
+                    ${addr}
+                </div>
+                <div class="mt-4 bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 flex items-start gap-3">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5"></i>
+                    <p class="text-xs text-slate-700">
+                        <strong>Postulez en direct :</strong> contactez vous-même l'entreprise par téléphone ou par courriel.
+                        Cet outil ne collecte et ne conserve <strong>aucune donnée personnelle des stagiaires</strong> (RGPD).
+                    </p>
+                </div>
+                <button onclick="prepareConventionFromContact('${offer.id}')" class="mt-4 w-full py-3 px-4 rounded-2xl bg-lagon hover:bg-lagonDark text-white font-bold text-xs sm:text-sm shadow-sm transition flex items-center justify-center gap-2">
+                    <span>Préparer ma convention avec cette offre</span>
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                </button>`;
+            lucide.createIcons();
+
+            const modal = document.getElementById('contact-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
 
-        function closeApplyModal() {
-            const modal = document.getElementById('apply-modal');
+        function closeContactModal() {
+            const modal = document.getElementById('contact-modal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
 
-        function submitApplication(event) {
-            event.preventDefault();
-            const offerId = document.getElementById('apply-offer-id').value;
+        function prepareConventionFromContact(offerId) {
             const offer = offers.find(o => o.id === offerId);
             if (!offer) return;
+            closeContactModal();
+            prefillConventionFromOffer(offer);
+            switchTab('convention');
+        }
 
-            const app = {
-                id: 'app-' + Date.now(),
-                date: new Date().toLocaleDateString('fr-FR'),
-                offerId: offer.id,
-                offerTitle: offer.title,
+        function deleteOffer(offerId) {
+            const offer = offers.find(o => o.id === offerId);
+            if (!offer) return;
+            if (!confirm(`Effacer cette offre ?\n\n« ${offer.title} » — ${offer.companyName}`)) return;
+            offers = offers.filter(o => o.id !== offerId);
+            saveOffers();
+            renderOffers();
+            showToast('Offre effacée.');
+        }
+
+        function clearExampleOffers() {
+            const n = offers.filter(o => o.example).length;
+            if (n === 0) return;
+            if (!confirm(`Effacer les ${n} offre(s) d'exemple ?\n\nLes vraies offres déposées par les entreprises seront conservées. Vous pourrez les récupérer via « Réinitialiser les données de démonstration ».`)) return;
+            offers = offers.filter(o => !o.example);
+            saveOffers();
+            renderOffers();
+            showToast(`${n} offre(s) d'exemple effacée(s).`);
+        }
+
+        function prefillConventionFromOffer(offer) {
+            const mapping = {
                 companyName: offer.companyName,
-                commune: offer.commune,
-                studentFirstName: document.getElementById('apply-firstname').value.trim(),
-                studentLastName: document.getElementById('apply-lastname').value.trim(),
-                schoolName: document.getElementById('apply-school').value.trim(),
-                studentClass: document.getElementById('apply-class').value.trim(),
-                studentPhone: document.getElementById('apply-phone').value.trim(),
-                studentEmail: document.getElementById('apply-email').value.trim(),
-                message: document.getElementById('apply-message').value.trim(),
-                status: 'Candidature envoyée — Convention prête'
+                companyRidet: offer.ridet,
+                companyPhone: offer.phone,
+                companyAddress: offer.address,
+                companySector: offer.sector,
+                repName: offer.repName,
+                repRole: offer.repRole,
+                repEmail: offer.repEmail,
+                tutorName: offer.tutorName,
+                tutorRole: offer.tutorRole,
+                tutorPhone: offer.tutorPhone,
+                tutorEmail: offer.tutorEmail,
+                stageLocation: offer.address,
+                plannedActivities: offer.description,
+                expenseBenefits: offer.perks,
+                derogationStatus: offer.derogation === 'oui'
+                    ? 'Oui (Autorisation DTE / Inspection du travail)'
+                    : 'Aucun travail soumis à dérogation'
             };
 
-            applications.unshift(app);
-            saveApplications();
-            closeApplyModal();
+            Object.entries(mapping).forEach(([key, val]) => {
+                const input = document.querySelector(`[data-bind="${key}"]`);
+                if (input && val) input.value = val;
+            });
 
-            // Pré-remplir automatiquement la convention avec les infos de l'offre + de l'élève
-            prefillConventionFromOfferAndStudent(offer, app);
-            showToast('Candidature enregistrée et convention officielle pré-remplie !');
-            switchTab('convention');
-        }
-
-        function renderApplications() {
-            const list = document.getElementById('applications-list');
-            if (applications.length === 0) {
-                list.innerHTML = `
-                    <div class="text-center py-8 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                        <p class="text-sm font-semibold text-slate-600 mb-1">Tu n'as pas encore envoyé de candidature</p>
-                        <p class="text-xs text-slate-500 mb-4">Parcours les offres de stages et clique sur "Postuler & Préparer ma convention".</p>
-                        <button onclick="switchJeunesSubtab('offers')" class="px-4 py-2 rounded-xl bg-lagon text-white text-xs font-semibold">Découvrir les offres</button>
-                    </div>
-                `;
-                return;
+            if (offer.levels && offer.levels.length > 0) {
+                selectConvType(offer.levels[0]);
             }
 
-            list.innerHTML = applications.map(app => `
-                <div class="p-4 rounded-2xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50/70 transition">
-                    <div>
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">${escapeHtml(app.status)}</span>
-                            <span class="text-xs text-slate-400">Le ${escapeHtml(app.date)}</span>
-                        </div>
-                        <h4 class="font-bold text-sm text-slate-900">${escapeHtml(app.offerTitle)}</h4>
-                        <p class="text-xs text-slate-600">${escapeHtml(app.companyName)} (${escapeHtml(app.commune)}) • Élève : <strong>${escapeHtml(app.studentFirstName)} ${escapeHtml(app.studentLastName)}</strong> (${escapeHtml(app.studentClass)})</p>
-                    </div>
-                    <button onclick="reopenConventionForApp('${app.id}')" class="px-4 py-2 rounded-xl bg-lagon hover:bg-lagonDark text-white text-xs font-semibold flex items-center justify-center gap-1.5 shrink-0 transition">
-                        <i data-lucide="file-text" class="w-4 h-4"></i>
-                        <span>Ouvrir la convention</span>
-                    </button>
-                </div>
-            `).join('');
-            lucide.createIcons();
-        }
-
-        function reopenConventionForApp(appId) {
-            const app = applications.find(a => a.id === appId);
-            if (!app) return;
-            const offer = offers.find(o => o.id === app.offerId);
-            if (offer) {
-                prefillConventionFromOfferAndStudent(offer, app);
-            }
-            switchTab('convention');
+            updateConventionPreview();
         }
 
         // =========================================================================
@@ -1870,6 +1842,8 @@
 
             const newOffer = {
                 id: 'nc-' + Date.now(),
+                dateDepot: (document.getElementById('ent-datedepot') && document.getElementById('ent-datedepot').value) || localIsoToday(),
+                example: false,
                 title: document.getElementById('ent-title').value.trim(),
                 companyName: document.getElementById('ent-name').value.trim(),
                 ridet: document.getElementById('ent-ridet').value.trim(),
@@ -1935,58 +1909,6 @@
         // =========================================================================
         // 7. GÉNÉRATEUR DE CONVENTION OFFICIELLE NC & CONTRÔLE HORAIRES
         // =========================================================================
-        function prefillConventionFromOfferAndStudent(offer, studentApp) {
-            const mapping = {
-                companyName: offer.companyName,
-                companyRidet: offer.ridet,
-                companyPhone: offer.phone,
-                companyAddress: offer.address,
-                companySector: offer.sector,
-                repName: offer.repName,
-                repRole: offer.repRole,
-                repEmail: offer.repEmail,
-                tutorName: offer.tutorName,
-                tutorRole: offer.tutorRole,
-                tutorPhone: offer.tutorPhone,
-                tutorEmail: offer.tutorEmail,
-                stageLocation: offer.address,
-                plannedActivities: offer.description,
-                expenseBenefits: offer.perks,
-                derogationStatus: offer.derogation === 'oui'
-                    ? 'Oui (Autorisation DTE / Inspection du travail)'
-                    : 'Aucun travail soumis à dérogation',
-                studentFirstName: studentApp.studentFirstName,
-                studentLastName: studentApp.studentLastName,
-                schoolName: studentApp.schoolName,
-                studentClass: studentApp.studentClass,
-                studentPhone: studentApp.studentPhone,
-                studentEmail: studentApp.studentEmail
-            };
-
-            Object.entries(mapping).forEach(([key, val]) => {
-                const input = document.querySelector(`[data-bind="${key}"]`);
-                if (input && val) input.value = val;
-            });
-
-            // Déduire le meilleur modèle de convention selon la classe ou l'offre
-            const cls = (studentApp.studentClass || '').toLowerCase();
-            if (cls.includes('bts')) {
-                selectConvType('bts');
-            } else if (cls.includes('bac pro') || cls.includes('cap') || cls.includes('1ere') || cls.includes('tle') || cls.includes('pro')) {
-                selectConvType('pfmp_pro');
-            } else if (cls.includes('2de') || cls.includes('seconde')) {
-                selectConvType('obs_2de');
-            } else if (cls.includes('segpa') && cls.includes('3')) {
-                selectConvType('app_segpa');
-            } else if (cls.includes('segpa') || cls.includes('prépa') || cls.includes('prepa')) {
-                selectConvType('init_segpa');
-            } else if (offer.levels && offer.levels.length > 0) {
-                selectConvType(offer.levels[0]);
-            }
-
-            updateConventionPreview();
-        }
-
         function selectConvType(typeKey) {
             currentConvType = typeKey;
             document.querySelectorAll('.conv-type-card').forEach(card => {
@@ -2173,7 +2095,9 @@
 
         function saveConventionDraft() {
             const fields = {};
+            const studentFields = ['studentFirstName', 'studentLastName', 'schoolName', 'studentClass', 'studentPhone', 'studentEmail'];
             document.querySelectorAll('[data-bind]').forEach(input => {
+                if (studentFields.includes(input.dataset.bind)) return;
                 fields[input.dataset.bind] = input.value;
             });
             const draft = {
@@ -2207,7 +2131,7 @@
         function confirmResetDemoData() {
             const modal = document.getElementById('confirm-modal');
             document.getElementById('confirm-title').textContent = 'Réinitialiser les données de démonstration';
-            document.getElementById('confirm-message').textContent = 'Toutes les offres ajoutées, candidatures et brouillons locaux seront remplacés par les 8 offres calédoniennes d’origine. Continuer ?';
+            document.getElementById('confirm-message').textContent = 'Toutes les offres actuelles (exemples et dépôts réels) seront remplacées par les 8 offres d’exemple d’origine, et les brouillons de convention effacés. Continuer ?';
             modal.classList.remove('hidden');
             modal.classList.add('flex');
 
@@ -2220,11 +2144,8 @@
                 localStorage.removeItem('stage_nc_applications');
                 localStorage.removeItem('stage_nc_conv_draft');
                 offers = [...DEFAULT_OFFERS];
-                applications = [];
                 saveOffers();
-                saveApplications();
                 renderOffers();
-                renderApplications();
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
                 showToast('Données de démonstration réinitialisées.');
@@ -2235,7 +2156,6 @@
         window.addEventListener('DOMContentLoaded', () => {
             loadState();
             saveOffers();
-            saveApplications();
             renderOffers();
             renderHoursEditor();
             selectConvType(currentConvType);
