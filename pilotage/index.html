@@ -105,6 +105,9 @@ function qhseData(){const reg=ls("suivi_qhse_sst_etabs_v1",[]);if(!Array.isArray
   const pts=st.points||{};const alertes=Object.values(pts).filter(p=>p&&p.s==="am").length;
   return {name:e.name||e.id,eq:eq.length,sig:sig.length,sigOpen:sig.filter(s=>s.statut!=="traite").length,act:act.length,actOpen:act.filter(a=>a.av!=="termine").length,alertes:alertes}});
  return {rows:rows,sig:rows.reduce((a,r)=>a+r.sig,0),sigOpen:rows.reduce((a,r)=>a+r.sigOpen,0),eq:rows.reduce((a,r)=>a+r.eq,0)}}
+function forumsData(){const o=ls("dafpic-forums-salons-v1",null);if(!o||!Array.isArray(o.exposants)||!Array.isArray(o.events))return null;
+ const ex=(o.exposants||[]).filter(x=>x&&!x.example),ev=(o.events||[]).filter(x=>x&&!x.example);
+ return {ex:ex,ev:ev,exAll:o.exposants.length,evAll:o.events.length,real:ex.length+ev.length}}
 const TOOLS=[
  {title:"Gestes qui sauvent 2027",path:"index.html",read:()=>{const d=gestesData();
    if(!d)return {st:"Vide sur cet appareil"};
@@ -118,7 +121,9 @@ const TOOLS=[
  {title:"Suivi QHSE & SST — Plateaux techniques",path:"suivi-qhse/",read:()=>{const d=qhseData();
    if(!d)return {st:"Vide sur cet appareil"};
    return {st:"Données présentes",counts:[["Établissements suivis",d.rows.length],["Équipements décrits",d.eq],["Signalements",d.sig+" dont "+d.sigOpen+" en cours"],["Plan d'actions",d.rows.reduce((a,r)=>a+r.act,0)]]}}},
- {title:"Portail des Événements (collèges & lycées)",path:"forums-salons/",read:()=>({st:"Fonctionne sans stockage"})},
+ {title:"Portail des Événements (collèges & lycées)",path:"forums-salons/",read:()=>{const d=forumsData();
+   if(!d)return {st:"Vide sur cet appareil"};
+   return {st:"Données présentes",counts:[["Inscriptions exposant",d.ex.length],["Événements publiés",d.ev.length],["Exemples intégrés",(d.exAll-d.ex.length)+(d.evAll-d.ev.length)]]}}},
  {title:"Remontée formations – DAFPIC",path:"remontee-formation/",read:()=>ls("dafpic-suivi",null)?{st:"Données chiffrées présentes"}:{st:"Vide sur cet appareil"}},
  {title:"Salon ACDET 2027",path:"salon-acdet/",read:()=>ls("acdet-salon-2027",null)?{st:"Données chiffrées présentes"}:{st:"Vide sur cet appareil"}},
  {title:"Portail A.C.D.E.T. × MDF",path:"portail-acdet-mdf/",read:()=>({st:"Voir le portail dédié"})}];
@@ -146,6 +151,10 @@ function renderRetours(){
  const q=qhseData();
  if(q){out.push(`<h3>Suivi QHSE & SST — plateaux techniques</h3><div class="scroll"><table><tr><th>Établissement</th><th>Équipements</th><th>Signalements en cours</th><th>Actions ouvertes</th><th>Alertes matériel</th></tr>
   ${q.rows.map(r=>`<tr><td>${esc(r.name)}</td><td class="num">${r.eq}</td><td class="num">${r.sigOpen} / ${r.sig}</td><td class="num">${r.actOpen} / ${r.act}</td><td class="num">${r.alertes||"0"}</td></tr>`).join("")}</table></div>`)}
+ const fo=forumsData();
+ if(fo){out.push(`<h3>Portail des Événements — inscriptions & événements publiés</h3><p style="font-size:.9rem"><strong>${fo.ex.length}</strong> inscription(s) exposant(s) au Salon, <strong>${fo.ev.length}</strong> événement(s) scolaire(s) sur cet appareil <em>(exemples intégrés exclus)</em>.</p>
+  ${fo.ex.length?`<div class="scroll"><table><tr><th>Structure</th><th>Ville</th><th>Référent</th><th>Contact</th><th>Statut</th></tr>${fo.ex.map(r=>`<tr><td><strong>${esc(r.nom)}</strong></td><td>${esc(r.ville||"")}</td><td>${esc(r.ref_nom||"")}</td><td style="font-size:.85rem">${esc([r.ref_email,r.ref_tel].filter(Boolean).join(" · "))}</td><td>${esc(r.statut||"")}</td></tr>`).join("")}</table></div>`:""}
+  ${fo.ev.length?`<div class="scroll"><table><tr><th>Événement</th><th>Organisateur</th><th>Date</th><th>Lieu</th></tr>${fo.ev.slice().sort((a,b)=>String(a.date||"").localeCompare(String(b.date||""))).map(r=>`<tr><td><strong>${esc(r.title)}</strong></td><td>${esc(r.org||"")}</td><td>${esc(r.date||"")}</td><td>${esc(r.location||"")}</td></tr>`).join("")}</table></div>`:""}`)}
  $("#retours").innerHTML=out.length?out.join(""):"<p>Aucune donnée d'outil dans ce navigateur pour l'instant. Les données saisies sur d'autres appareils ne sont pas visibles ici : utilisez les sauvegardes de chaque logiciel.</p>";
  $("#chips").innerHTML=["Les données restent dans chaque navigateur/appareil","Aucune transmission automatique","Fichiers reçus analysés en lecture seule"].map((t,i)=>`<span class="${i===0?"chip dark":"chip"}">${t}</span>`).join("")}
 function render(){renderTools();renderRetours()}

@@ -892,6 +892,7 @@ th { background: var(--chip); font-weight: 700; color: var(--pri2); }
         <div>
           <h2>Espace de Gestion Organisateur</h2>
           <p class="hint" style="margin:0;">Suivi des inscriptions exposants & validation des événements scolaires</p>
+        <p class="hint" style="margin:4px 0 0;">Les inscriptions et les événements sont conservés dans ce navigateur, sur cet appareil. Rien n'est envoyé automatiquement : après chaque séance, pensez à l'export CSV pour partager le suivi, et gardez une sauvegarde.</p>
         </div>
         <div>
           <button class="btn sm" onclick="exportDataCSV()">⬇️ Exporter en CSV</button>
@@ -965,6 +966,7 @@ th { background: var(--chip); font-weight: 700; color: var(--pri2); }
 let eventsData = [
   {
     id: 1,
+    example: true,
     title: "Salon Formations & Métiers 2027",
     org: "Comité d'Organisation & Partenaires NC",
     typeInst: "Partenaire",
@@ -982,6 +984,7 @@ let eventsData = [
   },
   {
     id: 2,
+    example: true,
     title: "Forum Territoire & Alternance 2027",
     org: "Collectif pour l'Emploi & Partenaires",
     typeInst: "Partenaire",
@@ -999,6 +1002,7 @@ let eventsData = [
   },
   {
     id: 3,
+    example: true,
     title: "Journée Portes Ouvertes - Lycée Polyvalent de Kaméré",
     org: "LPO de Kaméré",
     typeInst: "Lycee Pro",
@@ -1016,6 +1020,7 @@ let eventsData = [
   },
   {
     id: 4,
+    example: true,
     title: "Carrefour des Métiers de la Brousse & Mini-Stages",
     org: "Lycée Agricole de Pouembout",
     typeInst: "Lycee Pro",
@@ -1033,6 +1038,7 @@ let eventsData = [
   },
   {
     id: 5,
+    example: true,
     title: "Challenge Robotique & Sciences Jules Garnier",
     org: "Lycée Général & Technologique Jules Garnier",
     typeInst: "Lycee Gen",
@@ -1054,6 +1060,7 @@ let eventsData = [
 let exposantsData = [
   {
     id: 101,
+    example: true,
     nom: "OPT-NC (Office des Postes et Télécommunications)",
     type: "Entreprise",
     ville: "Nouméa",
@@ -1066,6 +1073,7 @@ let exposantsData = [
   },
   {
     id: 102,
+    example: true,
     nom: "Lycée Professionnel Commercial Auguste Escoffier",
     type: "Établissement scolaire",
     ville: "Nouméa",
@@ -1242,6 +1250,25 @@ function togglePanel(id, show) {
   if (el) el.classList.toggle('active', show);
 }
 
+// Conservation locale (navigateur, cet appareil) des inscriptions et des événements
+const STORE_KEY = "dafpic-forums-salons-v1";
+function saveForumData() {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify({ exposants: exposantsData, events: eventsData, maj: new Date().toISOString() }));
+  } catch (e) { /* navigation privée / stockage plein : la page continue de fonctionner sans conservation */ }
+}
+function loadForumData() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return false;
+    const o = JSON.parse(raw);
+    if (!o || !Array.isArray(o.exposants) || !Array.isArray(o.events)) return false;
+    exposantsData = o.exposants;
+    eventsData = o.events;
+    return true;
+  } catch (e) { return false; }
+}
+
 // Soumission Formulaire Exposant
 function handleExposantSubmit(e) {
   e.preventDefault();
@@ -1275,6 +1302,7 @@ function handleExposantSubmit(e) {
   };
 
   exposantsData.unshift(newExp);
+  saveForumData();
 
   alert(`🎉 Merci ! L'inscription de "${nom}" au Salon Formations & Métiers a bien été enregistrée.\nUn email de confirmation a été envoyé à ${refEmail}.`);
   document.getElementById('formExposant').reset();
@@ -1322,6 +1350,7 @@ function handleEventSubmit(e) {
   };
 
   eventsData.unshift(newEv);
+  saveForumData();
   filterEvents();
 
   alert(`🚀 Votre événement "${title}" a été publié avec succès sur le portail !`);
@@ -1368,6 +1397,7 @@ function renderAdminTables() {
 function deleteExposant(id) {
   if (confirm("Voulez-vous vraiment supprimer cette inscription exposant ?")) {
     exposantsData = exposantsData.filter(e => e.id !== id);
+    saveForumData();
     renderAdminTables();
   }
 }
@@ -1375,6 +1405,7 @@ function deleteExposant(id) {
 function deleteEvent(id) {
   if (confirm("Voulez-vous supprimer cet événement du calendrier ?")) {
     eventsData = eventsData.filter(e => e.id !== id);
+    saveForumData();
     filterEvents();
     renderAdminTables();
   }
@@ -1394,9 +1425,11 @@ function exportDataCSV() {
   document.body.removeChild(link);
 }
 
-// Initialisation au chargement
+// Initialisation au chargement : reprise des données conservées, sinon création du premier enregistrement
 window.onload = function() {
+  if (!loadForumData()) saveForumData();
   renderEvents(eventsData);
+  renderAdminTables();
 };
 </script>
 </body>
