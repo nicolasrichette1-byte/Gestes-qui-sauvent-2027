@@ -68,6 +68,7 @@ h2 .dot{width:12px;height:12px;border-radius:50%;flex:none}
     {group:"dafpic",title:"Suivi QHSE & SST — Plateaux techniques",desc:"Suivi multi-établissements du matériel et de la sécurité des plateaux techniques : état, pannes, signalements au DDFPT, grilles de contrôle et synthèse. Accès par code d'établissement.",icon:"check"},
     {group:"dafpic",title:"Portail des Événements (collèges & lycées)",desc:"Salons, forums, portes ouvertes, immersions et projets pédagogiques : l'agenda détaillé, l'inscription des exposants et l'espace organisateur.",icon:"cal"},
     {group:"dafpic",title:"Remontée formations – DAFPIC",desc:"Mise à jour annuelle de l'offre de formation du portail Formanoo Nouvelle-Calédonie : les établissements préparent leurs demandes (confirmer, modifier, créer, retirer) et la DAFPIC les traite.",icon:"up"},
+    {group:"dafpic",title:"OGELI (INRS) — Gestion des formations SST",desc:"Site officiel de l'INRS (partenariat INRS / Éducation nationale) : gestion en ligne des formations Santé et Sécurité au Travail (SST, PRAP, PRE, travail en hauteur, CACES…), suivi des validations des acquis et édition des attestations. Site externe, accès avec vos identifiants.",icon:"check"},
     {group:"acdet",title:"Portail A.C.D.E.T. × MDF",desc:"Appel à projets « Santé, Prévention & Sécurité » : le portail du partenariat pour déposer et suivre les dossiers.",icon:"hands"},
     {group:"acdet",title:"Salon ACDET 2027",desc:"Découverte des métiers et des formations — samedi 28 août 2027, salle d'honneur de la mairie de Nouméa : recensement des exposants sans engagement et espace administrateur.",icon:"cal"}
   ];
@@ -85,7 +86,7 @@ h2 .dot{width:12px;height:12px;border-radius:50%;flex:none}
     {id:"acdet",label:"A.C.D.E.T. (association de soutien)",note:"Projets portés avec l'association de soutien aux actions éducatives du DAFPIC.",color:"i-blue",dot:"blue"}
   ];
   var BASE="https://nicolasrichette1-byte.github.io/Gestes-qui-sauvent-2027/";
-  var PATHS={ "Gestes qui sauvent 2027":"", "Stage en Nouvelle-Calédonie":"stagenc/", "Code Prévention":"codeprvention/", "Suivi QHSE & SST — Plateaux techniques":"suivi-qhse/", "Portail des Événements (collèges & lycées)":"forums-salons/", "Portail A.C.D.E.T. × MDF":"portail-acdet-mdf/", "Salon ACDET 2027":"salon-acdet/", "Remontée formations – DAFPIC":"remontee-formation/" };
+  var PATHS={ "Gestes qui sauvent 2027":"", "Stage en Nouvelle-Calédonie":"stagenc/", "Code Prévention":"codeprvention/", "Suivi QHSE & SST — Plateaux techniques":"suivi-qhse/", "Portail des Événements (collèges & lycées)":"forums-salons/", "Portail A.C.D.E.T. × MDF":"portail-acdet-mdf/", "Salon ACDET 2027":"salon-acdet/", "Remontée formations – DAFPIC":"remontee-formation/", "OGELI (INRS) — Gestion des formations SST":"https://www.esst-inrs.fr/gestion/" };
   var root=document.getElementById("sections");
   GROUPS.forEach(function(g){
     var sec=document.createElement("section");
@@ -95,7 +96,7 @@ h2 .dot{width:12px;height:12px;border-radius:50%;flex:none}
     SITES.filter(function(s){return s.group===g.id;}).forEach(function(s){
       var a=document.createElement("a");
       a.className="card";
-      a.href=BASE+(PATHS[s.title]||"");
+      var p=PATHS[s.title]||"";a.href=p.indexOf("http")===0?p:BASE+p;
       a.target="_blank";
       a.rel="noopener";
       a.innerHTML='<span class="ico '+g.color+'">'+(ICONS[s.icon]||"")+'</span><span class="body"><b>'+s.title+'</b><small>'+s.desc+'</small></span><span class="arrow">→</span>';
