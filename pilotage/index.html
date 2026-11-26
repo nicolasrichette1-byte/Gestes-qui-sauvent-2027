@@ -126,6 +126,9 @@ const TOOLS=[
    return {st:"Données présentes",counts:[["Inscriptions exposant",d.ex.length],["Événements publiés",d.ev.length],["Exemples intégrés",(d.exAll-d.ex.length)+(d.evAll-d.ev.length)]]}}},
  {title:"Remontée formations – DAFPIC",path:"remontee-formation/",read:()=>ls("dafpic-suivi",null)?{st:"Données chiffrées présentes"}:{st:"Vide sur cet appareil"}},
  {title:"Salon ACDET 2027",path:"salon-acdet/",read:()=>ls("acdet-salon-2027",null)?{st:"Données chiffrées présentes"}:{st:"Vide sur cet appareil"}},
+ {title:"ACDET – Adhésions",path:"adhesions/",read:()=>{const d=ls("acdet_adhesions_v1",null);if(!d)return {st:"Vide sur cet appareil"};
+   const mem=(d.members||[]),y=new Date().getFullYear(),cur=mem.filter(m=>+m.annee===y);
+   return {st:"Données présentes · synchronisées sur internet",counts:[["Adhérents (tous exercices)",mem.length],["Exercice "+y,cur.length],["Paiements enregistrés (ex. "+y+")",cur.filter(m=>m.pay==="paye").length]]}}},
  {title:"Portail A.C.D.E.T. × MDF",path:"portail-acdet-mdf/",read:()=>({st:"Voir le portail dédié"})}];
 const chipClass=t=>t.indexOf("présen")>=0?(t.indexOf("chiffr")>=0?"chip dark":"chip ok"):t.indexOf("Vide")>=0?"chip warn":"chip";
 function renderTools(){
