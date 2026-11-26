@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StageNC - Plateforme des PFMP & Stages en Nouvelle-Calédonie</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            50: '#f0f4f8',
+                            100: '#d9e2ec',
+                            500: '#334e68',
+                            800: '#102a43',
+                            900: '#0b1b2b',
+                        },
+                        lagoon: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .toast-enter {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        .toast-show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-convention, #printable-convention * {
+                visibility: visible;
+            }
+            #printable-convention {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+                border: none;
+            }
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans text-slate-800 antialiased selection:bg-lagoon-500 selection:text-white">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="bg-navy-900 text-white sticky top-0 z-40 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('etudiants')">
+                    <div class="bg-lagoon-500 p-2 rounded-xl text-navy-900 font-bold flex items-center justify-center shadow-lg">
+                        <i data-lucide="graduation-cap" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl font-extrabold tracking-tight text-white">Stage<span class="text-lagoon-500">NC</span></span>
+                            <span class="hidden sm:inline-block text-[10px] uppercase font-bold bg-navy-800 text-lagoon-300 px-2 py-0.5 rounded border border-navy-700">Vice-Rectorat NC</span>
+                        </div>
+                        <p class="text-[10px] text-slate-400 hidden sm:block">Plateforme Territoriale des PFMP & Stages Scolaires</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="hidden md:flex space-x-1 bg-navy-800/80 p-1.5 rounded-xl border border-navy-700">
+                    <button id="nav-etudiants" onclick="switchTab('etudiants')" class="nav-btn flex items-center px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-white bg-lagoon-600 shadow-sm">
+                        <i data-lucide="search" class="w-4 h-4 mr-1.5"></i> Offres de PFMP
+                    </button>
+                    <button id="nav-entreprises" onclick="switchTab('entreprises')" class="nav-btn flex items-center px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white hover:bg-navy-700/50">
+                        <i data-lucide="building-2" class="w-4 h-4 mr-1.5"></i> Espace Entreprises
+                    </button>
+                    <button id="nav-ecoles" onclick="switchTab('ecoles')" class="nav-btn flex items-center px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white hover:bg-navy-700/50">
+                        <i data-lucide="school" class="w-4 h-4 mr-1.5"></i> Espace Lycées / Enseignants
+                    </button>
+                    <button id="nav-conventions" onclick="switchTab('conventions')" class="nav-btn flex items-center px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-300 hover:text-white hover:bg-navy-700/50">
+                        <i data-lucide="file-signature" class="w-4 h-4 mr-1.5"></i> Convention PFMP NC
+                    </button>
+                </nav>
+
+                <!-- Action Button -->
+                <div class="flex items-center gap-3">
+                    <button onclick="openPublishModal()" class="hidden sm:flex items-center bg-lagoon-500 hover:bg-lagoon-600 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition shadow hover:shadow-md">
+                        <i data-lucide="plus-circle" class="w-4 h-4 mr-1.5"></i> Déposer une offre
+                    </button>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-slate-300 hover:bg-navy-800">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-navy-800 border-t border-navy-700 px-4 pt-2 pb-4 space-y-1">
+            <button onclick="switchTab('etudiants')" class="w-full text-left flex items-center px-3 py-2 rounded-lg text-white font-medium hover:bg-navy-700 text-sm">
+                <i data-lucide="search" class="w-4 h-4 mr-3 text-lagoon-400"></i> Offres de PFMP & Stages
+            </button>
+            <button onclick="switchTab('entreprises')" class="w-full text-left flex items-center px-3 py-2 rounded-lg text-slate-200 font-medium hover:bg-navy-700 text-sm">
+                <i data-lucide="building-2" class="w-4 h-4 mr-3 text-lagoon-400"></i> Espace Entreprises
+            </button>
+            <button onclick="switchTab('ecoles')" class="w-full text-left flex items-center px-3 py-2 rounded-lg text-slate-200 font-medium hover:bg-navy-700 text-sm">
+                <i data-lucide="school" class="w-4 h-4 mr-3 text-lagoon-400"></i> Espace Lycées / Enseignants
+            </button>
+            <button onclick="switchTab('conventions')" class="w-full text-left flex items-center px-3 py-2 rounded-lg text-slate-200 font-medium hover:bg-navy-700 text-sm">
+                <i data-lucide="file-signature" class="w-4 h-4 mr-3 text-lagoon-400"></i> Convention & Fiche PFMP
+            </button>
+            <div class="pt-2">
+                <button onclick="openPublishModal()" class="w-full flex items-center justify-center bg-lagoon-500 text-white font-bold py-2 rounded-xl text-xs">
+                    <i data-lucide="plus-circle" class="w-4 h-4 mr-2"></i> Déposer une offre PFMP
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-grow">
+        
+        <!-- SECTION 1: ÉLÈVES / OFFRES DE PFMP -->
+        <section id="tab-etudiants" class="tab-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-r from-navy-900 via-navy-800 to-slate-900 rounded-3xl p-6 md:p-8 text-white shadow-xl mb-8 relative overflow-hidden border border-navy-700">
+                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-lagoon-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="max-w-3xl relative z-10">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-lagoon-500/20 text-lagoon-300 border border-lagoon-500/30 mb-3">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Cadre Réglementaire Vice-Rectorat de Nouvelle-Calédonie
+                    </span>
+                    <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-2">Trouvez votre PFMP ou Stage en Nouvelle-Calédonie</h1>
+                    <p class="text-slate-300 text-xs sm:text-sm mb-6">Mise en relation directe entre Lycées Professionnels, CFA, Enseignants Référents et Entreprises de la Grande Terre et des Îles Loyauté.</p>
+                </div>
+
+                <!-- Multi-criteria Search Bar -->
+                <div class="bg-white p-3 rounded-2xl shadow-xl text-slate-800 grid grid-cols-1 md:grid-cols-12 gap-3 relative z-10 border border-slate-100">
+                    <!-- Mots-clés -->
+                    <div class="md:col-span-4 flex items-center px-3 bg-slate-50 rounded-xl border border-slate-200/80 focus-within:border-lagoon-500 focus-within:ring-2 focus-within:ring-lagoon-200 transition">
+                        <i data-lucide="search" class="w-4 h-4 text-slate-400 mr-2 flex-shrink-0"></i>
+                        <input type="text" id="filter-keyword" placeholder="Secteur, BAC PRO, CAP, BTS, Métier..." oninput="applyFilters()" class="w-full py-2 bg-transparent text-xs text-slate-800 placeholder-slate-400 focus:outline-none">
+                    </div>
+
+                    <!-- Filière -->
+                    <div class="md:col-span-3 flex items-center px-3 bg-slate-50 rounded-xl border border-slate-200/80 focus-within:border-lagoon-500 focus-within:ring-2 focus-within:ring-lagoon-200 transition">
+                        <i data-lucide="book-open" class="w-4 h-4 text-slate-400 mr-2 flex-shrink-0"></i>
+                        <select id="filter-domain" onchange="applyFilters()" class="w-full py-2 bg-transparent text-xs text-slate-800 focus:outline-none cursor-pointer">
+                            <option value="">Toutes les filières</option>
+                            <option value="Électricité & Électrotechnique (MELEC)">Électricité & Électrotechnique (MELEC)</option>
+                            <option value="Maintenance Industrielle & Météorologie">Maintenance Industrielle & Mécanique</option>
+                            <option value="Commerce, Vente & Accueil">Commerce, Vente & Accueil</option>
+                            <option value="Gestion-Administration & Métiers du Tertiaire">Gestion-Administration & Tertiaire</option>
+                            <option value="Hôtellerie, Restauration & Alimentation">Hôtellerie, Restauration & Cuisine</option>
+                            <option value="BTP, Métiers du Bois & Construction">BTP, Construction & Bois</option>
+                            <option value="Informatique, Numérique & Réseaux">Informatique, Numérique & Télécoms</option>
+                            <option value="Santé, Social & SPVL">Santé, Social & ASSP</option>
+                        </select>
+                    </div>
+
+                    <!-- Localisation NC -->
+                    <div class="md:col-span-3 flex items-center px-3 bg-slate-50 rounded-xl border border-slate-200/80 focus-within:border-lagoon-500 focus-within:ring-2 focus-within:ring-lagoon-200 transition">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-slate-400 mr-2 flex-shrink-0"></i>
+                        <select id="filter-location" onchange="applyFilters()" class="w-full py-2 bg-transparent text-xs text-slate-800 focus:outline-none cursor-pointer">
+                            <option value="">Toutes les zones NC</option>
+                            <option value="Nouméa">Nouméa</option>
+                            <option value="Dumbéa">Dumbéa</option>
+                            <option value="Païta">Païta</option>
+                            <option value="Mont-Dore">Mont-Dore</option>
+                            <option value="VKP (Voh-Koné-Pouembout)">VKP (Voh-Koné-Pouembout)</option>
+                            <option value="Côte Est">Côte Est (Poindimié, Houaïlou...)</option>
+                            <option value="Côte Ouest">Côte Ouest (Bourail, La Foa...)</option>
+                            <option value="Îles Loyauté">Îles Loyauté (Lifou, Maré, Ouvéa)</option>
+                        </select>
+                    </div>
+
+                    <!-- Reset -->
+                    <div class="md:col-span-2 flex items-center justify-center">
+                        <button onclick="resetFilters()" class="w-full h-full py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition text-xs flex items-center justify-center gap-1.5">
+                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Effacer
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Filters -->
+                <div class="flex flex-wrap items-center gap-2 mt-4 text-xs">
+                    <span class="text-slate-400 font-medium mr-1">Filtres rapides :</span>
+                    <button onclick="toggleQuickFilter('bacpro')" id="btn-filter-bacpro" class="px-3 py-1 rounded-lg bg-navy-800 text-slate-300 hover:bg-navy-700 border border-navy-700 transition flex items-center gap-1">
+                        <i data-lucide="award" class="w-3.5 h-3.5 text-lagoon-400"></i> BAC PRO
+                    </button>
+                    <button onclick="toggleQuickFilter('cap')" id="btn-filter-cap" class="px-3 py-1 rounded-lg bg-navy-800 text-slate-300 hover:bg-navy-700 border border-navy-700 transition flex items-center gap-1">
+                        <i data-lucide="check" class="w-3.5 h-3.5 text-blue-400"></i> CAP / SEGPA
+                    </button>
+                    <button onclick="toggleQuickFilter('short')" id="btn-filter-short" class="px-3 py-1 rounded-lg bg-navy-800 text-slate-300 hover:bg-navy-700 border border-navy-700 transition flex items-center gap-1">
+                        <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i> PFMP 3-4 semaines
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Layout -->
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Sidebar Regulatory Reminder -->
+                <div class="w-full lg:w-72 flex-shrink-0 space-y-5">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider mb-3 flex items-center gap-2">
+                            <i data-lucide="info" class="w-4 h-4 text-lagoon-600"></i> Statut Légale en N.C.
+                        </h3>
+                        <div class="space-y-3 text-xs text-slate-600 leading-relaxed">
+                            <p class="bg-amber-50 p-3 rounded-xl border border-amber-200 text-amber-900 font-medium">
+                                <strong class="block text-amber-950 font-bold mb-0.5">Non-Rémunération Scolaire :</strong>
+                                Les PFMP de lycées professionnels et stages de formation initiale sous convention ne font l'objet d'aucune gratification obligatoire en Nouvelle-Calédonie.
+                            </p>
+                            <p class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                <strong class="block text-slate-800 font-semibold mb-0.5">Prise en charge :</strong>
+                                Les entreprises peuvent proposer facultativement le repas du midi ou le transport local.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Regulatory Checklist NC -->
+                    <div class="bg-slate-900 text-white p-5 rounded-2xl shadow-sm border border-slate-800">
+                        <h4 class="font-bold text-xs uppercase tracking-wider text-lagoon-400 mb-3 flex items-center gap-2">
+                            <i data-lucide="shield" class="w-4 h-4"></i> Obligation SST & Sécurité
+                        </h4>
+                        <ul class="space-y-2 text-xs text-slate-300">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-lagoon-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Convention signée avant le 1er jour de stage</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-lagoon-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Équipements de Protection (EPI) fournis par l'entreprise</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-lagoon-400 flex-shrink-0 mt-0.5"></i>
+                                <span>Interdiction des machines dangereuses sans dérogation (Mineurs)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Offers List -->
+                <div class="flex-grow">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                            Offres de PFMP actives <span id="results-count-badge" class="text-xs bg-lagoon-100 text-lagoon-800 px-2.5 py-0.5 rounded-full font-bold">0 offre</span>
+                        </h2>
+                        <div class="flex items-center gap-2 text-xs text-slate-500">
+                            <span>Trier :</span>
+                            <select id="sort-offers" onchange="applyFilters()" class="bg-white border border-slate-200 rounded-lg px-2.5 py-1 font-medium text-slate-700 focus:outline-none">
+                                <option value="recent">Plus récentes</option>
+                                <option value="duration">Durée</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic List -->
+                    <div id="offers-list" class="space-y-4"></div>
+
+                    <!-- Empty State -->
+                    <div id="empty-state" class="hidden bg-white p-10 rounded-2xl text-center border border-slate-200">
+                        <div class="w-12 h-12 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i data-lucide="search-x" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-sm mb-1">Aucune offre ne correspond à vos critères</h3>
+                        <p class="text-slate-500 text-xs max-w-sm mx-auto mb-4">Modifiez votre recherche par secteur ou réinitialisez les filtres.</p>
+                        <button onclick="resetFilters()" class="text-xs font-semibold bg-navy-800 text-white px-4 py-2 rounded-xl hover:bg-navy-900 transition">
+                            Réinitialiser la recherche
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: ESPACE ENTREPRISES -->
+        <section id="tab-entreprises" class="tab-content hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-navy-900">Espace Entreprises & Recruteurs NC</h1>
+                    <p class="text-slate-600 text-xs sm:text-sm mt-1">Accueillez des élèves de Lycées Professionnels et CFA de Nouvelle-Calédonie pour leurs PFMP réglementaires.</p>
+                </div>
+                <button onclick="openPublishModal()" class="bg-lagoon-600 hover:bg-lagoon-700 text-white font-bold px-4 py-2.5 rounded-xl transition text-xs flex items-center gap-2 shadow self-start md:self-auto">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i> Déposer une offre de PFMP
+                </button>
+            </div>
+
+            <!-- Recruiter Dashboard Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="p-3 bg-blue-50 text-blue-600 rounded-xl">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div id="company-stat-offers" class="text-xl font-bold text-navy-900">0</div>
+                        <div class="text-xs font-medium text-slate-500">Offres publiées</div>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="p-3 bg-lagoon-50 text-lagoon-600 rounded-xl">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div id="company-stat-apps" class="text-xl font-bold text-navy-900">0</div>
+                        <div class="text-xs font-medium text-slate-500">Candidatures réçues</div>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="p-3 bg-amber-50 text-amber-600 rounded-xl">
+                        <i data-lucide="clock" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div id="company-stat-pending" class="text-xl font-bold text-navy-900">0</div>
+                        <div class="text-xs font-medium text-slate-500">En cours d'étude</div>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
+                        <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div id="company-stat-validated" class="text-xl font-bold text-navy-900">0</div>
+                        <div class="text-xs font-medium text-slate-500">Stagiaires retenus</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Content -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Company Offres -->
+                <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+                    <div class="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                        <h2 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2">
+                            <i data-lucide="list" class="w-4 h-4 text-navy-800"></i> Offres déposées
+                        </h2>
+                        <span class="text-[11px] text-slate-500">Cliquez pour filtrer</span>
+                    </div>
+                    <div id="company-offers-list" class="divide-y divide-slate-100 max-h-[500px] overflow-y-auto"></div>
+                </div>
+
+                <!-- Candidatures reçues -->
+                <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                        <h2 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2">
+                            <i data-lucide="user-check" class="w-4 h-4 text-navy-800"></i> Candidatures d'élèves
+                        </h2>
+                        <span id="selected-offer-title" class="text-xs font-bold text-lagoon-700 bg-lagoon-50 px-2.5 py-1 rounded-md">Toutes les offres</span>
+                    </div>
+                    <div id="company-applications-list" class="p-4 space-y-4 max-h-[500px] overflow-y-auto"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: ESPACE LYCÉES & ENSEIGNANTS -->
+        <section id="tab-ecoles" class="tab-content hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-navy-900">Espace Lycées Professionnels & Enseignants Référents</h1>
+                <p class="text-slate-600 text-xs sm:text-sm mt-1">Suivi administratif des Périodes de Formation en Milieu Professionnel (PFMP) sous tutelle du Vice-Rectorat de la Nouvelle-Calédonie.</p>
+            </div>
+
+            <!-- Selector Bar -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-6 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-navy-900 text-white rounded-xl flex items-center justify-center font-bold">
+                        <i data-lucide="school" class="w-5 h-5 text-lagoon-400"></i>
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase font-bold text-slate-400 block">Établissement connecté</span>
+                        <select class="font-bold text-slate-800 bg-transparent border-none text-xs sm:text-sm focus:outline-none cursor-pointer">
+                            <option>LP Petro Attiti (Nouméa)</option>
+                            <option>LP Jules Garnier (Nouméa)</option>
+                            <option>LP Commercial et Hôtelier Auguste Escoffier</option>
+                            <option>LP Antoine Kela (Poindimié)</option>
+                            <option>LP François Cevert (Boulouparis)</option>
+                            <option>LP Marcellin Champagnat (Païta)</option>
+                            <option>LP Jean XXIII (Païta)</option>
+                            <option>CFA de la CCI Nouvelle-Calédonie</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-slate-500">Section / Classe :</span>
+                    <select class="bg-slate-100 border border-slate-200 rounded-lg text-xs font-semibold px-3 py-1.5 text-slate-700 focus:outline-none">
+                        <option>Toutes les filières (2026-2027)</option>
+                        <option>BAC PRO MELEC (Électricité)</option>
+                        <option>BAC PRO Métiers du Commerce</option>
+                        <option>BAC PRO Cuisine & Service</option>
+                        <option>CAP Maintenance des Véhicules</option>
+                        <option>BTS SIO / SAM</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Students Tracking Table -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-8">
+                <div class="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                    <h2 class="font-bold text-slate-800 text-xs uppercase tracking-wider flex items-center gap-2">
+                        <i data-lucide="users" class="w-4 h-4 text-lagoon-600"></i> Suivi des élèves de la classe
+                    </h2>
+                    <span class="text-xs bg-slate-200 text-slate-700 px-2.5 py-0.5 rounded-full font-bold">4 Élèves inscrits</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50/50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200">
+                                <th class="p-4">Élève</th>
+                                <th class="p-4">Diplôme préparé</th>
+                                <th class="p-4">Statut Recherche</th>
+                                <th class="p-4">Entreprise d'Accueil</th>
+                                <th class="p-4">Validation Enseignant</th>
+                                <th class="p-4 text-right">Fiche PFMP</th>
+                            </tr>
+                        </thead>
+                        <tbody id="school-students-table" class="divide-y divide-slate-100 text-xs"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Validation Pedagogy -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+                <h2 class="font-bold text-slate-800 text-xs uppercase tracking-wider mb-4 flex items-center gap-2">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-lagoon-600"></i> Conformité Pédagogique des Lieux d'Accueil (SST NC)
+                </h2>
+                <div id="school-offers-validation" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            </div>
+        </section>
+        <!-- SECTION 4: GENERATEUR DE CONVENTION PFMP NC -->
+        <section id="tab-conventions" class="tab-content hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="mb-8">
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-navy-900">Convention & Fiche de Liaison PFMP</h1>
+                <p class="text-slate-600 text-xs sm:text-sm mt-1">Période de Formation en Milieu Professionnel - Normes Vice-Rectorat de Nouvelle-Calédonie.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Form Inputs -->
+                <div class="lg:col-span-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                    <h2 class="font-bold text-navy-900 text-sm border-b border-slate-100 pb-2 flex items-center gap-2">
+                        <i data-lucide="edit-3" class="w-4 h-4 text-lagoon-600"></i> Informations Administratives
+                    </h2>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Nom & Prénom de l'élève *</label>
+                            <input type="text" id="conv-student-name" value="Waneck Kawa" oninput="updateConventionPreview()" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Lycée Professionnel *</label>
+                            <input type="text" id="conv-school-name" value="LP Petro Attiti (Nouméa)" oninput="updateConventionPreview()" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Professeur Référent *</label>
+                            <input type="text" id="conv-teacher-name" value="M. Laurent Dupuy (Prof. Principal)" oninput="updateConventionPreview()" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Classe / Section *</label>
+                            <input type="text" id="conv-class-name" value="1ère BAC PRO MELEC" oninput="updateConventionPreview()" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100" />
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Entreprise d'Accueil *</label>
+                            <input type="text" id="conv-company-name" value="EEC ENGIE Nouvelle-Calédonie" oninput="updateConventionPreview()" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Tuteur en Entreprise *</label>
+                            <input type="text" id="conv-tutor-name" value="Jean-Paul Wayaridri (Chef d'équipe)" oninput="updateConventionPreview()" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Intitulé des travaux confiés (PFMP) *</label>
+                        <input type="text" id="conv-mission-title" value="Maintenance des armoires électriques & réseaux basse tension" oninput="updateConventionPreview()" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Date de début</label>
+                            <input type="date" id="conv-start-date" value="2026-11-02" onchange="updateConventionPreview()" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Date de fin</label>
+                            <input type="date" id="conv-end-date" value="2026-11-27" onchange="updateConventionPreview()" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Modalités de prise en charge (Optionnel)</label>
+                        <input type="text" id="conv-perks" value="Repas du midi pris en charge à la cantine d'entreprise + Equipements de sécurité fournis." oninput="updateConventionPreview()" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                    </div>
+
+                    <div class="pt-2 flex gap-3">
+                        <button onclick="window.print()" class="w-full bg-navy-900 hover:bg-slate-900 text-white font-bold py-2.5 rounded-xl transition flex items-center justify-center gap-2 text-xs shadow">
+                            <i data-lucide="printer" class="w-4 h-4"></i> Imprimer la Convention (PDF)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Printable Preview -->
+                <div class="lg:col-span-6 bg-slate-200/70 p-4 sm:p-6 rounded-2xl border border-slate-300 flex items-center justify-center">
+                    <div id="printable-convention" class="bg-white w-full max-w-lg p-6 sm:p-8 rounded-xl shadow-md border border-slate-200 text-slate-800 text-[11px] space-y-4">
+                        <div class="border-b-2 border-navy-900 pb-3 flex justify-between items-start">
+                            <div>
+                                <span class="font-extrabold text-navy-900 text-sm uppercase tracking-wide block">CONVENTION DE PFMP</span>
+                                <span class="text-[10px] font-semibold text-slate-500">Période de Formation en Milieu Professionnel &bull; Vice-Rectorat NC</span>
+                            </div>
+                            <span class="px-2 py-0.5 bg-navy-100 text-navy-900 font-bold rounded text-[9px]">CADRE SCOLAIRE NC</span>
+                        </div>
+
+                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 grid grid-cols-2 gap-2">
+                            <div>
+                                <span class="font-bold text-[9px] text-slate-400 uppercase block">Lycée Professionnel</span>
+                                <span id="prev-school" class="font-bold text-slate-800">LP Petro Attiti</span>
+                            </div>
+                            <div>
+                                <span class="font-bold text-[9px] text-slate-400 uppercase block">Élève Stagiaire</span>
+                                <span id="prev-student" class="font-bold text-slate-800">Waneck Kawa</span>
+                            </div>
+                            <div>
+                                <span class="font-bold text-[9px] text-slate-400 uppercase block">Classe</span>
+                                <span id="prev-class" class="font-semibold text-slate-700">1ère BAC PRO MELEC</span>
+                            </div>
+                            <div>
+                                <span class="font-bold text-[9px] text-slate-400 uppercase block">Enseignant Référent</span>
+                                <span id="prev-teacher" class="font-semibold text-slate-700">M. Laurent Dupuy</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 grid grid-cols-2 gap-2">
+                            <div>
+                                <span class="font-bold text-[9px] text-slate-400 uppercase block">Entreprise d'Accueil</span>
+                                <span id="prev-company" class="font-bold text-slate-800">EEC ENGIE NC</span>
+                            </div>
+                            <div>
+                                <span class="font-bold text-[9px] text-slate-400 uppercase block">Tuteur Professionnel</span>
+                                <span id="prev-tutor" class="font-semibold text-slate-800">Jean-Paul Wayaridri</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <span class="font-bold text-[9px] text-slate-400 uppercase block">Objectifs & Travaux Confiés</span>
+                            <div id="prev-title" class="font-bold text-slate-800 bg-slate-50 p-2 rounded border border-slate-100">
+                                Maintenance des armoires électriques
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 pt-1">
+                            <div>
+                                <span class="text-slate-500 block">Période du stage :</span>
+                                <div id="prev-dates" class="font-bold text-slate-800">Du 02/11/2026 au 27/11/2026</div>
+                            </div>
+                            <div>
+                                <span class="text-slate-500 block">Statut Financier :</span>
+                                <div class="font-bold text-slate-800">Non rémunéré (Scolaire NC)</div>
+                            </div>
+                        </div>
+
+                        <div class="bg-emerald-50/60 p-2 rounded border border-emerald-100 text-[10px] text-emerald-900">
+                            <span class="font-bold block text-[9px] uppercase text-emerald-800">Prise en charge & Avantages :</span>
+                            <span id="prev-perks">Cantine d'entreprise</span>
+                        </div>
+
+                        <div class="border-t border-slate-200 pt-2 text-[9px] text-slate-500 leading-tight">
+                            <strong>Note SST & Sécurité :</strong> L'élève stagiaire reste sous statut d'élève sous la responsabilité du Vice-Rectorat de Nouvelle-Calédonie. Respect strict des règles d'hygiène et de sécurité du travail en entreprise.
+                        </div>
+
+                        <div class="pt-4 grid grid-cols-3 gap-2 text-[8px] text-center text-slate-400 border-t border-slate-200">
+                            <div class="border-t border-dashed border-slate-300 pt-1">Signature Élève / Représentant</div>
+                            <div class="border-t border-dashed border-slate-300 pt-1">Visa Chef d'Établissement</div>
+                            <div class="border-t border-dashed border-slate-300 pt-1">Cachet Entreprise</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-navy-900 text-slate-400 text-xs border-t border-navy-800 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <i data-lucide="graduation-cap" class="w-4 h-4 text-lagoon-400"></i>
+                <span class="text-slate-200 font-bold">StageNC</span> &copy; 2026 - Plateforme Territoriale des PFMP de Nouvelle-Calédonie.
+            </div>
+            <div class="flex space-x-4 text-slate-400 text-[11px]">
+                <span>Vice-Rectorat NC</span>
+                <span>&bull;</span>
+                <span>Direction de l'Enseignement (DENC)</span>
+                <span>&bull;</span>
+                <span>DAFPIC</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL: DÉPOSER UNE OFFRE PFMP -->
+    <div id="modal-publish" class="fixed inset-0 z-50 hidden overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative border border-slate-100 my-8">
+            <button onclick="closePublishModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-100 transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <h2 class="text-xl font-bold text-navy-900 mb-1">Déposer une offre de PFMP / Stage Scolaire</h2>
+            <p class="text-slate-500 text-xs mb-5">Destinée aux élèves de Lycées Professionnels et CFA de Nouvelle-Calédonie.</p>
+
+            <form id="form-publish-offer" onsubmit="handlePublishOffer(event)" class="space-y-4 text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Intitulé du poste / Mission *</label>
+                        <input type="text" id="pub-title" required placeholder="ex: PFMP Électricité Bâtiment ou Vente" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Entreprise / Organisme *</label>
+                        <input type="text" id="pub-company" required placeholder="ex: OPT-NC, EEC, Hyper U, Mairie..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Secteur / Filière *</label>
+                        <select id="pub-domain" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                            <option value="Électricité & Électrotechnique (MELEC)">Électricité & MELEC</option>
+                            <option value="Maintenance Industrielle & Météorologie">Maintenance & Mécanique</option>
+                            <option value="Commerce, Vente & Accueil">Commerce & Vente</option>
+                            <option value="Gestion-Administration & Métiers du Tertiaire">Gestion & Tertiaire</option>
+                            <option value="Hôtellerie, Restauration & Alimentation">Hôtellerie & Cuisine</option>
+                            <option value="BTP, Métiers du Bois & Construction">BTP & Construction</option>
+                            <option value="Informatique, Numérique & Réseaux">Informatique & Réseaux</option>
+                            <option value="Santé, Social & SPVL">Santé & ASSP</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Zone Géographique NC *</label>
+                        <select id="pub-location" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                            <option value="Nouméa">Nouméa</option>
+                            <option value="Dumbéa">Dumbéa</option>
+                            <option value="Païta">Païta</option>
+                            <option value="Mont-Dore">Mont-Dore</option>
+                            <option value="VKP (Voh-Koné-Pouembout)">VKP (Voh-Koné-Pouembout)</option>
+                            <option value="Côte Est">Côte Est</option>
+                            <option value="Côte Ouest">Côte Ouest</option>
+                            <option value="Îles Loyauté">Îles Loyauté</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Durée PFMP *</label>
+                        <select id="pub-duration" required class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                            <option value="3 à 4 semaines (PFMP standard)">3 à 4 semaines (PFMP standard)</option>
+                            <option value="2 semaines (CAP / SEGPA)">2 semaines (CAP / SEGPA)</option>
+                            <option value="6 à 8 semaines">6 à 8 semaines</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Niveau d'études visé</label>
+                        <input type="text" id="pub-level" placeholder="ex: BAC PRO, CAP, BTS" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-700 mb-1">Avantages / Prise en charge</label>
+                        <input type="text" id="pub-perks" placeholder="ex: Cantine gratuite, transport assuré" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Description des travaux confiés *</label>
+                    <textarea id="pub-description" required rows="3" placeholder="Détaillez les activités que l'élève effectuera sous la direction du tuteur..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Compétences attendues (séparées par virgules)</label>
+                    <input type="text" id="pub-skills" placeholder="ex: Ponctualité, Rigueur, Habilitation B0" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none">
+                </div>
+
+                <div class="pt-3 flex justify-end gap-3 border-t border-slate-100">
+                    <button type="button" onclick="closePublishModal()" class="px-4 py-2 font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">Annuler</button>
+                    <button type="submit" class="px-5 py-2 font-bold bg-lagoon-600 hover:bg-lagoon-700 text-white rounded-xl transition shadow">Publier l'offre de PFMP</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: DETAIL & CANDIDATURE -->
+    <div id="modal-detail" class="fixed inset-0 z-50 hidden overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative border border-slate-100 my-8">
+            <button onclick="closeDetailModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 p-2 rounded-full hover:bg-slate-100 transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div id="modal-detail-content"></div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Initial Demo Data NC - Strictly Unpaid PFMP
+        const INITIAL_OFFERS = [
+            {
+                id: 'off-1',
+                title: 'PFMP - Électrotechnique & Distribution Électrique',
+                company: 'EEC ENGIE Nouvelle-Calédonie',
+                domain: 'Électricité & Électrotechnique (MELEC)',
+                location: 'Nouméa',
+                duration: '3 à 4 semaines (PFMP standard)',
+                level: '1ère ou Term BAC PRO MELEC',
+                date: '2026-10-25',
+                perks: 'Repas de midi au réfectoire d\'entreprise',
+                skills: ['Habilitation B0/B1V', 'Lecture de plans', 'Règles SST NC'],
+                description: 'Accompagnement des techniciens de réseau sur le secteur du Grand Nouméa. Diagnostic de câblage, raccordement d\'armoires et maintenance préventive.'
+            },
+            {
+                id: 'off-2',
+                title: 'PFMP - Service en Salle & Restauration',
+                company: 'Hôtel Le Méridien Nouméa',
+                domain: 'Hôtellerie, Restauration & Alimentation',
+                location: 'Nouméa',
+                duration: '3 à 4 semaines (PFMP standard)',
+                level: 'BAC PRO Commercialisation & Services en Restauration',
+                date: '2026-10-22',
+                perks: 'Uniforme fourni + Repas du service',
+                skills: ['Mise en place', 'Accueil client', 'Travail en équipe'],
+                description: 'Immersion au sein des équipes de restauration de l\'hôtel. Participation au dressage des tables, au service du petit-déjeuner et à l\'accueil des clients.'
+            },
+            {
+                id: 'off-3',
+                title: 'PFMP - Maintenance Véhicules & Engins',
+                company: 'SLN - Centre Minier de Nepoui',
+                domain: 'Maintenance Industrielle & Météorologie',
+                location: 'VKP (Voh-Koné-Pouembout)',
+                duration: '3 à 4 semaines (PFMP standard)',
+                level: 'BAC PRO Maintenance des Véhicules / Engins',
+                date: '2026-10-20',
+                perks: 'Transport assuré depuis Koné + Équipements EPI fournis',
+                skills: ['Vidange', 'Diagnostic mécanique', 'Respect Consignes Sécurité Minère'],
+                description: 'Assistance aux mécaniciens sur les ateliers de maintenance des engins de chantier minier. Vidanges, contrôles des circuits hydrauliques et pneumatiques.'
+            },
+            {
+                id: 'off-4',
+                title: 'PFMP - Vente, Mise en Rayon & Caisses',
+                company: 'Hyper U Ducos',
+                domain: 'Commerce, Vente & Accueil',
+                location: 'Nouméa',
+                duration: '2 semaines (CAP / SEGPA)',
+                level: 'CAP Equipier Polyvalent du Commerce',
+                date: '2026-10-18',
+                perks: 'Chèques repas',
+                skills: ['Réception marchandises', 'Facing', 'Politesse client'],
+                description: 'Stage de formation pratique : mise en rayon des produits, étiquetage, tenue du poste de travail et orientation des clients dans le magasin.'
+            },
+            {
+                id: 'off-5',
+                title: 'PFMP - Secrétariat & Accueil Administratif',
+                company: 'Mairie de Païta',
+                domain: 'Gestion-Administration & Métiers du Tertiaire',
+                location: 'Païta',
+                duration: '3 à 4 semaines (PFMP standard)',
+                durationMonths: 1,
+                level: 'BAC PRO AGORA / Gestion-Admin',
+                date: '2026-10-15',
+                perks: 'Navette communale',
+                skills: ['Pack Office', 'Accueil téléphonique', 'Classement numérique'],
+                description: 'Saisie de courriers officiels, orientation des usagers au guichet d\'accueil, numérisation de documents et gestion du courrier entrant/sortant.'
+            }
+        ];
+
+        const INITIAL_STUDENTS = [
+            { id: 'st-1', name: 'Waneck Kawa', school: 'LP Petro Attiti', formation: 'BAC PRO MELEC', status: 'En stage', offer: 'PFMP Électrotechnique', company: 'EEC ENGIE NC', validation: 'Validée' },
+            { id: 'st-2', name: 'Leïla Tjibaou', school: 'LP Auguste Escoffier', formation: 'BAC PRO Restauration', status: 'En stage', offer: 'PFMP Service en Salle', company: 'Le Méridien', validation: 'Validée' },
+            { id: 'st-3', name: 'Kevin Vendegou', school: 'LP Antoine Kela (Poindimié)', formation: 'BAC PRO Commerce', status: 'En recherche', offer: '-', company: '-', validation: 'En attente' },
+            { id: 'st-4', name: 'Marie-Claire Païta', school: 'LP François Cevert', formation: 'CAP Maintenance', status: 'Candidature transmise', offer: 'PFMP Mécanique', company: 'SLN Nepoui', validation: 'En cours' }
+        ];
+
+        // State variables
+        let offers = [];
+        let applications = [];
+        let activeQuickFilters = { bacpro: false, cap: false, short: false };
+        let selectedCompanyOfferId = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            renderOffers();
+            renderCompanyView();
+            renderSchoolView();
+            updateConventionPreview();
+            lucide.createIcons();
+        });
+
+        function loadState() {
+            const storedOffers = localStorage.getItem('stagenc_offers_v2');
+            if (storedOffers) {
+                offers = JSON.parse(storedOffers);
+            } else {
+                offers = [...INITIAL_OFFERS];
+                localStorage.setItem('stagenc_offers_v2', JSON.stringify(offers));
+            }
+
+            const storedApps = localStorage.getItem('stagenc_apps_v2');
+            if (storedApps) {
+                applications = JSON.parse(storedApps);
+            } else {
+                applications = [
+                    {
+                        id: 'app-1',
+                        offerId: 'off-1',
+                        offerTitle: 'PFMP - Électrotechnique & Distribution Électrique',
+                        candidateName: 'Waneck Kawa',
+                        candidateEmail: 'w.kawa@petro-attiti.nc',
+                        school: 'LP Petro Attiti (Nouméa)',
+                        motivation: 'Élève motivé en 1ère BAC PRO MELEC, à jour de ses habilitations électriques B0/B1V.',
+                        cvName: 'Fiche_Eleve_Waneck_Kawa.pdf',
+                        date: '2026-10-26',
+                        status: 'Retenu'
+                    }
+                ];
+                localStorage.setItem('stagenc_apps_v2', JSON.stringify(applications));
+            }
+        }
+
+        function saveOffers() {
+            localStorage.setItem('stagenc_offers_v2', JSON.stringify(offers));
+        }
+
+        function saveApplications() {
+            localStorage.setItem('stagenc_apps_v2', JSON.stringify(applications));
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-lagoon-600', 'text-white', 'shadow-sm');
+                btn.classList.add('text-slate-300', 'hover:text-white', 'hover:bg-navy-700/50');
+            });
+
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-300', 'hover:text-white', 'hover:bg-navy-700/50');
+                activeBtn.classList.add('bg-lagoon-600', 'text-white', 'shadow-sm');
+            }
+
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function toggleQuickFilter(type) {
+            activeQuickFilters[type] = !activeQuickFilters[type];
+            const btn = document.getElementById(`btn-filter-${type}`);
+            if (activeQuickFilters[type]) {
+                btn.classList.add('bg-lagoon-600', 'text-white', 'border-lagoon-500');
+                btn.classList.remove('bg-navy-800', 'text-slate-300');
+            } else {
+                btn.classList.remove('bg-lagoon-600', 'text-white', 'border-lagoon-500');
+                btn.classList.add('bg-navy-800', 'text-slate-300');
+            }
+            applyFilters();
+        }
+
+        function resetFilters() {
+            document.getElementById('filter-keyword').value = '';
+            document.getElementById('filter-domain').value = '';
+            document.getElementById('filter-location').value = '';
+            activeQuickFilters = { bacpro: false, cap: false, short: false };
+            ['bacpro', 'cap', 'short'].forEach(type => {
+                const btn = document.getElementById(`btn-filter-${type}`);
+                if (btn) {
+                    btn.classList.remove('bg-lagoon-600', 'text-white', 'border-lagoon-500');
+                    btn.classList.add('bg-navy-800', 'text-slate-300');
+                }
+            });
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const kw = document.getElementById('filter-keyword').value.toLowerCase().trim();
+            const domain = document.getElementById('filter-domain').value;
+            const location = document.getElementById('filter-location').value;
+
+            let filtered = offers.filter(off => {
+                const matchKw = !kw || off.title.toLowerCase().includes(kw) || off.company.toLowerCase().includes(kw) || off.skills.some(s => s.toLowerCase().includes(kw));
+                const matchDomain = !domain || off.domain === domain;
+                const matchLoc = !location || off.location.includes(location);
+
+                let matchBacPro = true;
+                if (activeQuickFilters.bacpro) matchBacPro = off.level.toLowerCase().includes('bac pro');
+
+                let matchCap = true;
+                if (activeQuickFilters.cap) matchCap = off.level.toLowerCase().includes('cap') || off.level.toLowerCase().includes('segpa');
+
+                let matchShort = true;
+                if (activeQuickFilters.short) matchShort = off.duration.includes('3 à 4') || off.duration.includes('2 semaines');
+
+                return matchKw && matchDomain && matchLoc && matchBacPro && matchCap && matchShort;
+            });
+
+            renderOffersList(filtered);
+        }
+
+        function renderOffers() {
+            applyFilters();
+        }
+
+        function renderOffersList(list) {
+            const container = document.getElementById('offers-list');
+            const emptyState = document.getElementById('empty-state');
+            const badgeCount = document.getElementById('results-count-badge');
+
+            badgeCount.innerText = `${list.length} offre${list.length > 1 ? 's' : ''}`;
+
+            if (list.length === 0) {
+                container.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            container.innerHTML = list.map(off => `
+                <div class="bg-white rounded-2xl p-5 border border-slate-200/80 hover:border-lagoon-500/50 hover:shadow-md transition duration-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 group">
+                    <div class="space-y-2 flex-grow">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-navy-50 text-navy-800 border border-navy-100">${escapeHtml(off.domain)}</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-100 text-slate-700">
+                                Stage non rémunéré (Cadre PFMP)
+                            </span>
+                            <span class="text-xs text-slate-500 flex items-center gap-1">
+                                <i data-lucide="clock" class="w-3.5 h-3.5"></i> ${escapeHtml(off.duration)}
+                            </span>
+                        </div>
+
+                        <div>
+                            <h3 class="text-base font-bold text-slate-800 group-hover:text-lagoon-600 transition cursor-pointer" onclick="openDetailModal('${off.id}')">${escapeHtml(off.title)}</h3>
+                            <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 mt-1">
+                                <span class="font-semibold text-slate-700 flex items-center gap-1"><i data-lucide="building" class="w-3.5 h-3.5 text-slate-400"></i> ${escapeHtml(off.company)}</span>
+                                <span>&bull;</span>
+                                <span class="flex items-center gap-1 text-lagoon-700 font-semibold"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> ${escapeHtml(off.location)}</span>
+                                <span>&bull;</span>
+                                <span class="text-slate-600 font-medium">${escapeHtml(off.level)}</span>
+                            </div>
+                        </div>
+
+                        ${off.perks ? `<div class="text-[11px] text-emerald-700 font-medium flex items-center gap-1"><i data-lucide="check" class="w-3.5 h-3.5"></i> Avantage : ${escapeHtml(off.perks)}</div>` : ''}
+
+                        <div class="flex flex-wrap gap-1.5 pt-1">
+                            ${off.skills.map(s => `<span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-[10px] font-medium">${escapeHtml(s)}</span>`).join('')}
+                        </div>
+                    </div>
+
+                    <div class="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                        <button onclick="openDetailModal('${off.id}')" class="w-full sm:w-auto px-4 py-2 bg-navy-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-xl transition shadow-sm flex items-center justify-center gap-1">
+                            Détails <i data-lucide="arrow-right" class="w-3.5 h-3.5 ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function openDetailModal(offerId) {
+            const offer = offers.find(o => o.id === offerId);
+            if (!offer) return;
+
+            const modalContent = document.getElementById('modal-detail-content');
+            modalContent.innerHTML = `
+                <div class="space-y-5 text-xs">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-lagoon-50 text-lagoon-700 border border-lagoon-200">${escapeHtml(offer.domain)}</span>
+                            <span class="text-xs text-slate-400">PFMP NC</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-navy-900">${escapeHtml(offer.title)}</h2>
+                        <div class="flex flex-wrap items-center gap-3 text-xs text-slate-600 mt-2">
+                            <span class="font-bold text-slate-800 flex items-center gap-1"><i data-lucide="building" class="w-4 h-4 text-lagoon-600"></i> ${escapeHtml(offer.company)}</span>
+                            <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-4 h-4 text-slate-400"></i> ${escapeHtml(offer.location)}</span>
+                            <span class="flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4 text-slate-400"></i> ${escapeHtml(offer.duration)}</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-1">Activités confiées durant la PFMP</h4>
+                        <p class="text-slate-600 leading-relaxed">${escapeHtml(offer.description)}</p>
+                    </div>
+
+                    ${offer.perks ? `
+                    <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 text-emerald-900 font-medium">
+                        <strong class="block font-bold">Prise en charge entreprise :</strong> ${escapeHtml(offer.perks)}
+                    </div>` : ''}
+
+                    <div>
+                        <h4 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-2">Compétences visées</h4>
+                        <div class="flex flex-wrap gap-1.5">
+                            ${offer.skills.map(s => `<span class="bg-navy-50 text-navy-800 px-2.5 py-1 rounded-lg font-semibold border border-navy-100">${escapeHtml(s)}</span>`).join('')}
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100" />
+
+                    <div class="bg-gradient-to-br from-lagoon-50/60 to-teal-50/60 p-4 rounded-2xl border border-lagoon-200 space-y-3">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4 text-lagoon-600"></i> Postuler pour cette PFMP
+                        </h3>
+
+                        <form onsubmit="handleApply(event, '${offer.id}', '${escapeHtml(offer.title)}')" class="space-y-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Nom & Prénom de l'élève *</label>
+                                    <input type="text" id="app-name" required placeholder="Votre nom complet" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none bg-white">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Email / Contact *</label>
+                                    <input type="email" id="app-email" required placeholder="eleve@etud.nc ou email" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none bg-white">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">Lycée Professionnel / CFA *</label>
+                                    <input type="text" id="app-school" required placeholder="ex: LP Petro Attiti, LP Escoffier..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none bg-white">
+                                </div>
+                                <div>
+                                    <label class="block font-semibold text-slate-700 mb-1">CV / Fiche Élève (PDF)</label>
+                                    <input type="file" id="app-cv" accept=".pdf,.doc,.docx" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-lagoon-100 file:text-lagoon-800 hover:file:bg-lagoon-200 bg-white rounded-xl border border-slate-200 py-1">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-semibold text-slate-700 mb-1">Motivations pour ce stage *</label>
+                                <textarea id="app-motivation" required rows="2" placeholder="Précisez la section que vous préparez et vos objectifs..." class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-lagoon-500 focus:outline-none bg-white"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full bg-lagoon-600 hover:bg-lagoon-700 text-white font-bold py-2.5 rounded-xl transition shadow flex items-center justify-center gap-2">
+                                Envoyer au Recruteur <i data-lucide="check-circle" class="w-4 h-4"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('modal-detail').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeDetailModal() {
+            document.getElementById('modal-detail').classList.add('hidden');
+        }
+
+        function handleApply(e, offerId, offerTitle) {
+            e.preventDefault();
+            const name = document.getElementById('app-name').value;
+            const email = document.getElementById('app-email').value;
+            const school = document.getElementById('app-school').value;
+            const motivation = document.getElementById('app-motivation').value;
+            const cvInput = document.getElementById('app-cv');
+            const cvName = cvInput.files[0] ? cvInput.files[0].name : 'Fiche_Eleve_NC.pdf';
+
+            const newApp = {
+                id: 'app-' + Date.now(),
+                offerId,
+                offerTitle,
+                candidateName: name,
+                candidateEmail: email,
+                school,
+                motivation,
+                cvName,
+                date: new Date().toISOString().split('T')[0],
+                status: 'En attente'
+            };
+
+            applications.unshift(newApp);
+            saveApplications();
+
+            closeDetailModal();
+            showToast('Candidature de PFMP transmise à l\'entreprise !', 'success');
+            renderCompanyView();
+        }
+
+        // Company View
+        function renderCompanyView() {
+            const offersList = document.getElementById('company-offers-list');
+            const appsCount = document.getElementById('company-stat-apps');
+            const offersCount = document.getElementById('company-stat-offers');
+            const pendingCount = document.getElementById('company-stat-pending');
+            const validatedCount = document.getElementById('company-stat-validated');
+
+            offersCount.innerText = offers.length;
+            appsCount.innerText = applications.length;
+            pendingCount.innerText = applications.filter(a => a.status === 'En attente').length;
+            validatedCount.innerText = applications.filter(a => a.status === 'Retenu').length;
+
+            if (offers.length === 0) {
+                offersList.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">Aucune offre déposée.</div>`;
+                return;
+            }
+
+            offersList.innerHTML = offers.map(off => {
+                const offerAppsCount = applications.filter(a => a.offerId === off.id).length;
+                const isSelected = selectedCompanyOfferId === off.id;
+
+                return `
+                    <div onclick="selectCompanyOffer('${off.id}')" class="p-3.5 cursor-pointer hover:bg-slate-50 transition ${isSelected ? 'bg-lagoon-50/60 border-l-4 border-lagoon-500' : ''}">
+                        <div class="flex justify-between items-start mb-1">
+                            <h4 class="font-bold text-slate-800 text-xs">${escapeHtml(off.title)}</h4>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${offerAppsCount > 0 ? 'bg-lagoon-100 text-lagoon-800' : 'bg-slate-100 text-slate-500'}">
+                                ${offerAppsCount}
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2 text-[11px] text-slate-500">
+                            <span><i data-lucide="map-pin" class="w-3 h-3 inline"></i> ${escapeHtml(off.location)}</span>
+                            <span>&bull;</span>
+                            <span>${escapeHtml(off.duration)}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            renderCompanyApplications();
+            lucide.createIcons();
+        }
+
+        function selectCompanyOffer(offerId) {
+            selectedCompanyOfferId = offerId === selectedCompanyOfferId ? null : offerId;
+            renderCompanyView();
+        }
+
+        function renderCompanyApplications() {
+            const container = document.getElementById('company-applications-list');
+            const titleBadge = document.getElementById('selected-offer-title');
+
+            let filteredApps = applications;
+            if (selectedCompanyOfferId) {
+                const currentOffer = offers.find(o => o.id === selectedCompanyOfferId);
+                titleBadge.innerText = currentOffer ? currentOffer.title : 'Offre sélectionnée';
+                filteredApps = applications.filter(a => a.offerId === selectedCompanyOfferId);
+            } else {
+                titleBadge.innerText = 'Toutes les candidatures';
+            }
+
+            if (filteredApps.length === 0) {
+                container.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">Aucune candidature pour cette sélection.</div>`;
+                return;
+            }
+
+            container.innerHTML = filteredApps.map(app => `
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3 text-xs">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-xs">${escapeHtml(app.candidateName)}</h4>
+                            <p class="text-[11px] text-slate-500">${escapeHtml(app.school)} &bull; ${escapeHtml(app.candidateEmail)}</p>
+                            <span class="inline-block text-[11px] font-bold text-lagoon-700 mt-1">Offre : ${escapeHtml(app.offerTitle)}</span>
+                        </div>
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                            app.status === 'Retenu' ? 'bg-emerald-100 text-emerald-800' :
+                            app.status === 'Refusé' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'
+                        }">
+                            ${app.status}
+                        </span>
+                    </div>
+
+                    <div class="bg-white p-2.5 rounded-xl text-slate-600 border border-slate-100 italic">
+                        "${escapeHtml(app.motivation)}"
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                        <span class="text-slate-400 flex items-center gap-1 text-[11px]">
+                            <i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-500"></i> ${escapeHtml(app.cvName)}
+                        </span>
+                        
+                        <div class="flex gap-2">
+                            <button onclick="updateAppStatus('${app.id}', 'Refusé')" class="px-2.5 py-1 bg-rose-50 text-rose-700 hover:bg-rose-100 font-semibold rounded-lg transition text-[11px]">
+                                Refuser
+                            </button>
+                            <button onclick="updateAppStatus('${app.id}', 'Retenu')" class="px-2.5 py-1 bg-lagoon-600 text-white hover:bg-lagoon-700 font-bold rounded-lg transition text-[11px]">
+                                Accepter l'Élève
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function updateAppStatus(appId, newStatus) {
+            const app = applications.find(a => a.id === appId);
+            if (app) {
+                app.status = newStatus;
+                saveApplications();
+                renderCompanyView();
+                showToast(`Statut mis à jour : ${newStatus}`, 'info');
+            }
+        }
+
+        // Publish Offer NC
+        function openPublishModal() {
+            document.getElementById('modal-publish').classList.remove('hidden');
+        }
+
+        function closePublishModal() {
+            document.getElementById('modal-publish').classList.add('hidden');
+        }
+
+        function handlePublishOffer(e) {
+            e.preventDefault();
+            const title = document.getElementById('pub-title').value;
+            const company = document.getElementById('pub-company').value;
+            const domain = document.getElementById('pub-domain').value;
+            const location = document.getElementById('pub-location').value;
+            const duration = document.getElementById('pub-duration').value;
+            const level = document.getElementById('pub-level').value || 'BAC PRO / CAP';
+            const perks = document.getElementById('pub-perks').value;
+            const description = document.getElementById('pub-description').value;
+            const skillsRaw = document.getElementById('pub-skills').value;
+
+            const skills = skillsRaw ? skillsRaw.split(',').map(s => s.trim()) : ['Ponctualité', 'SST'];
+
+            const newOffer = {
+                id: 'off-' + Date.now(),
+                title,
+                company,
+                domain,
+                location,
+                duration,
+                level,
+                perks,
+                date: new Date().toISOString().split('T')[0],
+                skills,
+                description
+            };
+
+            offers.unshift(newOffer);
+            saveOffers();
+
+            closePublishModal();
+            document.getElementById('form-publish-offer').reset();
+            renderOffers();
+            renderCompanyView();
+            showToast('Offre de PFMP publiée avec succès !', 'success');
+        }
+
+        // School View NC
+        function renderSchoolView() {
+            const tableBody = document.getElementById('school-students-table');
+            tableBody.innerHTML = INITIAL_STUDENTS.map(st => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="p-3.5 font-bold text-slate-800">${escapeHtml(st.name)}</td>
+                    <td class="p-3.5 text-slate-600">${escapeHtml(st.formation)}</td>
+                    <td class="p-3.5">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                            st.status === 'En stage' ? 'bg-emerald-100 text-emerald-800' :
+                            st.status === 'En recherche' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'
+                        }">${escapeHtml(st.status)}</span>
+                    </td>
+                    <td class="p-3.5 text-slate-600 font-medium">${escapeHtml(st.company)}</td>
+                    <td class="p-3.5">
+                        <span class="font-bold ${st.validation === 'Validée' ? 'text-emerald-600' : 'text-amber-600'}">
+                            ${escapeHtml(st.validation)}
+                        </span>
+                    </td>
+                    <td class="p-3.5 text-right">
+                        <button onclick="prefillConvention('${escapeHtml(st.name)}', '${escapeHtml(st.school)}', '${escapeHtml(st.company)}', '${escapeHtml(st.offer)}')" class="text-xs font-bold text-lagoon-600 hover:text-lagoon-800 hover:underline">
+                            Générer Fiche PFMP
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            const validationQueue = document.getElementById('school-offers-validation');
+            validationQueue.innerHTML = offers.slice(0, 2).map(off => `
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex justify-between items-center text-xs">
+                    <div>
+                        <h4 class="font-bold text-slate-800">${escapeHtml(off.title)}</h4>
+                        <p class="text-[11px] text-slate-500">${escapeHtml(off.company)} &bull; ${escapeHtml(off.location)}</p>
+                    </div>
+                    <button onclick="showToast('Conformité SST & Pédagogique confirmée', 'success')" class="px-3 py-1 bg-lagoon-100 text-lagoon-800 font-bold rounded-lg text-[11px] hover:bg-lagoon-200 transition">
+                        Valider Lieu
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Convention Generator NC
+        function updateConventionPreview() {
+            document.getElementById('prev-student').innerText = document.getElementById('conv-student-name').value || '---';
+            document.getElementById('prev-school').innerText = document.getElementById('conv-school-name').value || '---';
+            document.getElementById('prev-teacher').innerText = document.getElementById('conv-teacher-name').value || '---';
+            document.getElementById('prev-class').innerText = document.getElementById('conv-class-name').value || '---';
+            document.getElementById('prev-company').innerText = document.getElementById('conv-company-name').value || '---';
+            document.getElementById('prev-tutor').innerText = document.getElementById('conv-tutor-name').value || '---';
+            document.getElementById('prev-title').innerText = document.getElementById('conv-mission-title').value || '---';
+            document.getElementById('prev-perks').innerText = document.getElementById('conv-perks').value || 'Aucun avantage spécifique';
+
+            const start = document.getElementById('conv-start-date').value;
+            const end = document.getElementById('conv-end-date').value;
+            document.getElementById('prev-dates').innerText = `Du ${start || '..'} au ${end || '..'}`;
+        }
+
+        function prefillConvention(studentName, schoolName, companyName, missionTitle) {
+            switchTab('conventions');
+            document.getElementById('conv-student-name').value = studentName;
+            document.getElementById('conv-school-name').value = schoolName;
+            document.getElementById('conv-company-name').value = companyName !== '-' ? companyName : 'Structure d\'accueil NC';
+            document.getElementById('conv-mission-title').value = missionTitle !== '-' ? missionTitle : 'Intitulé de stage';
+            updateConventionPreview();
+            showToast('Convention pré-remplie avec les données de l\'élève.', 'info');
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            const bgClass = type === 'success' ? 'bg-emerald-600 text-white' :
+                            type === 'error' ? 'bg-rose-600 text-white' : 'bg-navy-900 text-white';
+
+            toast.className = `${bgClass} px-4 py-3 rounded-xl shadow-xl text-xs font-semibold flex items-center gap-2 transition-all duration-300 pointer-events-auto toast-enter`;
+            toast.innerHTML = `<i data-lucide="${type === 'success' ? 'check-circle' : 'info'}" class="w-4 h-4"></i> ${escapeHtml(message)}`;
+
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.add('toast-show');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.remove('toast-show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
