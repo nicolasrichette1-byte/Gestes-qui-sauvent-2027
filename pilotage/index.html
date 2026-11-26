@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Espace DAFPIC × ACDET — Pilotage</title>
+<style>
+:root{--b:#0b4f6c;--a:#e8871e;--bg:#f3f6f8;--l:#d5dde3}
+*{box-sizing:border-box}body{margin:0;font:16px/1.45 system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:#1c2b33}
+header{background:var(--b);color:#fff;padding:18px 16px;border-bottom:5px solid var(--a)}header h1{margin:0;font-size:1.35rem}header p{margin:4px 0 0}
+main{max-width:1100px;margin:auto;padding:16px}
+.card{background:#fff;border:1px solid var(--l);border-radius:10px;padding:16px;margin-bottom:14px}
+.warn{border-left:5px solid var(--a);background:#fff7ec}
+h2{margin:0 0 10px;font-size:1.1rem;color:var(--b)}
+h3{margin:14px 0 6px;font-size:.98rem;color:var(--b)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+label.f{display:block;font-weight:600;font-size:.9rem}
+input,select,textarea{width:100%;font:inherit;padding:8px;border:1px solid #aebbc4;border-radius:6px;background:#fff;margin-top:3px}
+button{font:inherit;font-weight:600;padding:9px 14px;border-radius:6px;border:1px solid var(--b);background:var(--b);color:#fff;cursor:pointer}
+button.s{background:#fff;color:var(--b)}button.g{background:#1d7f55;border-color:#1d7f55;color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.k{font-size:1.9rem;font-weight:700;color:var(--b)}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{border-bottom:1px solid var(--l);padding:7px;text-align:left;vertical-align:top}
+td.num{text-align:right;white-space:nowrap}
+[hidden]{display:none!important}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.76rem;font-weight:700;background:#e4eaf2;color:#3f5a75}
+.chip.ok{background:#dff3ea;color:#1d7f55}.chip.warn{background:#fdf0d5;color:#9a6200}.chip.bull{background:#fbe4e7;color:#b23a48}
+.chip.dark{background:#0b4f6c;color:#fff}
+.tcard{display:block;background:#fff;border:1px solid var(--l);border-left:5px solid var(--l);border-radius:10px;padding:12px}
+.tcard.ok{border-left-color:#1d7f55}.tcard.warn{border-left-color:#e8871e}
+.tcard b{display:block;font-size:.95rem}.tcard small{color:#5d6b82}
+.tcard .row{margin-top:6px}
+a.btnlink{display:inline-block;font:inherit;font-weight:600;font-size:.8rem;padding:5px 10px;border-radius:6px;border:1px solid var(--b);background:#fff;color:var(--b);text-decoration:none}
+@media print{header,button,.noprint,#gate{display:none!important}body{background:#fff}.card{break-inside:avoid}}
+</style></head><body>
+<header><h1>Espace DAFPIC × ACDET — Pilotage des outils</h1>
+<p>Vue d'ensemble : outils utilisés, données présentes sur cet appareil, retours consolidés — sans ouvrir chaque logiciel</p></header>
+<main>
+<div class="card warn noprint"><strong>Confidentialité.</strong> Cet espace ne transporte aucune donnée : il lit uniquement les informations déjà présentes dans <em>cet</em> navigateur, sur <em>cet</em> appareil, et les fichiers que vous y déposez. Rien n'est envoyé automatiquement. Le mot de passe protège l'affichage ; pour un partage, utilisez les sauvegardes et exports prévus dans chaque logiciel.</div>
+<form id="gate" class="card"><h2 id="gt">Accès DAFPIC × ACDET</h2><p id="gh"></p><label class="f">Mot de passe<input type="password" id="pw" required></label><label class="f" id="pw2l">Confirmer le mot de passe<input type="password" id="pw2"></label><p><button>Ouvrir</button></p><p id="gmsg" role="alert"></p></form>
+<div id="app" hidden>
+<div class="row noprint" style="justify-content:flex-end"><button type="button" class="s" id="print">Imprimer cette vue</button><button type="button" class="s" id="lock">Verrouiller</button></div>
+<div class="card noprint"><h2>Aperçu général</h2><div class="chips" id="chips"></div></div>
+<div class="card"><h2>Outils et données présentes sur cet appareil</h2>
+<div class="grid" id="tools"></div>
+<p class="noprint" style="font-size:.85rem;color:#5d6b82;margin:10px 0 0">« Vide » signifie seulement qu'il n'y a rien dans <strong>ce</strong> navigateur : les données peuvent exister sur un autre appareil ou dans une sauvegarde. Le Portail des Événements fonctionne sans stockage.</p></div>
+<div class="card"><h2>Retours consolidés — données de cet appareil</h2><div id="retours"></div></div>
+<div class="card"><h2>Remontée formations (espace DAFPIC chiffré)</h2>
+<p class="noprint" style="font-size:.85rem;color:#5d6b82">Optionnel : saisissez le mot de passe DAFPIC créé dans « Remontée formations » pour afficher ici le résumé de ses données sur cet appareil.</p>
+<div class="row noprint"><input type="password" id="pw-rem" placeholder="Mot de passe « Remontée formations »" style="max-width:340px"><button type="button" class="s" id="unlock-rem">Afficher le résumé</button></div>
+<p id="msg-rem" role="status"></p><div id="sum-rem"></div></div>
+<div class="card"><h2>Salon ACDET 2027 (espace administrateur chiffré)</h2>
+<p class="noprint" style="font-size:.85rem;color:#5d6b82">Optionnel : saisissez le code administrateur du Salon ACDET pour afficher ici le résumé de ses données sur cet appareil.</p>
+<div class="row noprint"><input type="password" id="pw-salon" placeholder="Code administrateur du salon" style="max-width:340px"><button type="button" class="s" id="unlock-salon">Afficher le résumé</button></div>
+<p id="msg-salon" role="status"></p><div id="sum-salon"></div></div>
+<div class="card"><h2>Retours reçus par courriel (fichiers ou codes)</h2>
+<p style="font-size:.9rem">Déposez ici les fichiers reçus des établissements et structures — sans rien importer dans les logiciels : simple lecture et synthèse.</p>
+<label class="f">Fichiers (.json, .txt) — remontées DAFPIC, réponses Salon ACDET, sauvegardes<input type="file" id="files" accept=".json,.txt" multiple></label>
+<label class="f">Ou collez un courriel contenant des codes DAFPIC1…FIN ou ACDET1…FIN<textarea id="paste"></textarea></label>
+<button type="button" id="imp">Analyser le texte collé</button>
+<p id="msg" role="status"></p>
+<div id="agg"></div></div>
+</div>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm=s=>String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+const b64=u=>{let s="";u.forEach(c=>s+=String.fromCharCode(c));return btoa(s)},unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
+const ls=(k,d)=>{try{const r=localStorage.getItem(k);return r?JSON.parse(r):d}catch(e){return d}};
+const te=new TextEncoder();
+async function derive(pw,salt){const base=await crypto.subtle.importKey("raw",te.encode(pw),"PBKDF2",false,["deriveKey"]);
+ return crypto.subtle.deriveKey({name:"PBKDF2",hash:"SHA-256",salt:salt,iterations:310000},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
+const unseal=async(o,k)=>JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(o.iv)},k,unb64(o.ct))));
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+
+/* Accès protégé de CET espace */
+const GKEY="dafpic-acdet-pilotage-v1";
+const gStored=()=>ls(GKEY,null);
+let gkey=null;
+function gate(){const n=!gStored();$("#pw2l").hidden=!n;$("#gt").textContent=n?"Créez le mot de passe de l'espace DAFPIC × ACDET":"Accès DAFPIC × ACDET";
+ $("#gh").textContent=n?"10 caractères minimum. Il ne peut pas être récupéré en cas d'oubli : conservez-le en lieu sûr.":""}
+$("#gate").onsubmit=async e=>{e.preventDefault();const pw=$("#pw").value,s=gStored(),m=$("#gmsg");
+ if(!s&&(pw.length<10||pw!=$("#pw2").value))return m.textContent="10 caractères minimum, saisis deux fois à l'identique.";
+ m.textContent="Vérification…";try{const salt=s?unb64(s.salt):crypto.getRandomValues(new Uint8Array(16));gkey=await derive(pw,salt);
+  if(s)await unseal(s,gkey);else{const iv=crypto.getRandomValues(new Uint8Array(12)),ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},gkey,new TextEncoder().encode(JSON.stringify({ok:1})));
+   localStorage.setItem(GKEY,JSON.stringify({p:1,salt:b64(salt),iv:b64(iv),ct:b64(new Uint8Array(ct))}))}}
+ catch(x){return m.textContent="Mot de passe incorrect ou données illisibles."}
+ m.textContent="";$("#pw").value=$("#pw2").value="";$("#gate").hidden=true;$("#app").hidden=false;render()};
+$("#lock").onclick=()=>location.reload();
+$("#print").onclick=()=>window.print();
+
+/* Relecture (en lecture seule) des autres outils sur cet appareil */
+function gestesData(){const a=ls("gestes_2027_sessions_v1",[]);if(!Array.isArray(a)||!a.length)return null;
+ const pend=k=>a.filter(s=>!s.val||!s.val[k]||s.val[k].state!=="ok").length;
+ const fut=a.filter(s=>s.date&&s.date>=today()).map(s=>s.date).sort();
+ return {total:a.length,etabs:new Set(a.map(s=>s.etab)).size,dafpicPend:pend("dafpic"),crPend:pend("cr"),gpPend:pend("gp"),fut:fut.length?fut[0]:"",sessions:a}}
+function stagencData(){const a=ls("stage_nc_offers",[]);if(!Array.isArray(a))return null;
+ const ex=a.filter(o=>o.example).length;
+ return {total:a.length,real:a.length-ex,ex:ex}}
+function cpData(){const a=ls("cp-recap-v1",[]);const main=ls("code-prevention-v1",null);
+ if(!Array.isArray(a)||!a.length)return null;return {total:a.length,main:!!main}}
+function qhseData(){const reg=ls("suivi_qhse_sst_etabs_v1",[]);if(!Array.isArray(reg)||!reg.length)return null;
+ const rows=reg.map(e=>{const st=ls("suivi_qhse_sst_v2_"+e.id,{});
+  const sig=Array.isArray(st.signalements)?st.signalements:[],act=Array.isArray(st.actions)?st.actions:[],eq=Array.isArray(st.equipements)?st.equipements:[];
+  const pts=st.points||{};const alertes=Object.values(pts).filter(p=>p&&p.s==="am").length;
+  return {name:e.name||e.id,eq:eq.length,sig:sig.length,sigOpen:sig.filter(s=>s.statut!=="traite").length,act:act.length,actOpen:act.filter(a=>a.av!=="termine").length,alertes:alertes}});
+ return {rows:rows,sig:rows.reduce((a,r)=>a+r.sig,0),sigOpen:rows.reduce((a,r)=>a+r.sigOpen,0),eq:rows.reduce((a,r)=>a+r.eq,0)}}
+const TOOLS=[
+ {title:"Gestes qui sauvent 2027",path:"index.html",read:()=>{const d=gestesData();
+   if(!d)return {st:"Vide sur cet appareil"};
+   return {st:"Données présentes",counts:[["Sessions",d.total],["Établissements",d.etabs],["DAFPIC à valider",d.dafpicPend],["Croix-Rouge à valider",gestesCr()],["GRETA à valider",gestesGp()],["Sessions à venir",d.fut?d.fut:"aucune".replace("aucune","—")]]}}},
+ {title:"Stage en Nouvelle-Calédonie",path:"stagenc/",read:()=>{const d=stagencData();
+   if(!d)return {st:"Vide sur cet appareil"};
+   return {st:"Données présentes",counts:[["Offres affichées",d.total],["Offres réelles",d.real],["Offres d'exemple",d.ex]]}}},
+ {title:"Code Prévention",path:"codeprvention/",read:()=>{const d=cpData();
+   if(!d)return {st:"Vide sur cet appareil"};
+   return {st:"Données présentes",counts:[["Résultats conservés",d.total]]}}},
+ {title:"Suivi QHSE & SST — Plateaux techniques",path:"suivi-qhse/",read:()=>{const d=qhseData();
+   if(!d)return {st:"Vide sur cet appareil"};
+   return {st:"Données présentes",counts:[["Établissements suivis",d.rows.length],["Équipements décrits",d.eq],["Signalements",d.sig+" dont "+d.sigOpen+" en cours"],["Plan d'actions",d.rows.reduce((a,r)=>a+r.act,0)]]}}},
+ {title:"Portail des Événements (collèges & lycées)",path:"forums-salons/",read:()=>({st:"Fonctionne sans stockage"})},
+ {title:"Remontée formations – DAFPIC",path:"remontee-formation/",read:()=>ls("dafpic-suivi",null)?{st:"Données chiffrées présentes"}:{st:"Vide sur cet appareil"}},
+ {title:"Salon ACDET 2027",path:"salon-acdet/",read:()=>ls("acdet-salon-2027",null)?{st:"Données chiffrées présentes"}:{st:"Vide sur cet appareil"}},
+ {title:"Portail A.C.D.E.T. × MDF",path:"portail-acdet-mdf/",read:()=>({st:"Voir le portail dédié"})}];
+const chipClass=t=>t.indexOf("présen")>=0?(t.indexOf("chiffr")>=0?"chip dark":"chip ok"):t.indexOf("Vide")>=0?"chip warn":"chip";
+function renderTools(){
+ $("#tools").innerHTML=TOOLS.map(t=>{let r;
+  try{r=t.read()}catch(e){r={st:"Illisible sur cet appareil"}}
+  const c=r.counts||[];
+  return `<div class="tcard ok"><b>${esc(t.title)}</b><small><span class="${chipClass(r.st)}">${esc(r.st)}</span></small>
+   ${c.length?c.map(x=>`<div style="font-size:.85rem"><strong>${esc(x[0])} :</strong> ${esc(x[1])}</div>`).join(""):""}
+   <div class="row noprint"><a class="btnlink" href="../${esc(t.path)}" target="_blank" rel="noopener">Ouvrir l'outil</a></div></div>`}).join("")}
+function renderRetours(){
+ const out=[];
+ const g=gestesData();
+ if(g){out.push(`<h3>Gestes qui sauvent 2027 — sessions</h3><div class="scroll"><table><tr><th>Date</th><th>Établissement</th><th>Classe</th><th>Effectif</th><th>Validation DAFPIC</th><th>Croix-Rouge</th><th>GRETA</th></tr>
+  ${g.sessions.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")).slice(0,12).map(s=>{const st=(s.val&&s.val.dafpic&&s.val.dafpic.state)||"pending";
+   const oktxt=v=>v==="ok"?"<span class='chip ok'>Validée</span>":"<span class='chip warn'>En attente</span>";
+   const cv=(s.val&&s.val.cr&&s.val.cr.state)||"pending",gv=(s.val&&s.val.gp&&s.val.gp.state)||"pending";
+   return `<tr><td>${esc(s.date)} ${esc(s.debut||"")}</td><td>${esc(s.etab)}</td><td>${esc(s.classe||"")}</td><td class="num">${esc(s.effectif||"")}</td><td>${oktxt(st)}</td><td>${oktxt(cv)}</td><td>${oktxt(gv)}</td></tr>`}).join("")}
+  </table>${g.sessions.length>12?`<p style="font-size:.85rem">12 sessions les plus récentes sur ${g.total}.</p>`:""}</div>`)}
+ const stg=stagencData();
+ if(stg){out.push(`<h3>Stage en Nouvelle-Calédonie — offres</h3><p style="font-size:.9rem"><strong>${stg.real}</strong> offre(s) réelle(s) affichée(s), <strong>${stg.ex}</strong> offre(s) d'exemple (effaçables depuis l'outil). Les candidatures se font en direct auprès des entreprises : aucune donnée élève n'est conservée.</p>`)}
+ const cp=cpData();
+ if(cp){out.push(`<h3>Code Prévention — résultats</h3><p style="font-size:.9rem"><strong>${cp.total}</strong> résultat(s) conservé(s) dans ce navigateur (détail dans l'outil).</p>`)}
+ const q=qhseData();
+ if(q){out.push(`<h3>Suivi QHSE & SST — plateaux techniques</h3><div class="scroll"><table><tr><th>Établissement</th><th>Équipements</th><th>Signalements en cours</th><th>Actions ouvertes</th><th>Alertes matériel</th></tr>
+  ${q.rows.map(r=>`<tr><td>${esc(r.name)}</td><td class="num">${r.eq}</td><td class="num">${r.sigOpen} / ${r.sig}</td><td class="num">${r.actOpen} / ${r.act}</td><td class="num">${r.alertes||"0"}</td></tr>`).join("")}</table></div>`)}
+ $("#retours").innerHTML=out.length?out.join(""):"<p>Aucune donnée d'outil dans ce navigateur pour l'instant. Les données saisies sur d'autres appareils ne sont pas visibles ici : utilisez les sauvegardes de chaque logiciel.</p>";
+ $("#chips").innerHTML=["Les données restent dans chaque navigateur/appareil","Aucune transmission automatique","Fichiers reçus analysés en lecture seule"].map((t,i)=>`<span class="${i===0?"chip dark":"chip"}">${t}</span>`).join("")}
+function render(){renderTools();renderRetours()}
+/* Résumés déverrouillés */
+let remKey=null,salonKey=null;
+const SALT_SALON=te.encode("acdet-salon-2027");
+const CHECK="f5765617d2731a669de1134292f1b9063fa9cb2d7d8e99c1551a1a786d499cf8";
+async function unlockRem(){const pw=$("#pw-rem").value,s=ls("dafpic-suivi",null),m=$("#msg-rem");
+ if(!s)return m.textContent="Aucune donnée « Remontée formations » sur cet appareil.";
+ m.textContent="Vérification…";try{remKey=await derive(pw,unb64(s.salt));const db=await unseal(s,remKey);m.textContent="";sumRem(db)}catch(e){remKey=null;m.textContent="Mot de passe incorrect."}}
+function sumRem(db){const subs=db&&Array.isArray(db.subs)?db.subs:[];
+ const st={};subs.forEach(s=>(s.demandes||[]).forEach(d=>{st[d.statut||"À traiter"]=(st[d.statut||"À traiter"]||0)+1}));
+ const totD=subs.reduce((a,s)=>a+(s.demandes||[]).length,0);
+ const acts={};subs.forEach(s=>(s.demandes||[]).forEach(d=>{acts[d.action||""]= (acts[d.action||""]||0)+1}));
+ $("#sum-rem").innerHTML=`<div class="grid">${['<div class="tcard ok"><div class="k">'+subs.length+'</div>remontées d\'établissements</div>',
+  '<div class="tcard ok"><div class="k">'+totD+'</div>demandes de formation</div>'].join("")}
+  ${Object.keys(st).map(k=>`<div class="tcard"><b>${esc(k)}</b>${st[k]} demande(s)</div>`).join("")}</div>
+  <div class="scroll"><table><tr><th>Établissement</th><th>Campagne</th><th>Demandes</th><th>Détail des traitements</th></tr>
+  ${subs.map(s=>`<tr><td><strong>${esc(s.etab)}</strong></td><td>${esc(s.campagne)}</td><td class="num">${(s.demandes||[]).length}</td>
+   <td>${(s.demandes||[]).map(d=>esc(d.action||"")+" : "+esc(d.titre||"")+" <em>["+esc(d.statut||"À traiter")+"]</em>").join("<br>")}</td></tr>`).join("")}</table></div>`}
+function statChips(a){return a.map(x=>`<span class="chip ok">${esc(x)}</span>`).join("")}
+async function unlockSalon(){const pw=$("#pw-salon").value,s=ls("acdet-salon-2027",null),m=$("#msg-salon");
+ if(!s)return m.textContent="Aucune donnée du Salon ACDET sur cet appareil.";
+ m.textContent="Vérification…";try{const base=await crypto.subtle.importKey("raw",te.encode(pw),"PBKDF2",false,["deriveBits"]);
+  const bits=await crypto.subtle.deriveBits({name:"PBKDF2",hash:"SHA-256",salt:SALT_SALON,iterations:310000},base,256);
+  if(hex(await crypto.subtle.digest("SHA-256",bits))!=CHECK)return m.textContent="Code incorrect.";
+  salonKey=await crypto.subtle.importKey("raw",bits,"AES-GCM",false,["encrypt","decrypt"]);
+  const data=await unseal(s,salonKey);m.textContent="";sumSalon(data)}catch(e){m.textContent="Code incorrect ou données illisibles."}}
+const INTENT=["Intéressé(e) pour participer","Peut-être, à étudier","Souhaite d'abord des informations","Pas disponible"];
+function statutSalon(r){if(r.suivi==="Ne participe pas")return "chip bull";if(r.intention===INTENT[0]||r.intention===INTENT[1])return "chip ok";return "chip warn"}
+function sumSalon(data){const a=Array.isArray(data)?data:[];
+ const inter=a.filter(r=>r.suivi!=="Ne participe pas"&&(r.intention===INTENT[0]||r.intention===INTENT[1]));
+ const sum=k=>inter.reduce((x,r)=>x+(Number(r[k])||0),0);
+ $("#sum-salon").innerHTML=`<div class="grid"><div class="tcard ok"><div class="k">${a.length}</div>structures recensées</div>
+  <div class="tcard ok"><div class="k">${inter.length}</div>intéressées ou à l'étude</div>
+  <div class="tcard"><b>Besoins cumulés</b><div style="font-size:.85rem">${sum("tables")} tables · ${sum("chaises")} chaises · ${sum("surface")} m²</div></div></div>
+  <div class="scroll"><table><tr><th>Structure</th><th>Type</th><th>Intérêt / suivi</th><th>Contact</th></tr>
+  ${a.sort((x,y)=>String(x.nom||"").localeCompare(String(y.nom||""),"fr")).map(r=>`<tr><td><strong>${esc(r.nom)}</strong></td><td>${esc(r.type)}</td><td><span class="${statutSalon(r)}">${esc(r.intention||"")}</span><br><em style="font-size:.85rem">${esc(r.suivi||"")}</em></td><td style="font-size:.85rem">${esc([r.contact,r.tel,r.email].filter(Boolean).join(" · "))}</td></tr>`).join("")}</table></div>`}
+$("#unlock-rem").onclick=unlockRem;$("#unlock-salon").onclick=unlockSalon;
+$("#pw-rem").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();unlockRem()}});
+$("#pw-salon").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();unlockSalon()}});
+/* Analyse des retours reçus (fichiers / codes) — lecture seule */
+function tryParse(t){t=String(t||"").replace(/^\uFEFF/,"").trim();
+ const dec=c=>JSON.parse(new TextDecoder().decode(unb64(c.replace(/[\s>]/g,""))));
+ const out={rem:[],salon:[],notes:[]};
+ const codes=[...t.matchAll(/(DAFPIC|ACDET)1:([\s\S]*?):FIN/g)];
+ codes.forEach(m=>{try{const o=JSON.parse(new TextDecoder().decode(unb64(m[2].replace(/[\s>]/g,""))));pushSmart(o,out)}catch(e){out.notes.push("Code "+m[1]+"1 illisible.")}});
+ if(!codes.length){try{const o=JSON.parse(t);[].concat(o).forEach(x=>pushSmart(x,out))}catch(e){out.notes.push("Texte non reconnu (ni code ni JSON).")}}
+ return out}
+function pushSmart(o,out){if(!o||typeof o!="object"){out.notes.push("Élément ignoré.");return}
+ if(o.dafpic===1||o.acdet===1){out.notes.push("Sauvegarde chiffrée détectée : importez-la dans l'outil correspondant pour l'analyser.");return}
+ if(Array.isArray(o.demandes)&&o.etab){out.rem.push(o);return}
+ if(o.nom&&Array.isArray(o.offres)){out.salon.push(o);return}
+ if(typeof o.nom=="string"&&(o.suivi||o.intention)){out.salon.push(o);return}
+ out.notes.push("Format non identifié (ignoré).")}
+function aggRem(items){if(!items.length)return "";
+ const st={};items.forEach(s=>(s.demandes||[]).forEach(d=>{st[d.statut||"À traiter"]=(st[d.statut||"À traiter"]||0)+1}));
+ const totD=items.reduce((a,s)=>a+(s.demandes||[]).length,0);
+ return `<h3>Remontées formations (fichiers analysés)</h3><p style="font-size:.9rem"><strong>${items.length}</strong> remontée(s), <strong>${totD}</strong> demande(s). ${Object.keys(st).map(k=>esc(k)+" : "+st[k]).join(" · ")||""}</p>
+ <div class="scroll"><table><tr><th>Établissement</th><th>Commune</th><th>Campagne</th><th>Demandes</th><th>Nouvelles formations</th></tr>
+ ${items.map(s=>`<tr><td><strong>${esc(s.etab)}</strong></td><td>${esc(s.commune||"")}</td><td>${esc(s.campagne||"")}</td><td class="num">${(s.demandes||[]).length}</td><td>${(s.demandes||[]).filter(d=>d.action==="Créer une formation").map(d=>esc(d.titre)).join("<br>")||"—"}</td></tr>`).join("")}</table></div>`}
+function aggSalon(items){if(!items.length)return "";
+ const inter=items.filter(r=>r.suivi!=="Ne participe pas"&&(r.intention===INTENT[0]||r.intention===INTENT[1]));
+ const sum=k=>inter.reduce((x,r)=>x+(Number(r[k])||0),0);
+ return `<h3>Salon ACDET (fichiers analysés)</h3><p style="font-size:.9rem"><strong>${items.length}</strong> structure(s), <strong>${inter.length}</strong> intéressée(s) ou à l'étude · ${sum("tables")} tables · ${sum("chaises")} chaises · ${sum("surface")} m²</p>
+ <div class="scroll"><table><tr><th>Structure</th><th>Type</th><th>Intérêt / suivi</th><th>Propose</th></tr>
+ ${items.map(r=>`<tr><td><strong>${esc(r.nom)}</strong></td><td>${esc(r.type||"")}</td><td>${esc(r.intention||"")}<br><em style="font-size:.85rem">${esc(r.suivi||"")}</em></td><td style="font-size:.85rem">${esc((r.offres||[]).join(", "))}</td></tr>`).join("")}</table></div>`}
+async function handle(t){const r=tryParse(t);
+ const html=(r.rem.length?aggRem(r.rem):"")+(r.salon.length?aggSalon(r.salon):"")+(r.notes.length?`<p role="alert" style="color:#b23a48;font-size:.9rem">${r.notes.map(esc).join("<br>")}</p>`:"");
+ if(html)$("#agg").innerHTML+=`<div class="card">${html}</div>`;
+ return r.notes.length?(r.rem.length||r.salon.length?"Analysé — à noter : "+r.notes.join(" "):r.notes[0]):(r.rem.length+" remontée(s) et "+r.salon.length+" fiche(s) salon analysée(s).")}
+$("#files").onchange=async e=>{const out=[];for(const f of e.target.files)out.push(f.name+" : "+await handle(await f.text()));$("#msg").textContent=out.join(" | ");e.target.value=""};
+$("#imp").onclick=async()=>{$("#msg").textContent=await handle($("#paste").value);$("#paste").value=""};
+gate();
+</script>
+</body>
+</html>
