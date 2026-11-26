@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Salon ACDET</title>
+<style>
+:root{--b:#0b4f6c;--a:#e8871e;--bg:#f3f6f8;--l:#d5dde3}
+*{box-sizing:border-box}body{margin:0;font:16px/1.45 system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:#1c2b33}
+header{background:var(--b);color:#fff;padding:18px 16px;border-bottom:5px solid var(--a)}header h1{margin:0;font-size:1.35rem}header p{margin:4px 0 0}
+main{max-width:1100px;margin:auto;padding:16px}
+.card{background:#fff;border:1px solid var(--l);border-radius:10px;padding:16px;margin-bottom:14px}
+.warn{border-left:5px solid var(--a);background:#fff7ec}
+h2{margin:0 0 10px;font-size:1.1rem;color:var(--b)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+label.f{display:block;font-weight:600;font-size:.9rem}
+input,select,textarea{width:100%;font:inherit;padding:8px;border:1px solid #aebbc4;border-radius:6px;background:#fff;margin-top:3px}
+textarea{min-height:80px}
+.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:4px;margin:6px 0 12px}
+.checks label,.one{display:flex;gap:8px;align-items:flex-start}input[type=checkbox]{width:auto;margin:5px 0 0}
+button{font:inherit;font-weight:600;padding:9px 14px;border-radius:6px;border:1px solid var(--b);background:var(--b);color:#fff;cursor:pointer}
+button.s{background:#fff;color:var(--b)}button.d{background:#fff;color:#a32020;border-color:#a32020}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+nav{margin-bottom:14px}nav button{background:#fff;color:var(--b)}nav button.on{background:var(--b);color:#fff}
+.k{font-size:1.9rem;font-weight:700;color:var(--b)}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{border-bottom:1px solid var(--l);padding:7px;text-align:left;vertical-align:top}
+[hidden]{display:none!important}
+@media print{nav,button,.noprint{display:none!important}body{background:#fff}.card{break-inside:avoid}}
+</style></head><body>
+<header><h1>Salon ACDET — Découverte des métiers et des formations</h1>
+<p>Samedi 28 août 2027 · Salle d'honneur de la mairie de Nouméa · Plus de 2 000 visiteurs attendus</p></header>
+<main>
+<div class="card warn"><strong>Recensement sans engagement.</strong> Ce document sert uniquement à recueillir des intentions, des propositions et des besoins. Il ne constitue ni une inscription, ni une réservation, ni un contrat. Ni l'ACDET ni la structure répondante ne sont engagées. La participation, les emplacements, le matériel, les conditions et le programme restent à étudier et à confirmer.</div>
+<div id="home" class="grid">
+<div class="card"><h2>Entreprises, organismes de formation, établissements scolaires</h2><p>Accès libre. Indiquez ce que vous pourriez proposer et vos besoins.</p><button type="button" id="go-exp">Remplir ma fiche</button></div>
+<div class="card"><h2>Administration ACDET</h2><p>Accès réservé, avec un code.</p><button type="button" class="s" id="go-adm">Espace administrateur</button></div></div>
+<div id="exp" hidden><p class="noprint"><button type="button" class="s" id="back-exp">← Accueil</button></p><form id="x-form"><div id="x-fields"></div>
+<div class="card"><label class="one"><input type="checkbox" required><span>J'accepte que l'ACDET utilise ces informations pour préparer le salon et me recontacter. Je peux demander leur correction ou leur suppression. Cette fiche est sans engagement. *</span></label>
+<p><button>Préparer ma réponse</button></p></div></form>
+<div class="card" id="x-done" hidden><h2>Dernière étape : transmettre votre réponse à l'ACDET</h2>
+<p><strong>Rien n'est envoyé automatiquement.</strong> Choisissez une méthode :</p>
+<ol><li>Téléchargez le fichier, puis joignez-le à un courriel adressé à l'ACDET.<div class="row"><button id="x-dl">Télécharger ma réponse</button><button class="s" id="x-mail">Ouvrir un courriel</button></div></li>
+<li>Ou copiez le code ci-dessous et collez-le dans votre courriel.<textarea id="x-code" readonly></textarea><button class="s" id="x-copy">Copier le code</button> <span id="x-ok" role="status"></span></li></ol></div>
+</div>
+<div id="adm" hidden><p class="noprint"><button type="button" class="s" id="back-adm">← Accueil</button></p><form id="gate" class="card"><h2>Accès réservé aux administrateurs</h2><label class="f">Code d'accès<input type="password" id="pw" autocomplete="off" required></label><p><button>Ouvrir</button></p><p id="gmsg" role="alert"></p></form>
+<div id="app" hidden>
+<div id="alert" class="card warn" hidden></div>
+<nav class="row"><button data-v="dash">Tableau de bord</button><button data-v="list">Structures</button><button data-v="edit">Nouvelle fiche</button><button data-v="io">Importer / exporter</button><button type="button" id="lock">Verrouiller</button></nav>
+<section id="dash"></section>
+<section id="list"><div class="card"><div class="grid noprint"><label class="f">Recherche<input id="q" type="search" placeholder="nom, métier, formation…"></label><label class="f">Type<select id="ft"></select></label><label class="f">Suivi<select id="fs"></select></label></div><div class="scroll" id="table"></div></div></section>
+<section id="edit"><form id="form"><div id="fields"></div><div class="card"><div class="grid"><label class="f">Suivi<select name="suivi" id="suivi"></select></label></div><label class="f">Notes internes<textarea name="notes"></textarea></label><div class="row"><button>Enregistrer</button><button type="button" class="s" id="cancel">Annuler</button></div></div></form></section>
+<section id="io">
+<div class="card"><h2>Importer des réponses d'exposants</h2><label class="f">Fichiers reçus (.json), y compris une sauvegarde<input type="file" id="files" accept=".json,.txt" multiple></label><label class="f">Ou collez un courriel contenant un code ACDET1<textarea id="paste"></textarea></label><button id="imp">Importer le texte collé</button><p id="msg" role="status"></p></div>
+<div class="card"><h2>Exporter</h2><div class="row"><button id="csv">Tableau pour Excel (CSV)</button><button class="s" id="save">Sauvegarde complète</button><button class="s" id="print">Imprimer la vue actuelle</button></div><p>Les données restent dans ce navigateur, sur cet appareil, chiffrées. La sauvegarde complète est elle aussi chiffrée ; le fichier Excel (CSV) ne l'est pas : ne le transmettez qu'aux administrateurs. Faites une sauvegarde après chaque séance de travail : c'est aussi le moyen de les transférer sur un autre ordinateur. Elles contiennent des coordonnées personnelles.</p></div></section>
+</div>
+</div>
+</main>
+<script>
+const TYPES=["Entreprise","Organisme de formation","Établissement scolaire","Autre (institution, association…)"];
+const INTENT=["Intéressé(e) pour participer","Peut-être, à étudier","Souhaite d'abord des informations","Pas disponible"];
+const SUIVI=["À contacter","Contacté","Réponse reçue","À recontacter","Ne participe pas"];
+const SECTIONS=[
+["Votre structure",[["type","Type de structure","select",TYPES,1],["nom","Nom de la structure","text",null,1],["commune","Commune / province","text"],["site","Site internet","text"]]],
+["Personne à contacter",[["contact","Nom et prénom","text",null,1],["fonction","Fonction","text"],["email","Courriel","email"],["tel","Téléphone","tel"]]],
+["Votre intérêt (sans engagement)",[["intention","Participation envisagée","select",INTENT,1],["personnes","Personnes envisagées sur le stand","number"]]],
+["Ce que vous pourriez proposer",[
+["offres","Cochez ce qui convient","checks",["Présentation de métiers","Présentation de formations","Offres d'emploi","Alternance / apprentissage","Stages","Démonstrations / ateliers","Intervention / mini-conférence","Information sur les aides et l'orientation","Documentation"]],
+["domaines","Domaines concernés","checks",["Industrie / maintenance","Mine / métallurgie","BTP","Numérique","Santé / social","Commerce / gestion","Hôtellerie / restauration / tourisme","Agriculture / environnement","Maritime","Transport / logistique","Sécurité / défense","Enseignement / animation","Artisanat","Autre"]],
+["niveaux","Niveaux de formation","checks",["Sans diplôme / remise à niveau","CAP / BEP","Baccalauréat","Bac +2","Bac +3 et plus","Formation continue / VAE"]],
+["detail","Précisez les métiers, formations ou animations proposés","area"]]],
+["Vos besoins éventuels (à étudier)",[
+["besoins","Cochez vos besoins","checks",["Électricité","Accès internet / Wi-Fi","Écran","Grilles ou panneaux d'affichage","Espace pour démonstration","Espace de conférence","Accès pour déchargement","Stationnement","Accessibilité (mobilité réduite)"]],
+["tables","Nombre de tables","number"],["chaises","Nombre de chaises","number"],["surface","Surface souhaitée (m²)","number"],
+["autres","Autres besoins, contraintes ou questions","area"]]]];
+const FIELDS=SECTIONS.flatMap(s=>s[1]);
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+function buildForm(el){
+ el.innerHTML=SECTIONS.map(([t,fs])=>`<div class="card"><h2>${t}</h2><div class="grid">`+fs.filter(f=>!["checks","area"].includes(f[2])).map(([k,l,ty,o,r])=>`<label class="f">${l}${r?" *":""}${ty=="select"?`<select name="${k}" ${r?"required":""}><option value="">— choisir —</option>${o.map(x=>`<option>${esc(x)}</option>`).join("")}</select>`:`<input name="${k}" type="${ty}" ${ty=="number"?'min="0"':""} ${r?"required":""}>`}</label>`).join("")+"</div>"+fs.filter(f=>["checks","area"].includes(f[2])).map(([k,l,ty,o])=>ty=="area"?`<label class="f">${l}<textarea name="${k}"></textarea></label>`:`<p><strong>${l}</strong></p><div class="checks">${o.map(x=>`<label><input type="checkbox" name="${k}" value="${esc(x)}">${esc(x)}</label>`).join("")}</div>`).join("")+"</div>").join("");
+}
+function readForm(form){const d=new FormData(form),o={};FIELDS.forEach(([k,,t])=>o[k]=t=="checks"?d.getAll(k):String(d.get(k)||"").trim());return o}
+function fillForm(form,o){form.reset();FIELDS.forEach(([k,,t])=>{if(t=="checks")form.querySelectorAll(`[name="${k}"]`).forEach(c=>c.checked=(o[k]||[]).includes(c.value));else form.elements[k].value=o[k]||""})}
+function clean(r){if(!r||typeof r!="object"||typeof r.nom!="string"||!r.nom.trim())throw Error("fiche invalide");
+ const o={id:String(r.id||uid()),maj:String(r.maj||new Date().toISOString()),suivi:SUIVI.includes(r.suivi)?r.suivi:"Réponse reçue",notes:String(r.notes||"")};
+ FIELDS.forEach(([k,,t])=>o[k]=t=="checks"?(Array.isArray(r[k])?r[k].map(String):[]):String(r[k]??""));return o}
+const encode=o=>"ACDET1:"+btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify(o))))+":FIN";
+const decode=s=>JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(s.replace(/[\s>]/g,"")),c=>c.charCodeAt(0))));
+function download(name,text,type){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+const slug=s=>s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/gi,"-").replace(/^-|-$/g,"").toLowerCase()||"fiche";
+(()=>{
+const EMAIL_ACDET=""; // Indiquer ici l'adresse de réception de l'ACDET
+const form=$("#x-form");buildForm($("#x-fields"));let rec;const id=uid();
+form.addEventListener("input",()=>$("#x-done").hidden=true);
+form.onsubmit=e=>{e.preventDefault();const o=readForm(form);
+ if(!o.nom||!o.contact)return alert("Indiquez le nom de la structure et de la personne à contacter.");
+ if(!o.email&&!o.tel)return alert("Indiquez au moins un courriel ou un téléphone.");
+ rec={id,maj:new Date().toISOString(),...o};$("#x-code").value=encode(rec);$("#x-done").hidden=false;$("#x-done").scrollIntoView()};
+$("#x-dl").onclick=()=>download("reponse-salon-"+slug(rec.nom)+".json",JSON.stringify(rec,null,1),"application/json");
+$("#x-mail").onclick=()=>location.href=`mailto:${EMAIL_ACDET}?subject=${encodeURIComponent("Salon ACDET (sans engagement) - "+rec.nom)}&body=${encodeURIComponent("Bonjour,\n\nVeuillez trouver notre réponse au recensement (fichier joint ou code ci-dessous). Elle est sans engagement.\n\n")}`;
+$("#x-copy").onclick=async()=>{const t=$("#x-code");t.select();try{await navigator.clipboard.writeText(t.value)}catch(e){document.execCommand("copy")}$("#x-ok").textContent="Code copié."};
+
+})();
+(()=>{
+const KEY="acdet-salon-2027";let data=[],current=null,stored=true;
+function warn(t){$("#alert").textContent=t;$("#alert").hidden=false}
+let key=null,queue=Promise.resolve();
+const CHECK="f5765617d2731a669de1134292f1b9063fa9cb2d7d8e99c1551a1a786d499cf8";
+const b64=u=>{let s="";u.forEach(c=>s+=String.fromCharCode(c));return btoa(s)},unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
+async function unlock(code){const te=new TextEncoder(),base=await crypto.subtle.importKey("raw",te.encode(code),"PBKDF2",false,["deriveBits"]);
+ const bits=await crypto.subtle.deriveBits({name:"PBKDF2",hash:"SHA-256",salt:te.encode("acdet-salon-2027"),iterations:310000},base,256);
+ if(hex(await crypto.subtle.digest("SHA-256",bits))!=CHECK)return false;
+ key=await crypto.subtle.importKey("raw",bits,"AES-GCM",false,["encrypt","decrypt"]);return true}
+async function seal(obj){const iv=crypto.getRandomValues(new Uint8Array(12)),ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,new TextEncoder().encode(JSON.stringify(obj)));return JSON.stringify({acdet:1,iv:b64(iv),ct:b64(new Uint8Array(ct))})}
+async function unseal(o){return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(o.iv)},key,unb64(o.ct))))}
+async function load(){try{const s=localStorage.getItem(KEY);if(!s)return;const o=JSON.parse(s);data=(Array.isArray(o)?o:await unseal(o)).map(clean);if(Array.isArray(o))persist()}catch(e){stored=false;warn("Impossible de relire les données enregistrées. Restaurez votre dernière sauvegarde avant toute saisie.")}}
+function persist(){const snap=JSON.parse(JSON.stringify(data));queue=queue.then(async()=>{try{localStorage.setItem(KEY,await seal(snap))}catch(e){warn("Enregistrement impossible dans ce navigateur. Faites une sauvegarde complète avant de fermer la page.")}})}
+const form=$("#form");buildForm($("#fields"));
+const opts=(a,all)=>(all?`<option value="">${all}</option>`:"")+a.map(x=>`<option>${esc(x)}</option>`).join("");
+$("#ft").innerHTML=opts(TYPES,"Tous");$("#fs").innerHTML=opts(SUIVI,"Tous");$("#suivi").innerHTML=opts(SUIVI);
+function show(v){document.querySelectorAll("section").forEach(s=>s.hidden=s.id!=v);document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v==v));if(v=="dash")dash();if(v=="list")list()}
+function blank(){current=null;form.reset();form.elements.suivi.value="À contacter"}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{if(b.dataset.v=="edit")blank();show(b.dataset.v)});
+// Seul le nom est obligatoire côté organisateur (prospects à contacter)
+form.querySelectorAll("[required]").forEach(e=>{if(e.name!="nom"&&e.name!="type")e.required=false});
+form.onsubmit=e=>{e.preventDefault();const o=readForm(form);if(!o.nom)return alert("Indiquez le nom de la structure.");
+ const r=clean({...o,id:current||uid(),maj:new Date().toISOString(),suivi:form.elements.suivi.value,notes:form.elements.notes.value});
+ const i=data.findIndex(x=>x.id==r.id);if(i<0&&data.some(x=>slug(x.nom)==slug(r.nom))&&!confirm("Une structure porte déjà ce nom. Ajouter quand même ?"))return;
+ i<0?data.push(r):data[i]=r;persist();blank();show("list")};
+$("#cancel").onclick=()=>show("list");
+const interested=r=>r.suivi!="Ne participe pas"&&(r.intention==INTENT[0]||r.intention==INTENT[1]);
+function count(rows,k,labels){return `<table>${labels.map(l=>`<tr><td>${esc(l)}</td><td><strong>${rows.filter(r=>[].concat(r[k]).includes(l)).length}</strong></td></tr>`).join("")}</table>`}
+function dash(){const p=data.filter(interested),sum=k=>p.reduce((a,r)=>a+(Number(r[k])||0),0),opt=k=>FIELDS.find(f=>f[0]==k)[3];
+ const kpi=(n,l)=>`<div class="card"><div class="k">${n}</div>${l}</div>`;
+ $("#dash").innerHTML=`<div class="grid">${kpi(data.length,"structures recensées")}${kpi(p.length,"intéressées ou à l'étude")}${TYPES.map(t=>kpi(p.filter(r=>r.type==t).length,esc(t)+" (intéressés)")).join("")}</div>
+ <div class="card"><h2>Besoins cumulés (intéressés ou à l'étude)</h2><p><strong>${sum("tables")}</strong> tables · <strong>${sum("chaises")}</strong> chaises · <strong>${sum("surface")}</strong> m² · <strong>${sum("personnes")}</strong> personnes sur les stands</p>${count(p,"besoins",opt("besoins"))}</div>
+ <div class="grid"><div class="card"><h2>Offres</h2>${count(p,"offres",opt("offres"))}</div><div class="card"><h2>Domaines</h2>${count(p,"domaines",opt("domaines"))}</div><div class="card"><h2>Niveaux</h2>${count(p,"niveaux",opt("niveaux"))}</div><div class="card"><h2>Suivi</h2>${count(data,"suivi",SUIVI)}</div></div>
+ <div class="card warn"><h2>Affluence : à vérifier avant toute confirmation</h2><ul><li>Capacité autorisée de la salle d'honneur en simultané, stands compris (à demander à la mairie). 2 000 visiteurs sur 8 heures représentent 250 arrivées par heure en moyenne.</li><li>Sécurité, secours, issues, sens de circulation et file d'attente extérieure.</li><li>Créneaux de visite pour les établissements scolaires et solution en cas de pluie.</li><li>Autorisation d'occupation, assurance, puissance électrique et horaires d'installation.</li></ul></div>`}
+function list(){const q=slug($("#q").value||" "),t=$("#ft").value,s=$("#fs").value;
+ const rows=data.filter(r=>(!t||r.type==t)&&(!s||r.suivi==s)&&(!$("#q").value||slug(Object.values(r).flat().join(" ")).includes(q))).sort((a,b)=>a.nom.localeCompare(b.nom,"fr"));
+ $("#table").innerHTML=rows.length?`<p>${rows.length} structure(s)</p><table><tr><th>Structure</th><th>Contact</th><th>Propose</th><th>Besoins</th><th>Intérêt / suivi</th><th class="noprint"></th></tr>${rows.map(r=>`<tr><td><strong>${esc(r.nom)}</strong><br>${esc(r.type)}</td><td>${[r.contact,r.tel,r.email].filter(Boolean).map(esc).join("<br>")}</td><td>${esc(r.offres.join(", "))}<br>${esc(r.detail)}</td><td>${esc([...r.besoins,r.tables&&r.tables+" table(s)",r.chaises&&r.chaises+" chaise(s)",r.surface&&r.surface+" m²"].filter(Boolean).join(", "))}<br>${esc(r.autres)}</td><td>${esc(r.intention)}<br><em>${esc(r.suivi)}</em></td><td class="noprint"><button class="s" data-e="${esc(r.id)}">Ouvrir</button> <button class="d" data-d="${esc(r.id)}">Supprimer</button></td></tr>`).join("")}</table>`:"<p>Aucune structure à afficher. Ajoutez une fiche ou importez des réponses.</p>"}
+["q","ft","fs"].forEach(i=>$("#"+i).oninput=list);
+$("#table").onclick=e=>{const {e:ed,d}=e.target.dataset;if(ed){const r=data.find(x=>x.id==ed);current=r.id;fillForm(form,r);form.elements.suivi.value=r.suivi;form.elements.notes.value=r.notes;show("edit");scrollTo(0,0)}
+ if(d&&confirm("Supprimer définitivement cette fiche ?")){data=data.filter(x=>x.id!=d);persist();list()}};
+function merge(items){let add=0,up=0,old=0;items.forEach(raw=>{const r=clean(raw),i=data.findIndex(x=>x.id==r.id);
+ if(i<0){const twin=data.find(x=>slug(x.nom)==slug(r.nom));if(twin&&confirm(`« ${r.nom} » existe déjà. OK : remplacer la fiche existante (notes conservées). Annuler : ajouter une seconde fiche.`)){data[data.indexOf(twin)]={...r,id:r.id,notes:r.notes||twin.notes};up++}else{data.push(r);add++}}
+ else if(r.maj>data[i].maj){data[i]={...r,notes:r.notes||data[i].notes};up++}else old++});persist();return `${add} ajoutée(s), ${up} mise(s) à jour, ${old} déjà à jour.`}
+function parse(text){text=text.replace(/^\uFEFF/,"").trim();const codes=[...text.matchAll(/ACDET1:([\s\S]*?):FIN/g)];if(codes.length)return codes.map(m=>decode(m[1]));return [].concat(JSON.parse(text))}
+$("#files").onchange=async e=>{const out=[];let bad=0;
+ for(const f of e.target.files){try{parse(await f.text()).forEach(r=>out.push(r))}catch(err){bad++}}
+ if(!out.length&&!bad)return;
+ if(!out.length){$("#msg").textContent="Aucun fichier lisible : vérifiez qu'il s'agit bien de réponses ou d'une sauvegarde de ce logiciel.";return}
+ $("#msg").textContent=merge(out)+(bad?` ${bad} fichier(s) illisible(s).`:"");
+ e.target.value=""};
+$("#imp").onclick=()=>{const t=$("#paste");if(!t.value.trim())return;
+ try{$("#msg").textContent=parse(t.value).length?merge(parse(t.value)):"Aucune fiche reconnue dans le texte collé."}
+ catch(err){$("#msg").textContent="Texte illisible : vérifiez que le code ACDET1 complet a été copié (du début ACDET1: jusqu'à :FIN)."}};
+$("#csv").onclick=()=>{const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+ const rows=[["Structure","Type","Commune","Contact","Fonction","Courriel","Téléphone","Participation envisagée","Personnes","Propose","Domaines","Niveaux","Détail","Besoins","Tables","Chaises","Surface","Autres","Suivi","Notes","MAJ"]];
+ data.slice().sort((a,b)=>a.nom.localeCompare(b.nom,"fr")).forEach(r=>rows.push([r.nom,r.type,r.commune,r.contact,r.fonction,r.email,r.tel,r.intention,r.personnes,r.offres.join(", "),r.domaines.join(", "),r.niveaux.join(", "),r.detail,r.besoins.join(", "),r.tables,r.chaises,r.surface,r.autres,r.suivi,r.notes,r.maj.slice(0,10)]));
+ download("salon-acdet-2027.csv","\ufeff"+rows.map(r=>r.map(q).join(";")).join("\r\n"),"text/csv;charset=utf-8")};
+$("#save").onclick=async()=>{try{download("Sauvegarde_salon_ACDET_2027.json",await seal(data),"application/json")}
+ catch(err){download("Sauvegarde_salon_ACDET_2027.json",JSON.stringify(data),"application/json")}};
+$("#print").onclick=()=>window.print();
+$("#lock").onclick=()=>{key=null;$("#app").hidden=true;$("#gate").hidden=false;$("#pw").value="";$("#gmsg").textContent="Espace verrouillé."};
+$("#gate").onsubmit=async e=>{e.preventDefault();
+ try{
+  if(await unlock($("#pw").value)){await load();$("#gate").hidden=true;$("#pw").value="";$("#gmsg").textContent="";$("#app").hidden=false;show("dash")}
+  else $("#gmsg").textContent="Code incorrect."
+ }catch(err){$("#gmsg").textContent="Vérification impossible dans ce navigateur."}};
+$("#go-exp").onclick=()=>{$("#home").hidden=true;$("#exp").hidden=false;scrollTo(0,0)};
+$("#go-adm").onclick=()=>{$("#home").hidden=true;$("#adm").hidden=false;$("#pw").focus();scrollTo(0,0)};
+$("#back-exp").onclick=()=>{$("#exp").hidden=true;$("#home").hidden=false;$("#x-done").hidden=true};
+$("#back-adm").onclick=()=>{$("#adm").hidden=true;$("#home").hidden=false;$("#gate").hidden=false;$("#app").hidden=true;$("#pw").value="";$("#gmsg").textContent=""};
+})();
+</script>
+</body>
+</html>
