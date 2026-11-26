@@ -40,6 +40,14 @@ header.top{background:var(--surface);border-bottom:1px solid var(--border);paddi
 .role button{border:0;background:transparent;padding:6px 14px;cursor:pointer;font-size:.85rem;font-weight:600;color:var(--muted)}
 .role button[aria-pressed="true"]{background:var(--accent);color:#fff}
 
+/* Écran de connexion par établissement */
+.gate-wrap{max-width:520px;margin:36px auto;padding:0 16px}
+.gate-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow)}
+.gate-card h2{margin:0 0 6px;font-size:1.3rem}
+.gate-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--surface2);padding:4px;border-radius:10px;margin:16px 0}
+.gate-tabs button{border:0;background:transparent;padding:8px 10px;border-radius:8px;font-weight:600;font-size:.88rem;cursor:pointer;color:var(--muted)}
+.gate-tabs button[aria-pressed="true"]{background:var(--surface);color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
 /* Navigation */
 nav#tabs{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5}
 .tabs-in{max-width:1000px;margin:0 auto;display:flex;overflow-x:auto;padding:0 12px;gap:2px}
@@ -74,7 +82,7 @@ h2{font-size:1.2rem;margin:0 0 4px}
 /* Formulaires */
 label{display:block;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:10px}
 label.inline{display:flex;gap:8px;align-items:center;color:var(--text);font-size:.92rem;font-weight:500}
-input[type=text],input[type=date],input[type=number],select,textarea{width:100%;margin-top:4px;padding:9px 11px;border:1px solid var(--border);border-radius:9px;background:var(--surface);font-weight:400;color:var(--text)}
+input[type=text],input[type=password],input[type=date],input[type=number],select,textarea{width:100%;margin-top:4px;padding:9px 11px;border:1px solid var(--border);border-radius:9px;background:var(--surface);font-weight:400;color:var(--text)}
 textarea{min-height:84px;resize:vertical}
 input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
@@ -105,6 +113,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}
 .note.alert{background:var(--alert-soft);color:var(--alert)}
 .note.warn{background:var(--warn-soft);color:var(--warn)}
 .note.info{background:var(--info-soft);color:var(--info)}
+.note.ok{background:var(--ok-soft);color:var(--ok)}
 
 /* Points de contrôle */
 details.theme{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;box-shadow:var(--shadow)}
@@ -159,23 +168,28 @@ table.t th{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-s
       <h1>Suivi QHSE &amp; SST — Plateaux techniques</h1>
       <p id="brand-sub">Vice-Rectorat de la Nouvelle-Calédonie · DAFPIC</p>
     </div>
-    <div class="top-right">
+    <div class="top-right hidden" id="top-controls">
       <div class="role" role="group" aria-label="Vue">
         <button type="button" data-act="role" data-v="ens">Enseignant</button>
         <button type="button" data-act="role" data-v="ddfpt">DDFPT</button>
       </div>
+      <button type="button" class="btn small" data-act="logout" title="Changer d'établissement ou verrouiller">🔒 Établissement</button>
       <span class="save-ind" id="save-ind" aria-live="polite"></span>
     </div>
   </div>
 </header>
-<nav id="tabs"><div class="tabs-in" id="tabs-in"></div></nav>
+<nav id="tabs" class="hidden"><div class="tabs-in" id="tabs-in"></div></nav>
 <main id="view"></main>
-<footer>Outil conçu par <a href="mailto:nicolas.richette@ac-noumea.nc">Nicolas Richette</a> · Vice-Rectorat de la Nouvelle-Calédonie · Version 2.0 · Données conservées uniquement dans ce navigateur</footer>
+<footer>Outil conçu par <a href="mailto:nicolas.richette@ac-noumea.nc">Nicolas Richette</a> · Vice-Rectorat de la Nouvelle-Calédonie · Version 2.1 · Données conservées uniquement dans ce navigateur</footer>
 <dialog id="dlg"></dialog>
 <div id="toast" role="status"></div>
 
 <script>
 /* ═════════════ DONNÉES DE RÉFÉRENCE ═════════════ */
+const MASTER_CODE='DAFPIC2027';
+const REG_KEY='suivi_qhse_sst_etabs_v1';
+const LEGACY_LS_KEY='suivi_qhse_sst_v2', OLD_KEY='ddfpt_securite_v1';
+
 const ATELIERS_BASE=[
  {id:'menuiserie',label:'Menuiserie'},{id:'maintenance',label:'Maintenance'},{id:'hotrest',label:'Hôtellerie-Restauration'},
  {id:'electricite',label:'Électricité'},{id:'froid',label:'Froid-Climatisation'},{id:'chaudronnerie',label:'Chaudronnerie / Soudage'},
@@ -249,9 +263,12 @@ const THEMES=[
 ];
 const ALL_POINTS={}; THEMES.forEach(t=>t.points.forEach(([id,title])=>ALL_POINTS[id]={id,title,theme:t.id}));
 
-/* ═════════════ ÉTAT & OUTILS ═════════════ */
-const LS_KEY='suivi_qhse_sst_v2', OLD_KEY='ddfpt_securite_v1';
+/* ═════════════ GESTION MULTI-ÉTABLISSEMENTS & CODES ═════════════ */
 let memOnly=false;
+let registry=[]; // [{id, name, code, created}]
+let currentEtabId=null;
+let unlockedByMaster=false;
+let gateMode='login'; // 'login' | 'create'
 let state={v:2,etab:'',role:'ens',ateliers:[],customAteliers:[],points:{},equipements:[],signalements:[],actions:[],lastBackup:null};
 const ui={tab:'home',eqSearch:'',eqAtelier:'',eqFilter:'',sigFilter:'open',actFilter:'open',openThemes:new Set(),openDetails:new Set(),prefill:null};
 
@@ -267,6 +284,23 @@ const addMonths=(iso,n)=>{const [y,m,d]=iso.split('-').map(Number);const dt=new 
 const diffDays=(a,b)=>{const p=s=>{const [y,m,d]=s.split('-').map(Number);return Date.UTC(y,m-1,d)};return Math.round((p(b)-p(a))/864e5)};
 const money=v=>{const n=parseInt(String(v).replace(/[^\d]/g,''),10);return isNaN(n)?0:n};
 const fmtMoney=n=>n.toLocaleString('fr-FR')+' FCFP';
+const slug=s=>(s||'etablissement').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'_').replace(/^_|_$/g,'').slice(0,30)||'etablissement';
+
+const etabStorageKey=id=>`${LEGACY_LS_KEY}_${id}`;
+
+function loadRegistry(){
+  try{
+    const raw=localStorage.getItem(REG_KEY);
+    if(raw)registry=JSON.parse(raw)||[];
+  }catch(e){memOnly=true}
+}
+function saveRegistry(){
+  if(memOnly)return;
+  try{localStorage.setItem(REG_KEY,JSON.stringify(registry))}catch(e){memOnly=true}
+}
+function currentEtabEntry(){
+  return registry.find(x=>x.id===currentEtabId)||null;
+}
 
 function allAteliers(){return ATELIERS_BASE.concat(state.customAteliers)}
 function activeAteliers(){
@@ -277,26 +311,56 @@ function activeAteliers(){
 function atelierLabel(id){const a=allAteliers().concat([{id:'general',label:'Général / tous ateliers'}]).find(x=>x.id===id);return a?a.label:(id||'—')}
 
 function save(){
+  if(!currentEtabId)return;
   state.updated=nowISO();
   if(!memOnly){
-    try{localStorage.setItem(LS_KEY,JSON.stringify(state))}
+    try{localStorage.setItem(etabStorageKey(currentEtabId),JSON.stringify(state))}
     catch(e){memOnly=true;toast('⚠️ Stockage du navigateur indisponible : exportez régulièrement une sauvegarde.')}
   }
-  const t=new Date();
-  $('#save-ind').textContent=memOnly?'⚠️ Non enregistré (mémoire temporaire)':`✓ Enregistré à ${pad(t.getHours())}:${pad(t.getMinutes())}`;
+  const ind=$('#save-ind');
+  if(ind){
+    const t=new Date();
+    ind.textContent=memOnly?'⚠️ Non enregistré':`✓ ${pad(t.getHours())}:${pad(t.getMinutes())}`;
+  }
 }
-function load(){
+
+function loadEtabState(etabEntry){
+  currentEtabId=etabEntry.id;
+  state={v:2,etab:etabEntry.name,role:'ens',ateliers:[],customAteliers:[],points:{},equipements:[],signalements:[],actions:[],lastBackup:null};
   let raw=null;
-  try{raw=localStorage.getItem(LS_KEY)}catch(e){memOnly=true}
+  try{raw=localStorage.getItem(etabStorageKey(etabEntry.id))}catch(e){memOnly=true}
   if(raw){
-    try{const o=JSON.parse(raw);Object.assign(state,o)}catch(e){console.warn(e)}
+    try{
+      const o=JSON.parse(raw);
+      Object.assign(state,o);
+      state.etab=etabEntry.name;
+    }catch(e){console.warn(e)}
     return;
   }
+  // Migration automatique d'éventuelles données antérieures non cloisonnées
   try{
+    const legacy=localStorage.getItem(LEGACY_LS_KEY);
+    if(legacy){
+      const o=JSON.parse(legacy);
+      Object.assign(state,o);
+      state.etab=etabEntry.name;
+      localStorage.removeItem(LEGACY_LS_KEY);
+      save();
+      return;
+    }
     const old=localStorage.getItem(OLD_KEY);
-    if(old){const conv=convertOld(JSON.parse(old));if(conv){mergeInto(conv);setTimeout(()=>toast('Anciennes données reprises automatiquement'),600)}}
+    if(old){
+      const conv=convertOld(JSON.parse(old));
+      if(conv){
+        mergeInto(conv);
+        state.etab=etabEntry.name;
+        save();
+        setTimeout(()=>toast('Anciennes données reprises automatiquement'),600);
+      }
+    }
   }catch(e){}
 }
+
 function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),3200)}
 function download(name,text,mime){
   const blob=new Blob([text],{type:mime});const a=document.createElement('a');
@@ -307,7 +371,6 @@ function copyText(txt){
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,()=>fallback())}else fallback();
   function fallback(){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(e){toast('Copie impossible')}ta.remove()}
 }
-const slug=s=>(s||'etablissement').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'_').replace(/^_|_$/g,'').slice(0,30)||'etablissement';
 
 /* ═════════════ FUSION / IMPORT ═════════════ */
 function convertOld(o){
@@ -350,7 +413,6 @@ function mergeInto(inc){
   });
   (inc.ateliers||[]).forEach(a=>{if(!state.ateliers.includes(a))state.ateliers.push(a)});
   (inc.customAteliers||[]).forEach(a=>{if(!state.customAteliers.find(x=>x.id===a.id))state.customAteliers.push(a)});
-  if(!state.etab&&inc.etab)state.etab=inc.etab;
   return {added,updated};
 }
 function readJSONFile(file,cb){
@@ -370,10 +432,10 @@ function doRestore(file){
   readJSONFile(file,o=>{
     const inc=convertOld(o)||o;
     if(!inc||typeof inc!=='object'||!(inc.signalements||inc.equipements||inc.points||inc.actions)){toast('⚠️ Ce fichier ne ressemble pas à une sauvegarde de cet outil');return}
-    if(!confirm('Restaurer cette sauvegarde REMPLACE toutes les données de ce navigateur. Continuer ?'))return;
-    const keepRole=state.role;
-    state={v:2,etab:'',role:keepRole,ateliers:[],customAteliers:[],points:{},equipements:[],signalements:[],actions:[],lastBackup:null};
-    mergeInto(inc);if(o.etab)state.etab=o.etab;save();render();toast('Sauvegarde restaurée');
+    if(!confirm('Restaurer cette sauvegarde REMPLACE toutes les données de cet établissement. Continuer ?'))return;
+    const keepRole=state.role,keepEtab=state.etab;
+    state={v:2,etab:keepEtab,role:keepRole,ateliers:[],customAteliers:[],points:{},equipements:[],signalements:[],actions:[],lastBackup:null};
+    mergeInto(inc);save();render();toast('Sauvegarde restaurée');
   });
 }
 function exportBackup(){
@@ -387,6 +449,61 @@ function exportSignalements(){
   toast('Fichier prêt : envoyez-le au DDFPT (il l\'importera dans son outil)');
 }
 function csv(rows){return '\ufeff'+rows.map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(';')).join('\r\n')}
+
+/* ═════════════ PORTAIL ÉTABLISSEMENT (CONNEXION / CRÉATION) ═════════════ */
+function renderGate(){
+  $('#top-controls').classList.add('hidden');
+  $('#tabs').classList.add('hidden');
+  $('#brand-sub').textContent='Vice-Rectorat de la Nouvelle-Calédonie · DAFPIC';
+
+  const hasEtabs=registry.length>0;
+  if(!hasEtabs)gateMode='create';
+
+  const etabOptions=registry
+    .slice()
+    .sort((a,b)=>a.name.localeCompare(b.name,'fr'))
+    .map(e=>`<option value="${esc(e.id)}">${esc(e.name)}</option>`)
+    .join('');
+
+  $('#view').innerHTML=`<div class="gate-wrap">
+    <div class="gate-card">
+      <h2>Accès par établissement</h2>
+      <p class="lead" style="margin-bottom:8px">Chaque établissement dispose de son espace sécurisé par un code d'accès dédié.</p>
+      <div class="gate-tabs" role="tablist">
+        <button type="button" role="tab" aria-pressed="${gateMode==='login'}" data-act="gate-mode" data-v="login" ${!hasEtabs?'disabled style="opacity:.45;cursor:not-allowed"':''}>Ouvrir mon établissement</button>
+        <button type="button" role="tab" aria-pressed="${gateMode==='create'}" data-act="gate-mode" data-v="create">+ Nouvel établissement</button>
+      </div>
+
+      ${gateMode==='login'?`
+        <form id="gate-login-form" autocomplete="off">
+          <label>Établissement *
+            <select name="etabId" required>${etabOptions}</select>
+          </label>
+          <label>Code d'accès de l'établissement *
+            <input type="password" name="code" required placeholder="Saisissez le code de l'établissement" autofocus>
+          </label>
+          <div class="note info" style="font-size:.82rem">
+            En cas d'oubli du code de l'établissement, le code de secours académique permet de débloquer l'accès et de réinitialiser le code.
+          </div>
+          <button type="submit" class="btn primary" style="width:100%;margin-top:6px">Accéder à l'espace de suivi</button>
+        </form>
+      `:`
+        <form id="gate-create-form" autocomplete="off">
+          <label>Nom de l'établissement *
+            <input type="text" name="name" required placeholder="Ex : Lycée Professionnel Jules Garnier" autofocus>
+          </label>
+          <label>Créer le code d'accès de l'établissement *
+            <input type="text" name="code" required minlength="4" placeholder="Ex : LJG2027 (4 caractères minimum)">
+          </label>
+          <div class="note info" style="font-size:.82rem">
+            Communiquez ce code aux équipes de l'établissement. Un code de secours académique reste actif en cas d'oubli.
+          </div>
+          <button type="submit" class="btn primary" style="width:100%;margin-top:6px">Créer l'établissement et ouvrir</button>
+        </form>
+      `}
+    </div>
+  </div>`;
+}
 
 /* ═════════════ ÉQUIPEMENTS ═════════════ */
 function dueInfo(e){
@@ -475,7 +592,7 @@ function editEquip(id){
 /* ═════════════ SIGNALEMENTS ═════════════ */
 function sigText(s){
   const eq=state.equipements.find(e=>e.id===s.equipId);
-  return `Signalement — ${atelierLabel(s.atelier)} — ${fmt(s.date)}\nNature : ${NATURES[s.cat]?.l||''}${s.urgent?'\n⚠ DANGER IMMÉDIAT signalé':''}${eq?'\nÉquipement : '+eq.nom:''}\n\n${s.desc}${s.auteur?'\n\nSignalé par : '+s.auteur:''}`;
+  return `Signalement (${state.etab}) — ${atelierLabel(s.atelier)} — ${fmt(s.date)}\nNature : ${NATURES[s.cat]?.l||''}${s.urgent?'\n⚠ DANGER IMMÉDIAT signalé':''}${eq?'\nÉquipement : '+eq.nom:''}\n\n${s.desc}${s.auteur?'\n\nSignalé par : '+s.auteur:''}`;
 }
 function sigItem(s){
   const st=SIG_ST[s.statut]||SIG_ST.nouveau,nat=NATURES[s.cat]||NATURES.materiel,eq=state.equipements.find(e=>e.id===s.equipId);
@@ -581,7 +698,6 @@ function viewControles(){
       <summary><span>${esc(t.label)}<small>${esc(t.sub)}</small></span><span class="badge ${s.ok===s.total?'b-ok':'b-mute'}">${s.ok}/${s.total} en place</span></summary>
       ${t.points.map(([id,title])=>{
         const p=state.points[id]||{s:'nv',note:'',resp:'',ech:''};
-        const dOpen=ui.openDetails.has(id)||p.note||p.resp||p.ech?'':'';
         return `<div class="pt"><div class="pt-title">${esc(title)}</div>
           <div class="seg" role="group" aria-label="Statut du point">${Object.entries(PT_ST).map(([k,v])=>`<button type="button" class="s-${k}" aria-pressed="${p.s===k}" data-act="pt-st" data-id="${id}" data-v="${k}">${v.i} ${v.l}</button>`).join('')}</div>
           <details class="more" data-det="${id}" ${ui.openDetails.has(id)?'open':''}><summary>Observation, qui peut agir, échéance${(p.note||p.resp||p.ech)?' •':''}</summary>
@@ -678,13 +794,18 @@ function exportCSV(kind){
 
 /* ═════════════ PARAMÈTRES / DONNÉES ═════════════ */
 function viewParams(){
-  const ddfpt=state.role==='ddfpt';
+  const ddfpt=state.role==='ddfpt'||unlockedByMaster;
+  const entry=currentEtabEntry();
   const days=state.lastBackup?diffDays(state.lastBackup.slice(0,10),today()):null;
   const chips=allAteliers().map(a=>`<label class="inline" style="margin:0 12px 8px 0"><input type="checkbox" data-chg="atelier-toggle" data-id="${a.id}" ${state.ateliers.includes(a.id)?'checked':''}> ${esc(a.label)}</label>`).join('');
   return `<h2>${ddfpt?'Paramètres &amp; données':'Mes données'}</h2>
-  <p class="lead">Les données restent dans ce navigateur, sur cet appareil. Pour les transmettre ou les conserver, utilisez les fichiers de sauvegarde.</p>
-  ${ddfpt?`<div class="card"><h3>Établissement et ateliers</h3>
-    <label>Nom de l'établissement<input type="text" data-chg="etab" value="${esc(state.etab)}" placeholder="Ex : Lycée professionnel …"></label>
+  <p class="lead">Les données restent dans ce navigateur, cloisonnées pour <b>${esc(state.etab)}</b>. Pour les transmettre ou les conserver, utilisez les fichiers de sauvegarde.</p>
+  ${ddfpt?`<div class="card"><h3>Établissement, code d'accès et ateliers</h3>
+    ${unlockedByMaster?`<div class="note ok">Accès ouvert via le code de secours <b>DAFPIC2027</b>. Vous pouvez consulter ou redéfinir le code propre à cet établissement ci-dessous.</div>`:''}
+    <div class="f2">
+      <label>Nom de l'établissement<input type="text" data-chg="etab" value="${esc(state.etab)}" placeholder="Ex : Lycée professionnel …"></label>
+      <label>Code d'accès de l'établissement<input type="text" data-chg="etab-code" value="${esc(entry?entry.code:'')}" minlength="4" placeholder="Code d'accès"></label>
+    </div>
     <div class="meta" style="margin-bottom:6px">Ateliers de l'établissement (si rien n'est coché, tous sont proposés)</div>
     <div>${chips}</div>
     <div class="row"><input type="text" id="new-atelier" placeholder="Atelier non listé (ex : Carrelage)" style="max-width:300px"><button class="btn" data-act="add-atelier">Ajouter</button></div></div>`:''}
@@ -698,7 +819,11 @@ function viewParams(){
     <p class="meta">« Importer et fusionner » ajoute les éléments d'un autre fichier (signalements d'un collègue, par exemple) sans rien effacer. Les anciennes sauvegardes de la version 1 sont acceptées.</p>
     ${state.signalements.length?`<div class="row"><button class="btn" data-act="sg-export">Envoyer mes signalements au DDFPT (fichier)</button></div>`:''}
   </div>
-  ${ddfpt?`<div class="card"><h3>Zone sensible</h3><button class="btn danger" data-act="reset">Effacer toutes les données de ce navigateur</button></div>`:''}`;
+  ${ddfpt?`<div class="card"><h3>Zone sensible</h3>
+    <div class="row">
+      <button class="btn danger" data-act="reset">Effacer les données de cet établissement</button>
+      <button class="btn danger" data-act="delete-etab">Supprimer cet établissement</button>
+    </div></div>`:''}`;
 }
 
 /* ═════════════ ACCUEIL ═════════════ */
@@ -719,7 +844,6 @@ function viewHome(){
     <li>On décrit des <b>faits</b> (matériel, lieu, date), jamais des personnes.</li>
     <li>Aucun classement ni comparaison entre ateliers ou établissements.</li>
     <li>Les signalements peuvent rester anonymes. Un danger immédiat se signale toujours de vive voix.</li></ul></div>
-  ${(!state.etab&&ddfpt)?`<div class="note warn noprint">Pour commencer, renseignez le nom de l'établissement et vos ateliers dans <a href="#" data-act="go" data-tab="params">Paramètres</a>.</div>`:''}
   ${(hasData&&(days===null||days>14))?`<div class="note warn noprint">Pensez à télécharger une sauvegarde de vos données (<a href="#" data-act="go" data-tab="params">Sauvegarde</a>).</div>`:''}
   <div class="row noprint" style="margin-bottom:14px"><button class="btn primary" data-act="go" data-tab="signal">Signaler un souci</button><button class="btn" data-act="eq-add">Ajouter un équipement</button></div>
   <div class="grid g-stats">
@@ -753,6 +877,13 @@ function tabsFor(){
   return t;
 }
 function render(){
+  if(!currentEtabId){
+    renderGate();
+    return;
+  }
+  $('#top-controls').classList.remove('hidden');
+  $('#tabs').classList.remove('hidden');
+
   const tabs=tabsFor();
   if(!tabs.find(t=>t[0]===ui.tab))ui.tab='home';
   document.querySelectorAll('.role button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===state.role)));
@@ -777,6 +908,16 @@ document.addEventListener('click',e=>{
   const a=el.dataset.act,id=el.dataset.id;
   if(el.tagName==='A')e.preventDefault();
   switch(a){
+    case 'gate-mode':
+      gateMode=el.dataset.v;
+      renderGate();
+      break;
+    case 'logout':
+      currentEtabId=null;
+      unlockedByMaster=false;
+      ui.tab='home';
+      render();
+      break;
     case 'role':state.role=el.dataset.v;save();render();break;
     case 'go':
       ui.tab=el.dataset.tab;
@@ -796,7 +937,7 @@ document.addEventListener('click',e=>{
       const open=state.signalements.filter(s=>s.statut!=='traite');
       if(!open.length){toast('Aucun signalement en cours à envoyer');break}
       const body=open.map(sigText).join('\n\n———\n\n');
-      const href='mailto:?subject='+encodeURIComponent('Signalement(s) — plateaux techniques')+'&body='+encodeURIComponent(body.slice(0,1500));
+      const href='mailto:?subject='+encodeURIComponent(`Signalement(s) (${state.etab}) — plateaux techniques`)+'&body='+encodeURIComponent(body.slice(0,1500));
       if(body.length>1500)copyText(body);
       location.href=href;break}
     case 'pt-st':{
@@ -822,8 +963,19 @@ document.addEventListener('click',e=>{
     case 'pick-merge':pickFile(doMerge);break;
     case 'pick-restore':pickFile(doRestore);break;
     case 'reset':
-      if(confirm('Effacer TOUTES les données de ce navigateur ? Pensez à télécharger une sauvegarde avant.')&&confirm('Dernière confirmation : cette action est définitive.')){
-        state={v:2,etab:'',role:state.role,ateliers:[],customAteliers:[],points:{},equipements:[],signalements:[],actions:[],lastBackup:null};save();render();toast('Données effacées')}
+      if(confirm('Effacer TOUTES les données de cet établissement ? Pensez à télécharger une sauvegarde avant.')&&confirm('Dernière confirmation : cette action est définitive.')){
+        state={v:2,etab:state.etab,role:state.role,ateliers:[],customAteliers:[],points:{},equipements:[],signalements:[],actions:[],lastBackup:null};save();render();toast('Données effacées')}
+      break;
+    case 'delete-etab':
+      if(confirm(`Supprimer définitivement l'établissement « ${state.etab} » et toutes ses données de ce navigateur ?`)){
+        try{localStorage.removeItem(etabStorageKey(currentEtabId))}catch(err){}
+        registry=registry.filter(x=>x.id!==currentEtabId);
+        saveRegistry();
+        currentEtabId=null;
+        unlockedByMaster=false;
+        render();
+        toast('Établissement supprimé');
+      }
       break;
   }
 });
@@ -839,7 +991,20 @@ document.addEventListener('change',e=>{
   if(c==='pt-note')setPoint(id,{note:el.value.trim()});
   if(c==='pt-resp')setPoint(id,{resp:el.value.trim()});
   if(c==='pt-ech')setPoint(id,{ech:el.value});
-  if(c==='etab'){state.etab=el.value.trim();save();render()}
+  if(c==='etab'){
+    const v=el.value.trim();
+    if(!v)return;
+    state.etab=v;
+    const entry=currentEtabEntry();
+    if(entry){entry.name=v;saveRegistry()}
+    save();render();
+  }
+  if(c==='etab-code'){
+    const v=el.value.trim();
+    if(v.length<4){toast('Le code doit contenir au moins 4 caractères');return}
+    const entry=currentEtabEntry();
+    if(entry){entry.code=v;saveRegistry();toast('Code de l\'établissement mis à jour')}
+  }
   if(c==='atelier-toggle'){
     state.ateliers=el.checked?[...new Set([...state.ateliers,id])]:state.ateliers.filter(x=>x!==id);save();
   }
@@ -848,6 +1013,50 @@ document.addEventListener('input',e=>{
   if(e.target.id==='eq-q'){ui.eqSearch=e.target.value;renderEquipList()}
 });
 document.addEventListener('submit',e=>{
+  if(e.target.id==='gate-login-form'){
+    e.preventDefault();
+    const d=Object.fromEntries(new FormData(e.target).entries());
+    const entry=registry.find(x=>x.id===d.etabId);
+    if(!entry){toast('Établissement introuvable');return}
+    const inputCode=(d.code||'').trim();
+    const isMaster=inputCode.toUpperCase()===MASTER_CODE;
+    if(inputCode!==entry.code && !isMaster){
+      toast('❌ Code incorrect (utilisez le code de l\'établissement ou le code de secours DAFPIC2027)');
+      return;
+    }
+    unlockedByMaster=isMaster;
+    loadEtabState(entry);
+    if(isMaster){
+      state.role='ddfpt';
+      toast(`Accès débloqué via le code de secours (${entry.name})`);
+    }else{
+      toast(`Bienvenue — ${entry.name}`);
+    }
+    render();
+    save();
+    return;
+  }
+  if(e.target.id==='gate-create-form'){
+    e.preventDefault();
+    const d=Object.fromEntries(new FormData(e.target).entries());
+    const name=(d.name||'').trim();
+    const code=(d.code||'').trim();
+    if(!name||code.length<4){toast('Renseignez le nom et un code d\'au moins 4 caractères');return}
+    if(registry.find(x=>x.name.toLowerCase()===name.toLowerCase())){
+      toast('Cet établissement existe déjà dans la liste');
+      return;
+    }
+    const entry={id:'etab_'+uid(),name,code,created:nowISO()};
+    registry.push(entry);
+    saveRegistry();
+    unlockedByMaster=false;
+    loadEtabState(entry);
+    state.role='ddfpt';
+    save();
+    render();
+    toast(`Établissement « ${name} » créé`);
+    return;
+  }
   if(e.target.id!=='sg-form')return;
   e.preventDefault();
   const d=Object.fromEntries(new FormData(e.target).entries());
@@ -858,10 +1067,8 @@ document.addEventListener('submit',e=>{
 });
 
 /* ═════════════ DÉMARRAGE ═════════════ */
-load();
-if(!state.lastBackup&&false)state.lastBackup=null;
+loadRegistry();
 render();
-save();
 </script>
 </body>
 </html>
