@@ -1,156 +1,1403 @@
-<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Forums & salons métiers — Calendrier partagé</title>
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portail des Événements Collèges & Lycées NC</title>
 <style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#EBF3F4;--card:#fff;--ink:#12303A;--mut:#5B737D;--line:#D3E0E3;--p:#0B6E7A;--pf:#fff;--soft:#E1F0F1;color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1D22;--card:#162A31;--ink:#E4F0F2;--mut:#93AAB2;--line:#28414A;--p:#4FC3CF;--pf:#08262B;--soft:#1B3840;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0E1D22;--card:#162A31;--ink:#E4F0F2;--mut:#93AAB2;--line:#28414A;--p:#4FC3CF;--pf:#08262B;--soft:#1B3840;color-scheme:dark}
-*{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--ink);font:15px/1.45 Figtree,system-ui,sans-serif}
-header{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center;justify-content:space-between;padding:18px 24px 8px}
-h1{font-size:22px;margin:0;letter-spacing:-.01em}.sub{color:var(--mut);font-size:13px}
-.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-select,input,textarea,button{font:inherit;color:var(--ink)}
-select,input,textarea{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0}
-textarea{width:100%;resize:vertical}
-:focus-visible{outline:2px solid var(--p);outline-offset:1px}
-.btn{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600}
-.btn:hover{border-color:var(--p)}.btn.p{background:var(--p);color:var(--pf);border-color:var(--p)}.btn.d{color:#D1344B}.btn.s{padding:4px 9px;font-size:13px}
-nav{display:flex;gap:4px;padding:0 24px;overflow-x:auto;border-bottom:1px solid var(--line)}
-nav button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;font-weight:600;color:var(--mut);cursor:pointer;white-space:nowrap}
-nav button.on{color:var(--p);border-color:var(--p)}
-main{padding:20px 24px 60px;max-width:1280px;margin:0 auto}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
-.card h3{margin:0 0 12px;font-size:15px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
-.kpi{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c,var(--p));border-radius:10px;padding:12px 14px;cursor:pointer;text-align:left}
-.kpi b{display:block;font-size:28px;line-height:1.1}.kpi span{color:var(--mut);font-size:13px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
-.alert{border-left:5px solid #C98A0B;margin-bottom:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-.months{display:flex;align-items:flex-end;gap:6px;height:170px}
-.months div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;font-size:12px;color:var(--mut);cursor:pointer}
-.months i{display:block;width:100%;background:var(--p);border-radius:4px 4px 0 0;min-height:2px}.months b{color:var(--ink);font-size:12px}
-.row{display:grid;grid-template-columns:minmax(90px,38%) 1fr 30px;gap:8px;align-items:center;margin:6px 0;font-size:13px;cursor:pointer}
-.row .tr{background:var(--soft);border-radius:5px;height:14px}.row i{display:block;height:100%;border-radius:5px;background:var(--c,var(--p))}.row u{text-decoration:none;text-align:right;font-weight:700}
-.donut{display:flex;gap:18px;align-items:center;flex-wrap:wrap}.ring{width:130px;height:130px;border-radius:50%;display:grid;place-items:center}
-.ring span{width:84px;height:84px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-weight:700;font-size:22px}
-.lg{display:flex;align-items:center;gap:8px;font-size:13px;margin:4px 0}.lg i{width:12px;height:12px;border-radius:3px;background:var(--c)}
-.up{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--line);cursor:pointer;font-size:14px}.up:first-of-type{border:0}.up em{font-style:normal;color:var(--mut);min-width:80px}
-.tbw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
-table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
-th{background:var(--soft);font-weight:600;white-space:nowrap;position:sticky;top:0}th.so{cursor:pointer}tr.rw:hover td{background:var(--soft)}
-td.n{white-space:nowrap}.mut{color:var(--mut);font-size:13px}.warn{background:color-mix(in srgb,#C98A0B 22%,transparent)}
-.pill,select.st{border-radius:999px;border:1px solid var(--c);background:color-mix(in srgb,var(--c) 15%,var(--card));padding:3px 9px;font-size:13px;font-weight:600}
-.bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}.bar input[type=search]{flex:1;min-width:180px}
-.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card);min-width:720px}
-.cal .h{background:var(--soft);padding:6px;font-weight:600;font-size:13px;text-align:center}
-.cal .d{min-height:104px;padding:4px;border-top:1px solid var(--line);border-left:1px solid var(--line);cursor:pointer}.cal .d:nth-child(7n+1){border-left:0}
-.cal .d.o{opacity:.45}.cal .d.w{background:color-mix(in srgb,var(--soft) 55%,transparent)}.cal .d.t .num{background:var(--p);color:var(--pf)}
-.num{display:inline-block;min-width:22px;text-align:center;border-radius:11px;font-size:12px;font-weight:700;margin-bottom:2px}
-.chip{display:block;width:100%;text-align:left;border:0;border-left:4px solid var(--c);background:color-mix(in srgb,var(--c) 16%,var(--card));border-radius:4px;padding:2px 5px;margin-bottom:2px;font-size:11.5px;line-height:1.25;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.more{font-size:11.5px;color:var(--p);font-weight:700}
-#ov{position:fixed;inset:0;background:rgba(5,20,25,.55);display:none;align-items:flex-start;justify-content:center;padding:4vh 12px;overflow:auto;z-index:20}
-#ov.on{display:flex}.mod{background:var(--card);border-radius:14px;width:100%;max-width:640px;padding:20px;border:1px solid var(--line)}
-.mod h2{margin:0 0 14px;font-size:18px}.f{display:grid;grid-template-columns:1fr 1fr;gap:10px}.f label{display:flex;flex-direction:column;gap:3px;font-size:13px;font-weight:600}.f .w{grid-column:1/-1}
-.err{color:#D1344B;font-size:13px;min-height:18px;margin-top:8px}.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.acts .gap{flex:1}
-#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;z-index:30}
-#toast div{background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;display:flex;gap:14px;align-items:center}#toast button{background:none;border:0;color:var(--bg);font-weight:700;text-decoration:underline;cursor:pointer}
-.help li{margin:6px 0}@media(max-width:560px){.f{grid-template-columns:1fr}header,main,nav{padding-left:14px;padding-right:14px}}
-</style></head><body>
-<header><div><h1>Forums & salons métiers</h1><div class="sub">Calendrier partagé des établissements · Nouvelle-Calédonie</div></div>
-<div class="ctl"><select id="gy" aria-label="Année"></select><select id="ge" aria-label="Établissement"></select><button class="btn p" data-a="new">+ Nouvel événement</button></div></header>
-<nav id="nav"></nav><main id="m"></main><div id="ov"></div><div id="toast"></div>
+:root {
+  --bg: #f4f9f9;
+  --card: #ffffff;
+  --tx: #12333a;
+  --mut: #5a7479;
+  --pri: #0e7c86;
+  --pri2: #0a5d65;
+  --acc: #ff6b4a;
+  --acc-hover: #e05333;
+  --bd: #d3e3e5;
+  --ok: #1d8a4e;
+  --warn: #d97706;
+  --chip: #e6f3f4;
+  --shadow: 0 4px 16px rgba(14, 124, 134, 0.08);
+  --radius: 16px;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c1a1d;
+    --card: #142a2e;
+    --tx: #e8f4f5;
+    --mut: #9ab8bc;
+    --pri: #3fc1cc;
+    --pri2: #7fdce4;
+    --bd: #25444a;
+    --chip: #1b383d;
+    --shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0c1a1d;
+  --card: #142a2e;
+  --tx: #e8f4f5;
+  --mut: #9ab8bc;
+  --pri: #3fc1cc;
+  --pri2: #7fdce4;
+  --bd: #25444a;
+  --chip: #1b383d;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+:root[data-theme="light"] {
+  --bg: #f4f9f9;
+  --card: #ffffff;
+  --tx: #12333a;
+  --mut: #5a7479;
+  --pri: #0e7c86;
+  --pri2: #0a5d65;
+  --acc: #ff6b4a;
+  --bd: #d3e3e5;
+  --chip: #e6f3f4;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--tx);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Header & Hero */
+.hero {
+  background: linear-gradient(135deg, #0e7c86 0%, #0a4f66 100%);
+  color: #fff;
+  padding: 30px 20px 60px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 99px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+  transition: all 0.2s;
+}
+.theme-toggle:hover { background: rgba(255, 255, 255, 0.3); }
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.logo-badge {
+  background: #fff;
+  color: #0e7c86;
+  border-radius: 14px;
+  padding: 8px 16px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero h1 {
+  margin: 0 0 10px;
+  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.hero p {
+  margin: 6px auto;
+  opacity: 0.95;
+  max-width: 680px;
+  font-size: 1.05rem;
+}
+
+.badges {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.badge {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+/* Layout Main */
+main {
+  max-width: 1080px;
+  margin: -35px auto 50px;
+  padding: 0 16px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Nav Tabs */
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+  background: var(--card);
+  padding: 8px;
+  border-radius: var(--radius);
+  border: 1px solid var(--bd);
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-tabs::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  flex: 1;
+  min-width: 140px;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--mut);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { background: var(--chip); color: var(--tx); }
+.tab-btn.active { background: var(--pri); color: #ffffff !important; }
+
+/* Filter Box */
+.filter-card {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+}
+.search-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.search-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1.5px solid var(--bd);
+  border-radius: 12px;
+  font: inherit;
+  background: var(--bg);
+  color: var(--tx);
+}
+.search-input:focus { outline: none; border-color: var(--pri); }
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.filter-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--mut);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--bd);
+  border-radius: 10px;
+  font: inherit;
+  background: var(--bg);
+  color: var(--tx);
+  cursor: pointer;
+}
+
+/* Event List & Cards */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.event-card {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.event-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(14, 124, 134, 0.15);
+}
+.event-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: var(--pri);
+}
+.event-card.featured::before {
+  background: var(--acc);
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.event-type-tag {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--chip);
+  color: var(--pri2);
+}
+.event-card.featured .event-type-tag {
+  background: #ffebe7;
+  color: var(--acc);
+}
+[data-theme="dark"] .event-card.featured .event-type-tag {
+  background: #3a1c17;
+  color: #ff8a73;
+}
+
+.event-title {
+  margin: 0 0 10px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--tx);
+  line-height: 1.3;
+}
+.event-meta {
+  font-size: 0.92rem;
+  color: var(--mut);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.event-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.event-desc {
+  font-size: 0.95rem;
+  color: var(--tx);
+  opacity: 0.9;
+  margin-bottom: 18px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.event-footer {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--bd);
+}
+
+/* Common UI Elements */
+.card-box {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.card-box h2 {
+  margin: 0 0 8px;
+  font-size: 1.3rem;
+  color: var(--pri2);
+}
+.hint { color: var(--mut); font-size: 0.9rem; margin: 0 0 16px; }
+
+label.f {
+  display: block;
+  font-weight: 700;
+  margin: 14px 0 6px;
+  font-size: 0.95rem;
+}
+input[type=text], input[type=email], input[type=tel], input[type=number], input[type=date], input[type=time], textarea {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1.5px solid var(--bd);
+  border-radius: 10px;
+  font: inherit;
+  background: var(--bg);
+  color: var(--tx);
+}
+input:focus, textarea:focus { outline: none; border-color: var(--pri); }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+.opts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+.opt { position: relative; }
+.opt input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; z-index: 2; }
+.opt span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--bd);
+  border-radius: 12px;
+  background: var(--chip);
+  font-weight: 600;
+  font-size: 0.92rem;
+  transition: 0.15s;
+}
+.opt span::before {
+  content: "";
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--pri);
+  border-radius: 5px;
+  background: var(--card);
+}
+.opt input[type=radio] + span::before { border-radius: 50%; }
+.opt input:checked + span { border-color: var(--pri); background: var(--pri); color: #fff; }
+.opt input:checked + span::before {
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3.2L15 6.8' fill='none' stroke='%230e7c86' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center center no-repeat;
+  border-color: #fff;
+}
+
+.sub-panel { margin-top: 14px; display: none; }
+.sub-panel.active { display: block; }
+
+.note {
+  background: var(--chip);
+  border-left: 4px solid var(--acc);
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  margin: 14px 0;
+  line-height: 1.4;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 22px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--acc);
+  color: #ffffff !important;
+  font-size: 1rem;
+  transition: transform 0.15s, background 0.15s;
+  text-decoration: none;
+}
+.btn:hover { background: var(--acc-hover); transform: translateY(-1px); }
+.btn.sec { background: var(--pri); }
+.btn.sec:hover { background: var(--pri2); }
+.btn.outline { background: transparent; border: 1.5px solid var(--bd); color: var(--tx) !important; }
+.btn.outline:hover { background: var(--chip); }
+.btn.sm { padding: 8px 14px; font-size: 0.88rem; border-radius: 8px; }
+
+.center { text-align: center; }
+.err { color: #dc2626; font-weight: 700; margin: 12px 0; font-size: 0.95rem; }
+
+/* Table Dashboard */
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { border-bottom: 1px solid var(--bd); padding: 10px 12px; text-align: left; vertical-align: top; }
+th { background: var(--chip); font-weight: 700; color: var(--pri2); }
+.scroll-table { overflow-x: auto; border-radius: 12px; border: 1px solid var(--bd); }
+
+/* Calendar view */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+}
+.cal-day-head {
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--mut);
+  padding: 6px;
+}
+.cal-day {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  min-height: 90px;
+  padding: 6px;
+  font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+}
+.cal-day-num { font-weight: 700; margin-bottom: 4px; }
+.cal-event-dot {
+  font-size: 0.72rem;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: var(--pri);
+  color: #fff;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.cal-event-dot.featured { background: var(--acc); }
+
+/* Modal */
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal {
+  background: var(--card);
+  border-radius: 20px;
+  max-width: 650px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: var(--chip);
+  border: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--tx);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.st-conf { background: #dcfce7; color: #15803d; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Mode Sombre</button>
+  
+  <div class="logo-container">
+    <div class="logo-badge">
+      <span>🎓 Événements Scolaires NC</span>
+    </div>
+  </div>
+
+  <h1>Portail des Événements Collèges & Lycées</h1>
+  <p>Nouvelle-Calédonie · Salons, Portes Ouvertes, Forums, Immersion & Projets Pédagogiques</p>
+
+  <div class="badges">
+    <span class="badge">📍 Nouméa & Grand Nouméa</span>
+    <span class="badge">🌿 Brousse (VKP, Bourail, Poindimié...)</span>
+    <span class="badge">🏝️ Îles Loyauté</span>
+    <span class="badge">📅 Année Scolaire 2026-2027</span>
+  </div>
+</header>
+
+<main>
+  <!-- Navigation par Onglets -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('agenda')">📅 Événements & Agenda</button>
+    <button class="tab-btn" onclick="switchTab('salon-exposants')">⭐ Inscription Exposants</button>
+    <button class="tab-btn" onclick="switchTab('proposer')">➕ Proposer un Événement</button>
+    <button class="tab-btn" onclick="switchTab('admin')">🔒 Espace Organisateur</button>
+  </nav>
+
+  <!-- ONGLET 1 : AGENDA & RECHERCHE -->
+  <section id="tab-agenda">
+    <div class="filter-card">
+      <div class="search-bar">
+        <input type="text" id="searchInput" class="search-input" placeholder="🔍 Rechercher un événement, un établissement, une ville, une formation..." oninput="filterEvents()">
+      </div>
+      <div class="filter-grid">
+        <div class="filter-group">
+          <label>Type d'établissement</label>
+          <select id="filterType" onchange="filterEvents()">
+            <option value="">Tous les établissements</option>
+            <option value="College">Collège</option>
+            <option value="Lycee Gen">Lycée Général & Technologique</option>
+            <option value="Lycee Pro">Lycée Professionnel / LPO</option>
+            <option value="Partenaire">Organisme / Partenaire</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Zone / Commune</label>
+          <select id="filterZone" onchange="filterEvents()">
+            <option value="">Toutes les zones</option>
+            <option value="Noumea">Nouméa</option>
+            <option value="Grand Noumea">Dumbéa / Païta / Mont-Dore</option>
+            <option value="Brousse">Brousse (VKP, Koné, Bourail...)</option>
+            <option value="Iles">Îles Loyauté (Lifou, Maré...)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Catégorie</label>
+          <select id="filterCat" onchange="filterEvents()">
+            <option value="">Toutes les catégories</option>
+            <option value="Salon">Salon / Forum des métiers</option>
+            <option value="JPO">Journée Portes Ouvertes (JPO)</option>
+            <option value="Alternance">Forum de l'Alternance</option>
+            <option value="Pedagogique">Projets pédagogiques & Concours</option>
+            <option value="Immerse">Mini-stages & Immersion</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toggle Vue Liste / Calendrier -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h2 style="margin: 0; font-size: 1.3rem; color: var(--pri2);">Prochains Événements Éducatifs</h2>
+      <div>
+        <button class="btn sm outline" id="btnVueList" onclick="setEventView('list')">📄 Liste</button>
+        <button class="btn sm outline" id="btnVueCal" onclick="setEventView('cal')">🗓️ Calendrier</button>
+      </div>
+    </div>
+
+    <!-- Conteneur Vue Liste -->
+    <div id="viewList" class="events-grid"></div>
+
+    <!-- Conteneur Vue Calendrier -->
+    <div id="viewCal" style="display: none;" class="card-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 style="margin:0;">Août / Septembre 2027</h3>
+        <span class="hint" style="margin:0;">Événements programmés</span>
+      </div>
+      <div class="calendar-grid">
+        <div class="cal-day-head">Lun</div><div class="cal-day-head">Mar</div><div class="cal-day-head">Mer</div>
+        <div class="cal-day-head">Jeu</div><div class="cal-day-head">Ven</div><div class="cal-day-head">Sam</div><div class="cal-day-head">Dim</div>
+        
+        <div class="cal-day"><span class="cal-day-num">23</span></div>
+        <div class="cal-day"><span class="cal-day-num">24</span></div>
+        <div class="cal-day"><span class="cal-day-num">25</span><div class="cal-event-dot" onclick="openEventModal(3)">JPO LPO Kamere</div></div>
+        <div class="cal-day"><span class="cal-day-num">26</span></div>
+        <div class="cal-day"><span class="cal-day-num">27</span><div class="cal-event-dot" onclick="openEventModal(2)">Forum Alternance</div></div>
+        <div class="cal-day" style="background: var(--chip)"><span class="cal-day-num">28</span><div class="cal-event-dot featured" onclick="openEventModal(1)">🌟 Salon Formations</div></div>
+        <div class="cal-day"><span class="cal-day-num">29</span></div>
+        
+        <div class="cal-day"><span class="cal-day-num">30</span></div>
+        <div class="cal-day"><span class="cal-day-num">31</span></div>
+        <div class="cal-day"><span class="cal-day-num">1</span><div class="cal-event-dot" onclick="openEventModal(4)">Mini-Stages Pouembout</div></div>
+        <div class="cal-day"><span class="cal-day-num">2</span></div>
+        <div class="cal-day"><span class="cal-day-num">3</span></div>
+        <div class="cal-day"><span class="cal-day-num">4</span><div class="cal-event-dot" onclick="openEventModal(5)">Robotique Jules Garnier</div></div>
+        <div class="cal-day"><span class="cal-day-num">5</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ONGLET 2 : FORMULAIRE SALON / EXPOSANTS -->
+  <section id="tab-salon-exposants" style="display: none;">
+    <div class="card-box" style="background: linear-gradient(135deg, var(--pri), var(--pri2)); color: #fff;">
+      <h2 style="color: #fff; font-size: 1.6rem; margin-bottom: 6px;">Salon Formations & Métiers – Inscription Exposants</h2>
+      <p style="opacity: 0.95; margin: 0;">Samedi 28 août 2027 · Salle d'honneur, Mairie de Nouméa</p>
+    </div>
+
+    <form id="formExposant" onsubmit="handleExposantSubmit(event)">
+      <div class="card-box">
+        <h2>1. Qui êtes-vous ?</h2>
+        <p class="hint">Choisissez le type de votre structure.</p>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="exp_type" value="Entreprise" checked><span>Entreprise</span></label>
+          <label class="opt"><input type="radio" name="exp_type" value="Établissement scolaire / de formation"><span>Établissement scolaire</span></label>
+          <label class="opt"><input type="radio" name="exp_type" value="Organisme de formation"><span>Organisme de formation</span></label>
+          <label class="opt"><input type="radio" name="exp_type" value="Institution"><span>Institution</span></label>
+          <label class="opt"><input type="radio" name="exp_type" value="Association"><span>Association</span></label>
+          <label class="opt"><input type="radio" name="exp_type" value="Autre organisme"><span>Autre organisme</span></label>
+        </div>
+        
+        <label class="f">Nom de l’entreprise ou de l’établissement *</label>
+        <input type="text" id="exp_nom" required placeholder="Ex : OPT-NC, Lycée Jules Garnier, CFA...">
+        
+        <label class="f">Ville / commune *</label>
+        <input type="text" id="exp_ville" required placeholder="Ex : Nouméa, Dumbéa, Koné...">
+      </div>
+
+      <div class="card-box">
+        <h2>2. Personne référente</h2>
+        <p class="hint">Notre interlocuteur pour l’organisation du salon.</p>
+        <div class="grid-2">
+          <div>
+            <label class="f">Prénom et Nom *</label>
+            <input type="text" id="exp_ref_nom" required placeholder="Jean Dupont">
+          </div>
+          <div>
+            <label class="f">Fonction</label>
+            <input type="text" id="exp_ref_fonction" placeholder="Responsable RH / Chargé de formation">
+          </div>
+          <div>
+            <label class="f">Email *</label>
+            <input type="email" id="exp_ref_email" required placeholder="contact@domaine.nc">
+          </div>
+          <div>
+            <label class="f">Téléphone *</label>
+            <input type="tel" id="exp_ref_tel" required placeholder="26.00.00 / 77.00.00">
+          </div>
+        </div>
+        <label class="f">Contact secondaire (facultatif)</label>
+        <input type="text" id="exp_ref2" placeholder="Nom, email, téléphone du contact de secours">
+      </div>
+
+      <div class="card-box">
+        <h2>3. Votre emplacement & Matériel</h2>
+        <p class="hint">Décrivez librement vos besoins sur le stand.</p>
+        <label class="f">Matériel et emplacement souhaités</label>
+        <textarea id="exp_materiel" rows="3" placeholder="Ex : 2 tables, 4 chaises, grille d'affichage, proche d'une prise électrique..."></textarea>
+        <div class="note">ℹ️ L'équipe fera son maximum selon la disposition de la salle d'honneur et les contraintes techniques.</div>
+      </div>
+
+      <div class="card-box">
+        <h2>4. Secteurs & Formations présentés</h2>
+        <p class="hint">Cochez les domaines concernés.</p>
+        <label class="f">Secteurs d'activité</label>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="exp_sec" value="Santé & social"><span>Santé & social</span></label>
+          <label class="opt"><input type="checkbox" name="exp_sec" value="Commerce & vente"><span>Commerce & vente</span></label>
+          <label class="opt"><input type="checkbox" name="exp_sec" value="Bâtiment & BTP"><span>Bâtiment & BTP</span></label>
+          <label class="opt"><input type="checkbox" name="exp_sec" value="Mines & métallurgie"><span>Mines & métallurgie</span></label>
+          <label class="opt"><input type="checkbox" name="exp_sec" value="Hôtellerie & Tourisme"><span>Hôtellerie & Tourisme</span></label>
+          <label class="opt"><input type="checkbox" name="exp_sec" value="Numérique & IT"><span>Numérique & IT</span></label>
+          <label class="opt"><input type="checkbox" name="exp_sec" value="Agriculture & Mer"><span>Agriculture & Mer</span></label>
+          <label class="opt"><input type="checkbox" name="exp_sec" value="Transport & Logistique"><span>Transport & Logistique</span></label>
+          <label class="opt"><input type="checkbox" name="exp_sec" value="Administration & Services"><span>Administration & Services</span></label>
+        </div>
+
+        <label class="f">Niveaux de formation / offres</label>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="exp_niv" value="CAP / BEP"><span>CAP / BEP</span></label>
+          <label class="opt"><input type="checkbox" name="exp_niv" value="Bac Pro / Techno"><span>Bac Pro / Techno</span></label>
+          <label class="opt"><input type="checkbox" name="exp_niv" value="BTS / BTSA"><span>BTS / BTSA</span></label>
+          <label class="opt"><input type="checkbox" name="exp_niv" value="Alternance"><span>Alternance</span></label>
+          <label class="opt"><input type="checkbox" name="exp_niv" value="Formation Continue"><span>Formation Continue</span></label>
+        </div>
+
+        <label class="f">Métiers & filières spécifiques présentés</label>
+        <textarea id="exp_metiers" rows="3" placeholder="Ex : BTS Électrotechnique, Mécanique navale, Métiers de la santé, Développeur web..."></textarea>
+      </div>
+
+      <div class="card-box">
+        <h2>5. Installation & Logistique</h2>
+        <label class="f">Installation la veille (Vendredi 27 août) ?</label>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="exp_veille" value="Oui" onchange="togglePanel('subVeille', true)"><span>Oui, installation la veille</span></label>
+          <label class="opt"><input type="radio" name="exp_veille" value="Non" checked onchange="togglePanel('subVeille', false)"><span>Non, le matin même</span></label>
+        </div>
+        <div id="subVeille" class="sub-panel">
+          <label class="f">Heure d'arrivée estimée</label>
+          <input type="text" id="exp_veille_heure" placeholder="Ex : 15h00">
+        </div>
+
+        <label class="f">Jeunes / Étudiants en démonstration sur votre stand ?</label>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="exp_jeunes" value="Oui" onchange="togglePanel('subJeunes', true)"><span>Oui, accompagnés de jeunes</span></label>
+          <label class="opt"><input type="radio" name="exp_jeunes" value="Non" checked onchange="togglePanel('subJeunes', false)"><span>Non / Pas encore sûr</span></label>
+        </div>
+        <div id="subJeunes" class="sub-panel">
+          <label class="f">Nombre de jeunes (environ)</label>
+          <input type="number" id="exp_jeunes_nb" min="1" max="20" placeholder="2">
+        </div>
+      </div>
+
+      <div class="card-box">
+        <h2>6. Sponsoring & Animations</h2>
+        <label class="f">Souhaitez-vous soutenir l'événement (Sponsoring) ?</label>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="exp_sponso" value="Oui" onchange="togglePanel('subSponso', true)"><span>Oui, nous souhaitons sponsoriser</span></label>
+          <label class="opt"><input type="radio" name="exp_sponso" value="Non" checked onchange="togglePanel('subSponso', false)"><span>Non pour cette édition</span></label>
+        </div>
+        <div id="subSponso" class="sub-panel">
+          <label class="f">Type de soutien</label>
+          <div class="opts">
+            <label class="opt"><input type="checkbox" name="exp_sponso_type" value="Financier"><span>Financier</span></label>
+            <label class="opt"><input type="checkbox" name="exp_sponso_type" value="Matériel"><span>Matériel / Équipement</span></label>
+            <label class="opt"><input type="checkbox" name="exp_sponso_type" value="Lots / Goodies"><span>Lots / Goodies</span></label>
+          </div>
+          <label class="f">Montant ou précision</label>
+          <input type="text" id="exp_sponso_detail" placeholder="Ex : 50 000 F CFP / Dégustation offerte...">
+        </div>
+
+        <label class="f">Propositions d'animations pour dynamiser la journée</label>
+        <textarea id="exp_propositions" rows="3" placeholder="Ex : Démonstration de soudure, atelier CV express, mini-conférence de 15 min..."></textarea>
+      </div>
+
+      <div id="expErr" class="err center"></div>
+
+      <div class="center" style="margin-top: 20px;">
+        <button type="submit" class="btn">🔎 Valider et envoyer mon inscription</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ONGLET 3 : PROPOSER UN ÉVÉNEMENT -->
+  <section id="tab-proposer" style="display: none;">
+    <div class="card-box">
+      <h2>Publier un Événement Scolaire</h2>
+      <p class="hint">Vous êtes un collège, un lycée ou un CIO ? Publiez vos JPO, carrefours des métiers ou projets pédagogiques sur le portail territorial.</p>
+
+      <form id="formEvent" onsubmit="handleEventSubmit(event)">
+        <label class="f">Titre de l'événement *</label>
+        <input type="text" id="ev_title" required placeholder="Ex : Journée Portes Ouvertes 2027">
+
+        <div class="grid-2">
+          <div>
+            <label class="f">Établissement / Organisateur *</label>
+            <input type="text" id="ev_org" required placeholder="Ex : Lycée Jules Garnier">
+          </div>
+          <div>
+            <label class="f">Type d'établissement *</label>
+            <select id="ev_type_inst" required>
+              <option value="College">Collège</option>
+              <option value="Lycee Gen">Lycée Général & Technologique</option>
+              <option value="Lycee Pro">Lycée Professionnel / LPO</option>
+              <option value="Partenaire">Organisme / Partenaire</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <label class="f">Date de l'événement *</label>
+            <input type="date" id="ev_date" required>
+          </div>
+          <div>
+            <label class="f">Horaires *</label>
+            <input type="text" id="ev_time" required placeholder="Ex : 08h00 - 15h00">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <label class="f">Commune / Lieu *</label>
+            <input type="text" id="ev_location" required placeholder="Ex : Nouméa (Gymnase du lycée)">
+          </div>
+          <div>
+            <label class="f">Zone géographique *</label>
+            <select id="ev_zone" required>
+              <option value="Noumea">Nouméa</option>
+              <option value="Grand Noumea">Dumbéa / Païta / Mont-Dore</option>
+              <option value="Brousse">Brousse (VKP, Bourail...)</option>
+              <option value="Iles">Îles Loyauté</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="f">Catégorie *</label>
+        <select id="ev_category" required>
+          <option value="JPO">Journée Portes Ouvertes (JPO)</option>
+          <option value="Salon">Forum / Carrefour des Métiers</option>
+          <option value="Alternance">Forum de l'Alternance</option>
+          <option value="Pedagogique">Projet Pédagogique / Concours</option>
+          <option value="Immerse">Mini-stages / Immersion</option>
+        </select>
+
+        <label class="f">Public cible</label>
+        <input type="text" id="ev_target" placeholder="Ex : Élèves de 3ème, Lycéens, Parents, Post-Bac">
+
+        <label class="f">Description détaillée & Programme *</label>
+        <textarea id="ev_desc" rows="4" required placeholder="Présentez le déroulement, les ateliers, les filières présentées..."></textarea>
+
+        <label class="f">Contact pour renseignements</label>
+        <input type="text" id="ev_contact" placeholder="Email ou téléphone de contact">
+
+        <div class="center" style="margin-top: 24px;">
+          <button type="submit" class="btn sec">🚀 Publier l'événement sur le portail</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ONGLET 4 : ESPACE ORGANISATEUR / DASHBOARD -->
+  <section id="tab-admin" style="display: none;">
+    <div class="card-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div>
+          <h2>Espace de Gestion Organisateur</h2>
+          <p class="hint" style="margin:0;">Suivi des inscriptions exposants & validation des événements scolaires</p>
+        </div>
+        <div>
+          <button class="btn sm" onclick="exportDataCSV()">⬇️ Exporter en CSV</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Rapides -->
+    <div class="grid-2" style="margin-bottom: 20px;">
+      <div class="card-box" style="margin: 0; text-align: center;">
+        <span style="font-size: 2.2rem; font-weight: 800; color: var(--pri);" id="statExposants">0</span>
+        <div style="font-weight: 700; color: var(--mut);">Exposants inscrits (Salon)</div>
+      </div>
+      <div class="card-box" style="margin: 0; text-align: center;">
+        <span style="font-size: 2.2rem; font-weight: 800; color: var(--acc);" id="statEvents">0</span>
+        <div style="font-weight: 700; color: var(--mut);">Événements au calendrier</div>
+      </div>
+    </div>
+
+    <!-- Inscriptions Salon Exposants -->
+    <div class="card-box">
+      <h3>📋 Inscriptions Exposants</h3>
+      <div class="scroll-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Structure</th>
+              <th>Référent & Contact</th>
+              <th>Secteurs</th>
+              <th>Matériel</th>
+              <th>Statut</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="adminExposantsTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Événements soumis -->
+    <div class="card-box">
+      <h3>🏫 Événements des Collèges & Lycées</h3>
+      <div class="scroll-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Événement</th>
+              <th>Organisateur</th>
+              <th>Date & Lieu</th>
+              <th>Catégorie</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminEventsTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- MODAL DETAILS EVENEMENT -->
+<div id="eventModal" class="modal-bg" style="display: none;">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
 <script>
-const D={"etabs":[{"nom":"ALP DE KOUMAC","type":"Lycée","secteur":"À préciser","commune":"Koumac","ref":"","contact":""},{"nom":"ANTOINE KELA","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"","contact":""},{"nom":"APOLLINAIRE ANOVA","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"BEZERT Nathalie","contact":""},{"nom":"AUGUSTIN TY","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"","contact":""},{"nom":"BLAISE PASCAL","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"M. MACIA Patrice","contact":""},{"nom":"DICK UKEIWE","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"Mme IMBERT Isabelle","contact":""},{"nom":"DO KAMO","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"","contact":""},{"nom":"DO NEVA – HOUAILOU","type":"Lycée","secteur":"À préciser","commune":"Houaïlou","ref":"","contact":""},{"nom":"FRANCOIS D'ASSISE","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"M. FANOY Daniel","contact":""},{"nom":"GABRIEL RIVAT","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"M. SANTINO Bruno","contact":""},{"nom":"JULES GARNIER","type":"Lycée","secteur":"À préciser","commune":"Nouméa","ref":"WAHMETU Kévin","contact":""},{"nom":"LPCH Auguste Escoffier","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"Mme WYGODA Astrid","contact":""},{"nom":"LYCEE DU MONT-DORE","type":"Lycée","secteur":"À préciser","commune":"Mont-Dore","ref":"M. NAIRI Lotfi","contact":""},{"nom":"LYCEE LAPEROUSE","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"M. BARBARIN Vincent","contact":""},{"nom":"MARCELLIN CHAMPAGNAT","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"M. SARIDJAN Marchel","contact":""},{"nom":"MICHEL ROCARD","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"M. GUTIERREZ Jerome","contact":""},{"nom":"PERE GUENEAU","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"","contact":""},{"nom":"PETRO ATTITI","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"M. BAILLIF Brian","contact":""},{"nom":"SAINT JEAN XXIII","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"TUITAVAKE Valelia","contact":""},{"nom":"ST JOSEPH DE CLUNY","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"M. FANTIN Serge","contact":""},{"nom":"ST PIERRE CHANEL","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"","contact":""},{"nom":"THEODORE KAWA BRAINO (LA FOA)","type":"Lycée","secteur":"À préciser","commune":"La Foa","ref":"Mme DEPOND Roxane","contact":""},{"nom":"WILLIAMA HAUDRA","type":"Lycée","secteur":"À préciser","commune":"À préciser","ref":"","contact":""},{"nom":"Collège Louis-Léopold DJIET - SEGPA","type":"Collège","secteur":"Public","commune":"Bourail","ref":"","contact":""},{"nom":"Collège de Canala et GOD de Kouaoua","type":"Collège","secteur":"Public","commune":"Canala","ref":"","contact":""},{"nom":"Collège Apogoti","type":"Collège","secteur":"Public","commune":"Dumbéa","ref":"","contact":""},{"nom":"Collège d'Auteuil Edmée VARIN et SEGPA","type":"Collège","secteur":"Public","commune":"Dumbéa","ref":"","contact":""},{"nom":"Collège de Katiramona Jean Fayard","type":"Collège","secteur":"Public","commune":"Dumbéa","ref":"","contact":""},{"nom":"Collège de Koutio Francis Carco - SEGPA","type":"Collège","secteur":"Public","commune":"Dumbéa","ref":"","contact":""},{"nom":"Collège de Dumbéa-sur-Mer","type":"Collège","secteur":"Public","commune":"Dumbéa","ref":"","contact":""},{"nom":"Collège Pai-Kaleone","type":"Collège","secteur":"Public","commune":"Hienghène","ref":"","contact":""},{"nom":"Collège de Wani - SEGPA","type":"Collège","secteur":"Public","commune":"Houaïlou","ref":"","contact":""},{"nom":"Collège de Koné - SEGPA","type":"Collège","secteur":"Public","commune":"Koné","ref":"","contact":""},{"nom":"Collège de Païamboué","type":"Collège","secteur":"Public","commune":"Koné","ref":"","contact":""},{"nom":"Collège de Koumac - SEGPA et ALP","type":"Collège","secteur":"Public","commune":"Koumac","ref":"","contact":""},{"nom":"Collège Théodore Kawa Braïno - ALP","type":"Collège","secteur":"Public","commune":"La Foa","ref":"","contact":""},{"nom":"Collège Laura Boula - SEGPA et GOD de Mou","type":"Collège","secteur":"Public","commune":"Lifou","ref":"","contact":""},{"nom":"Collège de La Roche - SEGPA","type":"Collège","secteur":"Public","commune":"Maré","ref":"","contact":""},{"nom":"Collège de Tadine","type":"Collège","secteur":"Public","commune":"Maré","ref":"","contact":""},{"nom":"Collège de Boulari et SEGPA","type":"Collège","secteur":"Public","commune":"Mont-Dore","ref":"","contact":""},{"nom":"Collège de Plum","type":"Collège","secteur":"Public","commune":"Mont-Dore","ref":"","contact":""},{"nom":"Collège de Kaméré","type":"Collège","secteur":"Public","commune":"Nouméa","ref":"","contact":""},{"nom":"Collège de Normandie et SEGPA","type":"Collège","secteur":"Public","commune":"Nouméa","ref":"","contact":""},{"nom":"Collège de Tuband","type":"Collège","secteur":"Public","commune":"Nouméa","ref":"","contact":""},{"nom":"Collège François Ollivaud et SEGPA","type":"Collège","secteur":"Public","commune":"Nouméa","ref":"","contact":""},{"nom":"Collège Georges Baudoux","type":"Collège","secteur":"Public","commune":"Nouméa","ref":"","contact":""},{"nom":"Collège Jean Lèques et SEGPA","type":"Collège","secteur":"Public","commune":"Nouméa","ref":"","contact":""},{"nom":"Collège Jean Mariotti","type":"Collège","secteur":"Public","commune":"Nouméa","ref":"","contact":""},{"nom":"Collège de Ouégoa","type":"Collège","secteur":"Public","commune":"Ouégoa","ref":"","contact":""},{"nom":"Collège de Fayaoué Shéa Tiaou","type":"Collège","secteur":"Public","commune":"Ouvéa","ref":"","contact":""},{"nom":"Collège Gabriel Païta","type":"Collège","secteur":"Public","commune":"Païta","ref":"","contact":""},{"nom":"Collège Louise Michel","type":"Collège","secteur":"Public","commune":"Païta","ref":"","contact":""},{"nom":"Collège Raymond Vauthier et SEGPA","type":"Collège","secteur":"Public","commune":"Poindimié","ref":"","contact":""},{"nom":"Collège Essau Voudjo","type":"Collège","secteur":"Public","commune":"Poya","ref":"","contact":""},{"nom":"Collège La Colline","type":"Collège","secteur":"Public","commune":"Thio","ref":"","contact":""},{"nom":"Collège de Yaté","type":"Collège","secteur":"Public","commune":"Yaté","ref":"","contact":""},{"nom":"Collège Sacré-Coeur (DDEC)","type":"Collège","secteur":"Privé sous contrat","commune":"Bourail","ref":"","contact":""},{"nom":"Collège Saint-Joseph (DDEC)","type":"Collège","secteur":"Privé sous contrat","commune":"Île des Pins","ref":"","contact":""},{"nom":"Collège Baganda (ASEE)","type":"Collège","secteur":"Privé sous contrat","commune":"Kaala-Gomen","ref":"","contact":""},{"nom":"Collège Saint-Dominique Savio (DDEC)","type":"Collège","secteur":"Privé sous contrat","commune":"La Foa","ref":"","contact":""},{"nom":"Collège de Hnaizianu (ASEE)","type":"Collège","secteur":"Privé sous contrat","commune":"Lifou","ref":"","contact":""},{"nom":"Collège de Hnathalo (DDEC)","type":"Collège","secteur":"Privé sous contrat","commune":"Lifou","ref":"","contact":""},{"nom":"Collège de Havila (ASEE)","type":"Collège","secteur":"Privé sous contrat","commune":"Lifou","ref":"","contact":""},{"nom":"Collège Taremen (ASEE)","type":"Collège","secteur":"Privé sous contrat","commune":"Maré","ref":"","contact":""},{"nom":"Collège de La Conception (DDEC)","type":"Collège","secteur":"Privé sous contrat","commune":"Mont-Dore","ref":"","contact":""},{"nom":"Collège Champagnat (DDEC)","type":"Collège","secteur":"Privé sous contrat","commune":"Nouméa","ref":"","contact":""},{"nom":"Collège St Joseph de Cluny (DDEC)","type":"Collège","secteur":"Privé sous contrat","commune":"Nouméa","ref":"","contact":""},{"nom":"Collège Eben-Eza (ASEE)","type":"Collège","secteur":"Privé sous contrat","commune":"Ouvéa","ref":"","contact":""},{"nom":"Collège Guillaume Douarre (DDEC)","type":"Collège","secteur":"Privé sous contrat","commune":"Ouvéa","ref":"","contact":""},{"nom":"Collège Sainte-Marie et SEGPA (DDEC)","type":"Collège","secteur":"Privé sous contrat","commune":"Païta","ref":"","contact":""},{"nom":"Collège Jean-Baptiste Vigouroux (DDEC)","type":"Collège","secteur":"Privé sous contrat","commune":"Poindimié","ref":"","contact":""},{"nom":"Collège de Mou (FELP)","type":"Collège","secteur":"Privé sous contrat","commune":"Ponerihouen","ref":"","contact":""},{"nom":"Collège Yves-Marie Hily (DDEC)","type":"Collège","secteur":"Privé sous contrat","commune":"Ponerihouen","ref":"","contact":""},{"nom":"Collège Hippolyte Bonou et SEGPA (DDEC)","type":"Collège","secteur":"Privé sous contrat","commune":"Pouébo","ref":"","contact":""},{"nom":"Collège Raymond Boaouva-Kaleba (ASEE)","type":"Collège","secteur":"Privé sous contrat","commune":"Poum","ref":"","contact":""},{"nom":"Collège Francis Rougé (DDEC)","type":"Collège","secteur":"Privé sous contrat","commune":"Thio","ref":"","contact":""},{"nom":"Collège de Tiéta (FELP)","type":"Collège","secteur":"Privé sous contrat","commune":"Voh","ref":"","contact":""},{"nom":"CIO","type":"CIO","secteur":"À préciser","commune":"À préciser","ref":"","contact":""}],"events":[{"etab":"ST JOSEPH DE CLUNY","type":"Journée Portes Ouvertes","titre":"Soirée portes ouvertes","debut":"2026-03-05","fin":"2026-03-05","horaires":"08h00 - 15h30","public":"Lycéens 2nde","lieu":"Gymnase du lycée","ref":"M. FANTIN Serge","contact":"jules.garnier@ac-noumea.nc","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"LYCEE DU MONT-DORE","type":"Autre","titre":"Remise de diplomes","debut":"2026-03-13","fin":"2026-03-13","horaires":"","public":"","lieu":"","ref":"M. NAIRI Lotfi","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"SAINT JEAN XXIII","type":"Autre","titre":"Remise des diplomes","debut":"2026-03-13","fin":"2026-03-13","horaires":"","public":"","lieu":"","ref":"TUITAVAKE Valelia","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"MICHEL ROCARD","type":"Autre","titre":"Remise des diplomes","debut":"2026-03-17","fin":"2026-03-17","horaires":"","public":"","lieu":"","ref":"M. GUTIERREZ Jerome","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"PETRO ATTITI","type":"Réunion d'information","titre":"Rencontre parents/professeurs","debut":"2026-03-17","fin":"2026-03-17","horaires":"","public":"","lieu":"","ref":"M. BAILLIF Brian","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"SAINT JEAN XXIII","type":"Journée Portes Ouvertes","titre":"Soirée Portes ouvertes","debut":"2026-03-17","fin":"2026-03-17","horaires":"","public":"","lieu":"","ref":"TUITAVAKE Valelia","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"DO KAMO","type":"Autre","titre":"Remise des diplomes","debut":"2026-03-18","fin":"2026-03-18","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"SAINT JEAN XXIII","type":"Journée Portes Ouvertes","titre":"Soirée Portes ouvertes 1CAP/2BACPRO/1BTS","debut":"2026-03-20","fin":"2026-03-20","horaires":"","public":"","lieu":"","ref":"TUITAVAKE Valelia","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"LYCEE LAPEROUSE","type":"Autre","titre":"Rencontre BTS et associations","debut":"2026-03-21","fin":"2026-03-21","horaires":"","public":"","lieu":"","ref":"M. BARBARIN Vincent","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"DICK UKEIWE","type":"Autre","titre":"Semaine de la Prévention à la santé","debut":"2026-03-23","fin":"2026-03-23","horaires":"","public":"","lieu":"","ref":"Mme IMBERT Isabelle","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"JULES GARNIER","type":"Job dating / Rencontre entreprises","titre":"Stage dating","debut":"2026-03-23","fin":"2026-03-23","horaires":"","public":"","lieu":"","ref":"WAHMETU Kévin","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"WILLIAMA HAUDRA","type":"Autre","titre":"Démarrage Brevet Initiation Aéronautique","debut":"2026-03-23","fin":"2026-03-23","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"LYCEE DU MONT-DORE","type":"Journée Portes Ouvertes","titre":"Journée Portes ouvertes et forum des métiers","debut":"2026-03-25","fin":"2026-03-25","horaires":"","public":"","lieu":"","ref":"M. NAIRI Lotfi","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"LYCEE DU MONT-DORE","type":"Autre","titre":"Cérémonie Remise Diplômes","debut":"2026-03-26","fin":"2026-03-26","horaires":"","public":"","lieu":"","ref":"M. NAIRI Lotfi","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ST JOSEPH DE CLUNY","type":"Job dating / Rencontre entreprises","titre":"Job meeting BTS SAM","debut":"2026-03-26","fin":"2026-03-26","horaires":"","public":"","lieu":"","ref":"M. FANTIN Serge","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"AUGUSTIN TY","type":"Autre","titre":"Classe défense participation au projet Préservation et restauration de la forêt humide de Touho","debut":"2026-03-27","fin":"2026-03-27","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"BLAISE PASCAL","type":"Autre","titre":"Rencontre BTS Comptabilité et DEL","debut":"2026-03-27","fin":"2026-03-27","horaires":"","public":"","lieu":"","ref":"M. MACIA Patrice","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"JULES GARNIER","type":"Autre","titre":"Remise des diplomes BTS","debut":"2026-03-30","fin":"2026-03-30","horaires":"","public":"","lieu":"","ref":"WAHMETU Kévin","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"MICHEL ROCARD","type":"Autre","titre":"Semaine du numérique","debut":"2026-03-30","fin":"2026-04-03","horaires":"","public":"","lieu":"","ref":"M. GUTIERREZ Jerome","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ST JOSEPH DE CLUNY","type":"Autre","titre":"Cocktail de remise des diplômes","debut":"2026-03-31","fin":"2026-03-31","horaires":"","public":"","lieu":"","ref":"M. FANTIN Serge","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"AUGUSTIN TY","type":"Autre","titre":"Remise des diplomes","debut":"2026-04-02","fin":"2026-04-02","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"BLAISE PASCAL","type":"Autre","titre":"Semaine de l'éducation financière IEOM","debut":"2026-04-02","fin":"2026-04-02","horaires":"","public":"","lieu":"","ref":"M. MACIA Patrice","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"BLAISE PASCAL","type":"Job dating / Rencontre entreprises","titre":"Job dating BTS Banque","debut":"2026-04-03","fin":"2026-04-03","horaires":"","public":"","lieu":"","ref":"M. MACIA Patrice","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ST JOSEPH DE CLUNY","type":"Autre","titre":"Journée de cohésion","debut":"2026-04-03","fin":"2026-04-03","horaires":"","public":"","lieu":"","ref":"M. FANTIN Serge","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ST JOSEPH DE CLUNY","type":"Autre","titre":"Remise de diplomes","debut":"2026-04-04","fin":"2026-04-04","horaires":"","public":"","lieu":"","ref":"M. FANTIN Serge","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"JULES GARNIER","type":"Autre","titre":"Lancement FCIL Entrepreunariat","debut":"2026-04-13","fin":"2026-04-13","horaires":"","public":"","lieu":"","ref":"WAHMETU Kévin","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ST PIERRE CHANEL","type":"Autre","titre":"Remise de diplomes","debut":"2026-04-21","fin":"2026-04-21","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"APOLLINAIRE ANOVA","type":"Autre","titre":"Rencontres Parents/professeurs","debut":"2026-04-22","fin":"2026-04-22","horaires":"","public":"","lieu":"","ref":"BEZERT Nathalie","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"PERE GUENEAU","type":"Autre","titre":"BAC VP découverte de l'exposition photographique Métisses","debut":"2026-04-22","fin":"2026-04-22","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"PETRO ATTITI","type":"Autre","titre":"SAS ADR chantier environnement avec WWF","debut":"2026-04-22","fin":"2026-04-23","horaires":"","public":"","lieu":"","ref":"M. BAILLIF Brian","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"GABRIEL RIVAT","type":"Autre","titre":"Préparation d'un livre de recettes dans le cadre du chef d'oeuvre","debut":"2026-04-23","fin":"2026-04-23","horaires":"","public":"","lieu":"","ref":"M. SANTINO Bruno","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"PERE GUENEAU","type":"Autre","titre":"CAP VL Echange, film et exposition \"Après la colère\"","debut":"2026-04-23","fin":"2026-04-23","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"GABRIEL RIVAT","type":"Autre","titre":"Présentation du CIRFA","debut":"2026-04-28","fin":"2026-04-28","horaires":"","public":"","lieu":"","ref":"M. SANTINO Bruno","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"PETRO ATTITI","type":"Autre","titre":"Matinée Santé sécurité au travail","debut":"2026-04-28","fin":"2026-04-28","horaires":"","public":"","lieu":"","ref":"M. BAILLIF Brian","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"APOLLINAIRE ANOVA","type":"Autre","titre":"Echanges BTS ESF et OPT NC","debut":"2026-04-29","fin":"2026-04-29","horaires":"","public":"","lieu":"","ref":"BEZERT Nathalie","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"FRANCOIS D'ASSISE","type":"Autre","titre":"Journée mondiale de la santé et de la sécurité au travail","debut":"2026-04-29","fin":"2026-04-29","horaires":"","public":"","lieu":"","ref":"M. FANOY Daniel","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"SAINT JEAN XXIII","type":"Autre","titre":"Formation SST","debut":"2026-04-29","fin":"2026-04-29","horaires":"","public":"","lieu":"","ref":"TUITAVAKE Valelia","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"DICK UKEIWE","type":"Job dating / Rencontre entreprises","titre":"Stage dating CFA DCG","debut":"2026-04-30","fin":"2026-04-30","horaires":"","public":"","lieu":"","ref":"Mme IMBERT Isabelle","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"LYCEE LAPEROUSE","type":"Autre","titre":"Classe défense rencontre avec la gendarnerie de NC","debut":"2026-04-30","fin":"2026-04-30","horaires":"","public":"","lieu":"","ref":"M. BARBARIN Vincent","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ST JOSEPH DE CLUNY","type":"Autre","titre":"Projet pédagogique AGORA 1 Réalisation de vidéos et prévention en espagnol","debut":"2026-04-30","fin":"2026-04-30","horaires":"","public":"","lieu":"","ref":"M. FANTIN Serge","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"BLAISE PASCAL","type":"Autre","titre":"Escape Game Objectifs de développement durable","debut":"2026-05-04","fin":"2026-05-04","horaires":"","public":"","lieu":"","ref":"M. MACIA Patrice","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"APOLLINAIRE ANOVA","type":"Autre","titre":"Formation SST BTS SP3S et ESF","debut":"2026-05-05","fin":"2026-05-05","horaires":"","public":"","lieu":"","ref":"BEZERT Nathalie","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ST JOSEPH DE CLUNY","type":"Autre","titre":"Initiation à la Web radio à la maison de la parole avec Kingtaz pour les 2 AMA","debut":"2026-05-05","fin":"2026-05-05","horaires":"","public":"","lieu":"","ref":"M. FANTIN Serge","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ST JOSEPH DE CLUNY","type":"Autre","titre":"Agora 2 visite de l'exposition Graveurs de nacre","debut":"2026-05-07","fin":"2026-05-07","horaires":"","public":"","lieu":"","ref":"M. FANTIN Serge","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ST PIERRE CHANEL","type":"Autre","titre":"FCIL Community manager","debut":"2026-05-07","fin":"2026-05-07","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"BLAISE PASCAL","type":"Autre","titre":"Echanges et conférences Management en entreprise Blaise avec la BNC","debut":"2026-05-11","fin":"2026-05-11","horaires":"","public":"","lieu":"","ref":"M. MACIA Patrice","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ALP DE KOUMAC","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-19","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ANTOINE KELA","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"APOLLINAIRE ANOVA","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"BEZERT Nathalie","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"AUGUSTIN TY","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"BLAISE PASCAL","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-20","horaires":"","public":"","lieu":"","ref":"M. MACIA Patrice","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"DICK UKEIWE","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"Mme IMBERT Isabelle","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"DO KAMO","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"DO NEVA – HOUAILOU","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"FRANCOIS D'ASSISE","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"M. FANOY Daniel","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"GABRIEL RIVAT","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"M. SANTINO Bruno","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"JULES GARNIER","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"WAHMETU Kévin","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"LPCH Auguste Escoffier","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"Mme WYGODA Astrid","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"LYCEE DU MONT-DORE","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"M. NAIRI Lotfi","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"LYCEE LAPEROUSE","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"M. BARBARIN Vincent","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"MARCELLIN CHAMPAGNAT","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"M. SARIDJAN Marchel","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"MICHEL ROCARD","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"M. GUTIERREZ Jerome","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"PERE GUENEAU","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"PETRO ATTITI","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"M. BAILLIF Brian","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"SAINT JEAN XXIII","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"TUITAVAKE Valelia","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ST JOSEPH DE CLUNY","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"M. FANTIN Serge","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ST PIERRE CHANEL","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"THEODORE KAWA BRAINO (LA FOA)","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"Mme DEPOND Roxane","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"WILLIAMA HAUDRA","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-18","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ALP DE KOUMAC","type":"Autre","titre":"CAP Services et cuisine repas dans le cadre du chef d'oeuvre","debut":"2026-05-20","fin":"2026-05-20","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ALP DE KOUMAC","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-21","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"BLAISE PASCAL","type":"Autre","titre":"Soirée orientation ACDET","debut":"2026-05-21","fin":"2026-05-21","horaires":"","public":"","lieu":"","ref":"M. MACIA Patrice","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"BLAISE PASCAL","type":"Autre","titre":"Semaine de l'orientation","debut":"2026-05-22","fin":"2026-05-22","horaires":"","public":"","lieu":"","ref":"M. MACIA Patrice","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"MICHEL ROCARD","type":"Forum des métiers","titre":"Forum emploi / insertion","debut":"2026-06-26","fin":"2026-06-26","horaires":"","public":"","lieu":"","ref":"M. GUTIERREZ Jerome","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"DICK UKEIWE","type":"Autre","titre":"Carrefour des Formations","debut":"2026-07-01","fin":"2026-07-01","horaires":"","public":"","lieu":"","ref":"Mme IMBERT Isabelle","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"BLAISE PASCAL","type":"Autre","titre":"Journée des Formations et des Métiers","debut":"2026-07-06","fin":"2026-07-06","horaires":"","public":"","lieu":"","ref":"M. MACIA Patrice","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"DICK UKEIWE","type":"Journée Portes Ouvertes","titre":"Journée Portes Ouvertes","debut":"2026-07-11","fin":"2026-07-11","horaires":"","public":"","lieu":"","ref":"Mme IMBERT Isabelle","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ST JOSEPH DE CLUNY","type":"Job dating / Rencontre entreprises","titre":"Job dating BTS Assurance","debut":"2026-07-16","fin":"2026-07-16","horaires":"","public":"","lieu":"","ref":"M. FANTIN Serge","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ST JOSEPH DE CLUNY","type":"Autre","titre":"Carrefour de l'orientation","debut":"2026-07-29","fin":"2026-07-29","horaires":"","public":"","lieu":"","ref":"M. FANTIN Serge","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"LPCH Auguste Escoffier","type":"Journée Portes Ouvertes","titre":"Journée Portes Ouvertes","debut":"2026-08-07","fin":"2026-08-07","horaires":"","public":"","lieu":"","ref":"Mme WYGODA Astrid","contact":"","statut":"Terminé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"MICHEL ROCARD","type":"Autre","titre":"Projet CROSS","debut":"2026-08-27","fin":"2026-08-27","horaires":"","public":"","lieu":"","ref":"M. GUTIERREZ Jerome","contact":"","statut":"Confirmé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ALP DE KOUMAC","type":"Salon de l'orientation","titre":"SALON Découverte des Métiers et des Formations","debut":"2026-08-29","fin":"2026-08-29","horaires":"","public":"","lieu":"","ref":"","contact":"","statut":"Confirmé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"ST JOSEPH DE CLUNY","type":"Autre","titre":"Semaine du littoral","debut":"2026-08-31","fin":"2026-09-01","horaires":"","public":"","lieu":"","ref":"M. FANTIN Serge","contact":"","statut":"Confirmé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"LYCEE LAPEROUSE","type":"Autre","titre":"semaine de l'orientation","debut":"2026-09-07","fin":"2026-09-11","horaires":"","public":"","lieu":"","ref":"M. BARBARIN Vincent","contact":"","statut":"Confirmé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"LYCEE DU MONT-DORE","type":"Journée Portes Ouvertes","titre":"Projet - Portes ouvertes","debut":"2026-09-12","fin":"2026-09-12","horaires":"","public":"","lieu":"","ref":"M. NAIRI Lotfi","contact":"","statut":"Confirmé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"MICHEL ROCARD","type":"Journée Portes Ouvertes","titre":"Journée portes ouvertes","debut":"2026-09-19","fin":"2026-09-19","horaires":"","public":"","lieu":"","ref":"M. GUTIERREZ Jerome","contact":"","statut":"Confirmé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"},{"etab":"LPCH Auguste Escoffier","type":"Autre","titre":"Festival Escoffier","debut":"2026-10-07","fin":"2026-10-07","horaires":"","public":"","lieu":"","ref":"Mme WYGODA Astrid","contact":"","statut":"Confirmé","remarques":"Importé depuis le Calendrier partagé des lycées 2026"}]};
-const ST={"Prévu":["🟡","#C98A0B"],"Confirmé":["🟢","#1E8E5A"],"Reporté":["🔵","#2F6FDE"],"Annulé":["🔴","#D1344B"],"Terminé":["⚪","#7F8D95"]};
-const TYPES=["Forum des métiers","Salon de l'orientation","Journée Portes Ouvertes","Mini-stage / Immersion","Job dating / Rencontre entreprises","Stage d'observation","Réunion d'information","Autre"];
-const PUB=["","Collégiens 6e-5e","Collégiens 4e-3e","Lycéens 2nde","Lycéens 1ère/Term.","Familles","Tout public","Professionnels"];
-const MO=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."],MF=["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],JO=["Lun","Mar","Mer","Jeu","Ven","Sam","Dim"];
-const KEY="dafpic-cal-v1",NOW=new Date(),iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"),TODAY=iso(NOW);
-const S={ev:D.events.map((e,i)=>({...e,id:i+1})),et:D.etabs,tab:"dash",year:NOW.getFullYear(),etab:"",cm:NOW.getMonth(),q:"",type:"",st:"",miss:0,asc:1};
-try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&s.ev){S.ev=s.ev;S.et=s.et}}catch(e){}
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({ev:S.ev,et:S.et}))}catch(e){}};
-const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const pd=s=>new Date(s+"T00:00:00"),fd=s=>{if(!s)return"";const d=pd(s);return d.getDate()+" "+MO[d.getMonth()]},fy=s=>fd(s)+" "+s.slice(0,4);
-const rng=e=>e.fin&&e.fin!==e.debut?fd(e.debut)+" → "+fd(e.fin):fd(e.debut);
-const col=e=>ST[e.statut]?ST[e.statut][1]:"#7F8D95",ico=e=>ST[e.statut]?ST[e.statut][0]:"";
-const byId=id=>S.ev.find(e=>e.id==id),end=e=>e.fin||e.debut;
-const scope=(y=true)=>S.ev.filter(e=>(!y||!S.year||e.debut.slice(0,4)==S.year)&&(!S.etab||e.etab==S.etab));
-const cnt=(a,f)=>{const m={};a.forEach(x=>{const k=f(x);m[k]=(m[k]||0)+1});return m};
-const toast=(msg,undo)=>{const t=document.createElement("div");t.innerHTML=`<span>${msg}</span>`;if(undo){const b=document.createElement("button");b.textContent="Annuler";b.onclick=()=>{undo();t.remove()};t.append(b)}$("#toast").append(t);setTimeout(()=>t.remove(),6000)};
-const go=(tab,patch={})=>{Object.assign(S,patch);S.tab=tab;render()};
-function bars(items){const mx=Math.max(1,...items.map(i=>i[1]));return items.map(i=>`<div class="row" ${i[3]||""}><span>${esc(i[0])}</span><span class="tr"><i style="width:${i[1]/mx*100}%;${i[2]?"--c:"+i[2]:""}"></i></span><u>${i[1]}</u></div>`).join("")||'<div class="mut">Aucun événement.</div>'}
-function pill(e){return`<span class="pill" style="--c:${col(e)}">${ico(e)} ${esc(e.statut)}</span>`}
-/* ---------- Tableau de bord ---------- */
-function dash(){const a=scope(),up=a.filter(e=>end(e)>=TODAY&&!["Annulé","Terminé"].includes(e.statut)).sort((x,y)=>x.debut.localeCompare(y.debut));
-const late=a.filter(e=>end(e)<TODAY&&["Prévu","Confirmé"].includes(e.statut)),c=cnt(a,e=>e.statut),k=(v,l,s,col)=>`<button class="kpi" style="--c:${col||"var(--p)"}" data-a="j" data-st="${s||""}"><b>${v}</b><span>${l}</span></button>`;
-const mo=Array(12).fill(0);a.forEach(e=>mo[+e.debut.slice(5,7)-1]++);const mx=Math.max(1,...mo);
-const ty=Object.entries(cnt(a,e=>e.type)).sort((x,y)=>y[1]-x[1]).map(([t,n])=>[t,n,"",`data-a="j" data-ty="${esc(t)}"`]);
-const te=Object.entries(cnt(a,e=>e.etab)).sort((x,y)=>y[1]-x[1]).slice(0,10).map(([t,n])=>[t,n,"",`data-a="ge" data-v="${esc(t)}"`]);
-let g=0;const ring=Object.keys(ST).filter(s=>c[s]).map(s=>{const f=g;g+=c[s]/a.length*100;return`${ST[s][1]} ${f}% ${g}%`}).join(",");
-return`<div class="kpis">${k(a.length,"événements","")}${k(up.length,"à venir","")}${k(c["Confirmé"]||0,"confirmés","Confirmé",ST["Confirmé"][1])}${k(c["Prévu"]||0,"prévus","Prévu",ST["Prévu"][1])}${k((c["Annulé"]||0)+(c["Reporté"]||0),"annulés / reportés","Annulé",ST["Annulé"][1])}${k(new Set(a.map(e=>e.etab)).size,"établissements actifs","")}</div>
-${late.length?`<div class="card alert"><div><b>${late.length} événement(s) passé(s) encore marqué(s) « Prévu » ou « Confirmé »</b><div class="mut">Les dates sont passées : vous pouvez les passer en « Terminé » en un clic.</div></div><button class="btn p" data-a="fix">Tout marquer « Terminé »</button></div>`:""}
-<div class="grid"><div class="card"><h3>Événements par mois</h3><div class="months">${mo.map((n,i)=>`<div data-a="cal" data-m="${i}"><b>${n||""}</b><i style="height:${n/mx*78}%"></i>${MO[i].replace(".","")}</div>`).join("")}</div></div>
-<div class="card"><h3>Répartition par statut</h3><div class="donut"><div class="ring" style="background:conic-gradient(${ring||"var(--line) 0 100%"})"><span>${a.length}</span></div><div>${Object.keys(ST).map(s=>`<div class="lg" style="--c:${ST[s][1]}"><i></i>${ST[s][0]} ${s} — <b>${c[s]||0}</b></div>`).join("")}</div></div></div>
-<div class="card"><h3>Prochains événements</h3>${up.slice(0,6).map(e=>`<div class="up" data-a="edit" data-id="${e.id}"><em>${rng(e)}</em><span><b>${esc(e.titre)}</b><br><span class="mut">${esc(e.etab)}</span></span></div>`).join("")||'<div class="mut">Rien de prévu pour le moment. Ajoutez un événement avec le bouton en haut.</div>'}</div>
-<div class="card"><h3>Par type d’événement</h3>${bars(ty)}</div><div class="card"><h3>Établissements les plus actifs</h3>${bars(te)}</div></div>`}
-/* ---------- Calendrier ---------- */
-function calendar(){const Y=S.year||NOW.getFullYear(),a=scope(false),f=new Date(Y,S.cm,1),off=(f.getDay()+6)%7,n=new Date(Y,S.cm+1,0).getDate(),cells=Math.ceil((off+n)/7)*7;let h="";
-JO.forEach(j=>h+=`<div class="h">${j}</div>`);
-for(let i=0;i<cells;i++){const d=new Date(Y,S.cm,1-off+i),s=iso(d),evs=a.filter(e=>e.debut<=s&&end(e)>=s),wk=i%7>4,out=d.getMonth()!=S.cm;
-h+=`<div class="d${out?" o":""}${wk?" w":""}${s==TODAY?" t":""}" data-a="day" data-d="${s}"><span class="num">${d.getDate()}</span>${evs.slice(0,3).map(e=>`<button class="chip" style="--c:${col(e)}" data-a="edit" data-id="${e.id}" title="${esc(e.etab+" — "+e.titre)}">${esc(e.etab.split(" ")[0]+" · "+e.titre)}</button>`).join("")}${evs.length>3?`<span class="more">+${evs.length-3} autres</span>`:""}</div>`}
-return`<div class="bar"><button class="btn" data-a="pm" data-v="-1" aria-label="Mois précédent">‹</button><h2 style="margin:0;min-width:170px;text-align:center">${MF[S.cm]} ${Y}</h2><button class="btn" data-a="pm" data-v="1" aria-label="Mois suivant">›</button><button class="btn" data-a="today">Aujourd’hui</button><span class="mut">Cliquez sur un jour pour voir ou ajouter, sur une pastille pour modifier.</span></div>
-<div class="bar">${Object.keys(ST).map(s=>`<span class="lg" style="--c:${ST[s][1]}"><i></i>${ST[s][0]} ${s}</span>`).join("")}</div><div class="tbw" style="border:0"><div class="cal">${h}</div></div>`}
-/* ---------- Journal ---------- */
-function rows(){let a=scope().filter(e=>(!S.type||e.type==S.type)&&(!S.st||e.statut==S.st)&&(!S.miss||!e.lieu||!e.horaires||!e.public)&&(!S.q||(e.titre+e.etab+e.ref+e.lieu+e.remarques).toLowerCase().includes(S.q.toLowerCase())));
-a.sort((x,y)=>S.asc*x.debut.localeCompare(y.debut)||x.etab.localeCompare(y.etab));
-return`<div class="mut" style="margin-bottom:8px">${a.length} événement(s)</div><div class="tbw"><table><thead><tr><th class="so" data-a="sort">Dates ${S.asc>0?"▲":"▼"}</th><th>Établissement</th><th>Type</th><th>Intitulé</th><th>Lieu / horaires</th><th>Référent</th><th>Statut</th><th></th></tr></thead><tbody>${a.map(e=>`<tr class="rw"><td class="n">${rng(e)}</td><td>${esc(e.etab)}</td><td>${esc(e.type)}</td><td><b>${esc(e.titre)}</b>${e.public?`<div class="mut">${esc(e.public)}</div>`:""}</td><td class="${e.lieu||e.horaires?"":"warn"}">${esc([e.lieu,e.horaires].filter(Boolean).join(" · "))||'<span class="mut">à compléter</span>'}</td><td>${esc(e.ref)}<div class="mut">${esc(e.contact)}</div></td><td><select class="st" style="--c:${col(e)}" data-a="stat" data-id="${e.id}" aria-label="Statut">${Object.keys(ST).map(s=>`<option ${s==e.statut?"selected":""}>${s}</option>`).join("")}</select></td><td class="n"><button class="btn s" data-a="edit" data-id="${e.id}">Modifier</button></td></tr>`).join("")||'<tr><td colspan="8" class="mut">Aucun événement ne correspond. Modifiez les filtres ou ajoutez un événement.</td></tr>'}</tbody></table></div>`}
-function journal(){return`<div class="bar"><input type="search" id="q" placeholder="Rechercher un titre, un lieu, un référent…" value="${esc(S.q)}"><select id="ft"><option value="">Tous les types</option>${TYPES.map(t=>`<option ${t==S.type?"selected":""}>${esc(t)}</option>`).join("")}</select><select id="fs"><option value="">Tous les statuts</option>${Object.keys(ST).map(t=>`<option ${t==S.st?"selected":""}>${t}</option>`).join("")}</select><label class="mut"><input type="checkbox" id="fm" ${S.miss?"checked":""}> À compléter</label></div>
-<div class="bar"><button class="btn" data-a="xl">Exporter vers Excel</button><label class="btn">Importer un Excel<input type="file" id="imp" accept=".xlsx,.xls" hidden></label><button class="btn d" data-a="reset">Réinitialiser les données</button></div><div id="jt">${rows()}</div>`}
-/* ---------- Établissements ---------- */
-function etabs(){const c=cnt(S.ev,e=>e.etab);return`<div class="bar"><input type="search" id="qe" placeholder="Rechercher un établissement…"><span class="mut">Modifiez le référent, le contact ou la commune directement dans le tableau : c’est enregistré automatiquement.</span></div><div class="tbw"><table><thead><tr><th>Établissement</th><th>Type</th><th>Commune</th><th>Référent</th><th>Contact</th><th>Événements</th></tr></thead><tbody id="et">${S.et.map((x,i)=>`<tr data-n="${esc(x.nom.toLowerCase())}"><td><b>${esc(x.nom)}</b></td><td>${x.type}</td><td><input data-i="${i}" data-k="commune" value="${esc(x.commune)}" class="${x.commune=="À préciser"?"warn":""}"></td><td><input data-i="${i}" data-k="ref" value="${esc(x.ref)}"></td><td><input data-i="${i}" data-k="contact" value="${esc(x.contact)}"></td><td>${c[x.nom]||0}</td></tr>`).join("")}</tbody></table></div>`}
-function help(){return`<div class="card help"><h3>Comment utiliser cet outil</h3><ol><li><b>Choisissez l’année et votre établissement</b> en haut de page : tout s’adapte.</li><li><b>Ajoutez</b> un événement avec « + Nouvel événement » (ou en cliquant sur un jour du calendrier).</li><li><b>Corrigez</b> : « Modifier » dans le journal, clic sur une pastille du calendrier, ou changez le statut directement dans la liste.</li><li><b>Tableau de bord</b> et <b>calendrier</b> se mettent à jour tout seuls.</li><li><b>Partagez</b> : « Exporter vers Excel » dans le journal, puis envoyez le fichier. Un collègue peut le charger avec « Importer un Excel ».</li></ol><p class="mut">Vos modifications sont enregistrées dans ce navigateur. Pensez à exporter régulièrement pour en garder une copie.</p><h3>Statuts</h3>${Object.keys(ST).map(s=>`<div>${pill({statut:s})}</div>`).join("")}</div>`}
-/* ---------- Formulaire ---------- */
-function form(id,pre={}){const e=id?byId(id):{etab:S.etab,type:TYPES[0],statut:"Prévu",debut:"",fin:"",...pre},o=(l,v)=>l.map(x=>`<option ${x==v?"selected":""}>${esc(x)}</option>`).join(""),inp=(k,l,t="text",c="")=>`<label class="${c}">${l}<input type="${t}" name="${k}" value="${esc(e[k])}"></label>`;
-$("#ov").innerHTML=`<form class="mod" id="fm2" data-id="${id||""}"><h2>${id?"Modifier l’événement":"Nouvel événement"}</h2><div class="f"><label class="w">Établissement *<select name="etab"><option value="">Choisir…</option>${o(S.et.map(x=>x.nom),e.etab)}</select></label><label>Type<select name="type">${o(TYPES,e.type)}</select></label><label>Statut<select name="statut">${o(Object.keys(ST),e.statut)}</select></label>${inp("titre","Intitulé *","text","w")}${inp("debut","Date de début *","date")}${inp("fin","Date de fin","date")}${inp("horaires","Horaires (ex. 08h00 - 15h30)")}<label>Public visé<select name="public">${o(PUB,e.public)}</select></label>${inp("lieu","Lieu")}${inp("ref","Référent")}${inp("contact","Contact (email ou téléphone)","text","w")}<label class="w">Remarques / besoins logistiques<textarea name="remarques" rows="3">${esc(e.remarques)}</textarea></label></div><div class="err" id="er"></div><div class="acts"><button class="btn p" type="submit">Enregistrer</button><button class="btn" type="button" data-a="close">Fermer</button><span class="gap"></span>${id?'<button class="btn" type="button" data-a="dup">Dupliquer</button><button class="btn d" type="button" data-a="del">Supprimer</button>':""}</div></form>`;$("#ov").classList.add("on")}
-const close=()=>{$("#ov").classList.remove("on");$("#ov").innerHTML=""};
-function ask(msg,yes){$("#ov").innerHTML=`<div class="mod" style="max-width:420px"><h2>${msg}</h2><div class="acts"><button class="btn p" id="y">Confirmer</button><button class="btn" data-a="close">Annuler</button></div></div>`;$("#ov").classList.add("on");$("#y").onclick=()=>{close();yes()}}
-function dayList(d){const a=scope(false).filter(e=>e.debut<=d&&end(e)>=d);$("#ov").innerHTML=`<div class="mod"><h2>${fy(d)} — ${a.length} événement(s)</h2>${a.map(e=>`<div class="up" data-a="edit" data-id="${e.id}"><span>${pill(e)}</span><span><b>${esc(e.titre)}</b><br><span class="mut">${esc(e.etab)}</span></span></div>`).join("")||'<div class="mut">Aucun événement ce jour.</div>'}<div class="acts"><button class="btn p" data-a="new" data-d="${d}">+ Ajouter ici</button><button class="btn" data-a="close">Fermer</button></div></div>`;$("#ov").classList.add("on")}
-/* ---------- Rendu & actions ---------- */
-function render(){const yrs=[...new Set([...S.ev.map(e=>+e.debut.slice(0,4)),NOW.getFullYear()])].sort();
-$("#gy").innerHTML=`<option value="0">Toutes les années</option>`+yrs.map(y=>`<option ${y==S.year?"selected":""}>${y}</option>`).join("");
-$("#ge").innerHTML=`<option value="">Tous les établissements</option>`+S.et.map(x=>`<option ${x.nom==S.etab?"selected":""}>${esc(x.nom)}</option>`).join("");
-$("#nav").innerHTML=[["dash","📊 Tableau de bord"],["cal","🗓️ Calendrier"],["jr","📅 Journal"],["et","🏫 Établissements"],["help","📘 Aide"]].map(([k,l])=>`<button class="${S.tab==k?"on":""}" data-a="tab" data-v="${k}">${l}</button>`).join("");
-$("#m").innerHTML={dash,cal:calendar,jr:journal,et:etabs,help}[S.tab]()}
-const num=n=>String(n).padStart(2,"0");
-document.addEventListener("click",ev=>{const t=ev.target.closest("[data-a]");if(!t){if(ev.target.id=="ov")close();return}const a=t.dataset.a,d=t.dataset;
-if(a=="tab")go(d.v);else if(a=="j")go("jr",{st:d.st||"",type:d.ty||"",q:"",miss:0});else if(a=="ge"){S.etab=d.v;go("jr")}else if(a=="cal"){S.cm=+d.m;go("cal")}
-else if(a=="edit"){ev.stopPropagation();form(d.id)}else if(a=="new")form(null,d.d?{debut:d.d}:{});else if(a=="day")dayList(d.d);else if(a=="close")close();
-else if(a=="pm"){S.cm+=+d.v;if(S.cm<0){S.cm=11;S.year=(S.year||NOW.getFullYear())-1}if(S.cm>11){S.cm=0;S.year=(S.year||NOW.getFullYear())+1}render()}
-else if(a=="today"){S.cm=NOW.getMonth();S.year=NOW.getFullYear();render()}else if(a=="sort"){S.asc*=-1;render()}
-else if(a=="fix"){const l=scope().filter(e=>end(e)<TODAY&&["Prévu","Confirmé"].includes(e.statut)),old=l.map(e=>e.statut);l.forEach(e=>e.statut="Terminé");save();render();toast(l.length+" événement(s) passé(s) en « Terminé »",()=>{l.forEach((e,i)=>e.statut=old[i]);save();render()})}
-else if(a=="del"){const id=$("#fm2").dataset.id,i=S.ev.findIndex(e=>e.id==id),r=S.ev[i];S.ev.splice(i,1);save();close();render();toast("Événement supprimé",()=>{S.ev.push(r);save();render()})}
-else if(a=="dup"){const e={...byId($("#fm2").dataset.id),id:Math.max(0,...S.ev.map(x=>x.id))+1};S.ev.push(e);save();render();form(e.id);toast("Copie créée : modifiez-la puis enregistrez")}
-else if(a=="reset")ask("Remplacer toutes vos données par celles du fichier d’origine ?",()=>{S.ev=D.events.map((e,i)=>({...e,id:i+1}));S.et=D.etabs;save();render();toast("Données d’origine restaurées")});
-else if(a=="xl")exportXl()});
-document.addEventListener("change",ev=>{const t=ev.target;if(t.id=="gy"){S.year=+t.value;render()}else if(t.id=="ge"){S.etab=t.value;render()}
-else if(t.dataset.a=="stat"){byId(t.dataset.id).statut=t.value;save();render()}else if(t.id=="ft"){S.type=t.value;$("#jt").innerHTML=rows()}else if(t.id=="fs"){S.st=t.value;$("#jt").innerHTML=rows()}else if(t.id=="fm"){S.miss=t.checked?1:0;$("#jt").innerHTML=rows()}
-else if(t.dataset.k){S.et[t.dataset.i][t.dataset.k]=t.value;save();t.classList.remove("warn")}else if(t.id=="imp")importXl(t.files[0]);
-else if(t.name=="etab"&&t.form){const x=S.et.find(z=>z.nom==t.value),f=t.form;if(x){if(!f.ref.value)f.ref.value=x.ref;if(!f.contact.value)f.contact.value=x.contact}}});
-document.addEventListener("input",ev=>{const t=ev.target;if(t.id=="q"){S.q=t.value;$("#jt").innerHTML=rows()}else if(t.id=="qe")document.querySelectorAll("#et tr").forEach(r=>r.hidden=!r.dataset.n.includes(t.value.toLowerCase()))});
-document.addEventListener("keydown",e=>{if(e.key=="Escape")close()});
-document.addEventListener("submit",ev=>{ev.preventDefault();const f=ev.target,v=Object.fromEntries(new FormData(f)),id=f.dataset.id,err=m=>$("#er").textContent=m;
-if(!v.etab)return err("Choisissez un établissement.");if(!v.titre.trim())return err("Saisissez un intitulé.");if(!v.debut)return err("Indiquez la date de début.");if(v.fin&&v.fin<v.debut)return err("La date de fin est avant la date de début.");
-v.fin=v.fin||v.debut;if(!id&&S.ev.some(e=>e.etab==v.etab&&e.debut==v.debut&&e.titre.trim().toLowerCase()==v.titre.trim().toLowerCase()))return err("Cet événement existe déjà pour cet établissement à cette date.");
-if(id)Object.assign(byId(id),v);else S.ev.push({...v,id:Math.max(0,...S.ev.map(x=>x.id))+1});
-if(!S.year||+v.debut.slice(0,4)!=S.year)S.year=+v.debut.slice(0,4);S.cm=+v.debut.slice(5,7)-1;save();close();render();toast(id?"Modifications enregistrées":"Événement ajouté")});
-/* ---------- Excel ---------- */
-async function exportXl(){const r=S.ev.slice().sort((a,b)=>a.debut.localeCompare(b.debut)).map((e,i)=>({"N°":i+1,"Établissement":e.etab,"Type d'événement":e.type,"Intitulé de la manifestation":e.titre,"Date début":e.debut,"Date fin":end(e),"Horaires":e.horaires,"Public visé":e.public,"Lieu":e.lieu,"Référent":e.ref,"Contact":e.contact,"Statut":ico(e)+" "+e.statut,"Remarques / Besoins logistiques":e.remarques}));
-try{const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(r),"Journal");const data=XLSX.write(wb,{type:"array",bookType:"xlsx"}),dl=await claude.use("downloads");
-if(!dl)return toast("Téléchargement indisponible dans cette vue : ouvrez l’outil depuis son lien.");await dl.save({filename:"calendrier-evenements.xlsx",data:new Uint8Array(data)})}catch(e){if(!e||e.code!="declined")toast("Export impossible pour le moment.")}}
-function importXl(f){if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const wb=XLSX.read(rd.result,{type:"array",cellDates:true}),ws=wb.Sheets[wb.SheetNames.find(n=>/journal/i.test(n))||wb.SheetNames[0]],a=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:""}),h=a.findIndex(r=>r.some(c=>/Intitulé/i.test(c)));if(h<0)throw 0;
-const H=a[h].map(c=>String(c)),ix=re=>H.findIndex(c=>re.test(c)),C={etab:ix(/Établissement/i),type:ix(/^Type d/i),titre:ix(/Intitulé/i),debut:ix(/Date début/i),fin:ix(/Date fin/i),horaires:ix(/Horaires/i),public:ix(/Public/i),lieu:ix(/Lieu/i),ref:ix(/Référent/i),contact:ix(/Contact/i),statut:ix(/Statut/i),remarques:ix(/Remarques/i)};
-const dt=v=>v instanceof Date?iso(new Date(v.getTime()+12*36e5)):typeof v=="number"?iso(new Date(Date.UTC(1899,11,30)+v*864e5+12*36e5)):/^\d{4}-\d\d-\d\d/.test(v)?v.slice(0,10):"",g=(r,k)=>C[k]<0?"":String(r[C[k]]??"").trim();let n=0,id=Math.max(0,...S.ev.map(x=>x.id));
-a.slice(h+1).forEach(r=>{const e={etab:g(r,"etab"),type:g(r,"type")||"Autre",titre:g(r,"titre"),debut:dt(r[C.debut]),fin:dt(r[C.fin]),horaires:g(r,"horaires"),public:g(r,"public"),lieu:g(r,"lieu"),ref:g(r,"ref"),contact:g(r,"contact"),statut:g(r,"statut").replace(/^\S+\s/,"")||"Prévu",remarques:g(r,"remarques")};
-if(!e.etab||!e.titre||!e.debut||S.ev.some(x=>x.etab==e.etab&&x.debut==e.debut&&x.titre==e.titre))return;if(!ST[e.statut])e.statut="Prévu";e.fin=e.fin||e.debut;e.id=++id;S.ev.push(e);n++});save();render();toast(n+" événement(s) importé(s) (les doublons sont ignorés)")}catch(e){toast("Fichier non reconnu : il faut une colonne « Intitulé de la manifestation ».")}};rd.readAsArrayBuffer(f)}
-render();
-</script></body></html>
+// Données initiales des événements
+let eventsData = [
+  {
+    id: 1,
+    title: "Salon Formations & Métiers 2027",
+    org: "Comité d'Organisation & Partenaires NC",
+    typeInst: "Partenaire",
+    date: "2027-08-28",
+    dateStr: "Samedi 28 août 2027",
+    time: "08h00 - 16h00",
+    location: "Salle d'honneur, Mairie de Nouméa",
+    zone: "Noumea",
+    category: "Salon",
+    categoryLabel: "Salon des Métiers",
+    target: "Collégiens, Lycéens, Étudiants, Parents & Reconversion",
+    desc: "Grand rendez-vous annuel de l'enseignement technique et de l'orientation en Nouvelle-Calédonie. Rencontrez plus de 50 entreprises, établissements de formation, universités et professionnels.",
+    contact: "contact@orientation.nc",
+    featured: true
+  },
+  {
+    id: 2,
+    title: "Forum Territoire & Alternance 2027",
+    org: "Collectif pour l'Emploi & Partenaires",
+    typeInst: "Partenaire",
+    date: "2027-08-27",
+    dateStr: "Vendredi 27 août 2027",
+    time: "08h30 - 15h30",
+    location: "Maison des Artisans, Nouméa",
+    zone: "Noumea",
+    category: "Alternance",
+    categoryLabel: "Alternance & Apprentissage",
+    target: "Élèves de 3ème, Lycéens Pro, Demandeurs d'emploi",
+    desc: "Découvrez toutes les offres de contrats d'apprentissage et de professionnalisation sur le territoire. Rencontre directe avec les CFA et les recruteurs.",
+    contact: "alternance@territoire.nc",
+    featured: false
+  },
+  {
+    id: 3,
+    title: "Journée Portes Ouvertes - Lycée Polyvalent de Kaméré",
+    org: "LPO de Kaméré",
+    typeInst: "Lycee Pro",
+    date: "2027-08-25",
+    dateStr: "Mercredi 25 août 2027",
+    time: "08h00 - 12h00",
+    location: "Lycée de Kaméré, Nouméa",
+    zone: "Noumea",
+    category: "JPO",
+    categoryLabel: "Portes Ouvertes",
+    target: "Élèves de 4ème/3ème et familles",
+    desc: "Visite des ateliers techniques (BAC Pro Métiers de l'Électricité, Maintenance, Services). Démonstrations en direct par les élèves.",
+    contact: "secretariat.kamere@etablissements.nc",
+    featured: false
+  },
+  {
+    id: 4,
+    title: "Carrefour des Métiers de la Brousse & Mini-Stages",
+    org: "Lycée Agricole de Pouembout",
+    typeInst: "Lycee Pro",
+    date: "2027-09-01",
+    dateStr: "Mercredi 1er septembre 2027",
+    time: "08h30 - 14h30",
+    location: "Pouembout (VKP)",
+    zone: "Brousse",
+    category: "Immerse",
+    categoryLabel: "Immersion & Stages",
+    target: "Collégiens de la Province Nord",
+    desc: "Présentation des filières de l'agro-équipement, de la gestion de l'environnement, de l'élevage et de la transformation alimentaire.",
+    contact: "pouembout@agri.nc",
+    featured: false
+  },
+  {
+    id: 5,
+    title: "Challenge Robotique & Sciences Jules Garnier",
+    org: "Lycée Général & Technologique Jules Garnier",
+    typeInst: "Lycee Gen",
+    date: "2027-09-04",
+    dateStr: "Samedi 4 septembre 2027",
+    time: "09h00 - 15h00",
+    location: "Nouméa (Nouville)",
+    zone: "Noumea",
+    category: "Pedagogique",
+    categoryLabel: "Projet Pédagogique",
+    target: "Tous publics, collégiens passionnés de sciences",
+    desc: "Compétition de robots conçus par les élèves de STI2D et de BTS. Exposition des projets d'innovation technologique.",
+    contact: "jules-garnier@etablissements.nc",
+    featured: false
+  }
+];
+
+// Données initiales des inscriptions exposants (Salon)
+let exposantsData = [
+  {
+    id: 101,
+    nom: "OPT-NC (Office des Postes et Télécommunications)",
+    type: "Entreprise",
+    ville: "Nouméa",
+    ref_nom: "Marie-Claire Waneisi",
+    ref_email: "mc.waneisi@opt.nc",
+    ref_tel: "26.88.00",
+    secteurs: ["Numérique & IT", "Administration & Services"],
+    materiel: "2 tables, 4 chaises, prise 220V pour démo fibre optique",
+    statut: "Confirmée"
+  },
+  {
+    id: 102,
+    nom: "Lycée Professionnel Commercial Auguste Escoffier",
+    type: "Établissement scolaire",
+    ville: "Nouméa",
+    ref_nom: "Pierre Sallenave",
+    ref_email: "p.sallenave@escoffier.nc",
+    ref_tel: "28.33.11",
+    secteurs: ["Hôtellerie & Tourisme", "Commerce & vente"],
+    materiel: "Grand stand 6m, espace démonstration bar/cuisine",
+    statut: "Stand attribué"
+  }
+];
+
+// Gestion de l'affichage / Onglets
+function switchTab(tabId) {
+  document.querySelectorAll('main > section').forEach(s => s.style.display = 'none');
+  document.getElementById('tab-' + tabId).style.display = 'block';
+  
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  if (event && event.currentTarget) {
+    event.currentTarget.classList.add('active');
+  }
+
+  if (tabId === 'admin') {
+    renderAdminTables();
+  }
+}
+
+// Thème Clair / Sombre
+function toggleTheme() {
+  const root = document.documentElement;
+  const isDark = root.getAttribute('data-theme') === 'dark';
+  const newTheme = isDark ? 'light' : 'dark';
+  root.setAttribute('data-theme', newTheme);
+  document.getElementById('themeBtn').innerText = newTheme === 'dark' ? '☀️ Mode Clair' : '🌙 Mode Sombre';
+}
+
+// Render Liste des événements
+function renderEvents(list) {
+  const container = document.getElementById('viewList');
+  if (list.length === 0) {
+    container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;" class="card-box"><h3>Aucun événement trouvé</h3><p class="hint">Essayez de modifier vos critères de recherche ou filtres.</p></div>';
+    return;
+  }
+
+  container.innerHTML = list.map(ev => `
+    <div class="event-card ${ev.featured ? 'featured' : ''}">
+      <div>
+        <div class="event-header">
+          <span class="event-type-tag">${ev.categoryLabel}</span>
+          <span style="font-size:0.8rem; font-weight:700; color:var(--mut);">${ev.zone}</span>
+        </div>
+        <h3 class="event-title">${ev.title}</h3>
+        <div class="event-meta">
+          <div class="event-meta-item">📅 <strong>${ev.dateStr || ev.date}</strong></div>
+          <div class="event-meta-item">⏰ ${ev.time}</div>
+          <div class="event-meta-item">📍 ${ev.location}</div>
+          <div class="event-meta-item">🏫 <em>${ev.org}</em></div>
+        </div>
+        <p class="event-desc">${ev.desc}</p>
+      </div>
+      <div class="event-footer">
+        <button class="btn sm" style="flex:1;" onclick="openEventModal(${ev.id})">Voir détails & Programme</button>
+        ${ev.id === 1 ? `<button class="btn sm sec" onclick="switchTab('salon-exposants')">S'inscrire</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+// Filtre des événements
+function filterEvents() {
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  const typeInst = document.getElementById('filterType').value;
+  const zone = document.getElementById('filterZone').value;
+  const cat = document.getElementById('filterCat').value;
+
+  const filtered = eventsData.filter(ev => {
+    const matchQuery = ev.title.toLowerCase().includes(query) || 
+                       ev.org.toLowerCase().includes(query) || 
+                       ev.desc.toLowerCase().includes(query) ||
+                       ev.location.toLowerCase().includes(query);
+    const matchType = !typeInst || ev.typeInst === typeInst;
+    const matchZone = !zone || ev.zone === zone;
+    const matchCat = !cat || ev.category === cat;
+
+    return matchQuery && matchType && matchZone && matchCat;
+  });
+
+  renderEvents(filtered);
+}
+
+// Vue Alternance Liste / Calendrier
+function setEventView(view) {
+  document.getElementById('viewList').style.display = view === 'list' ? 'grid' : 'none';
+  document.getElementById('viewCal').style.display = view === 'cal' ? 'block' : 'none';
+  document.getElementById('btnVueList').classList.toggle('sec', view === 'list');
+  document.getElementById('btnVueCal').classList.toggle('sec', view === 'cal');
+}
+
+// Modal Détails
+function openEventModal(id) {
+  const ev = eventsData.find(e => e.id === id);
+  if (!ev) return;
+
+  const modal = document.getElementById('eventModal');
+  const content = document.getElementById('modalContent');
+
+  content.innerHTML = `
+    <span class="event-type-tag" style="margin-bottom:10px; display:inline-block;">${ev.categoryLabel}</span>
+    <h2 style="margin: 0 0 12px; color: var(--pri2);">${ev.title}</h2>
+    
+    <div class="event-meta" style="font-size:1rem; margin-bottom: 20px;">
+      <div class="event-meta-item">📅 <strong>Date :</strong> ${ev.dateStr || ev.date}</div>
+      <div class="event-meta-item">⏰ <strong>Horaires :</strong> ${ev.time}</div>
+      <div class="event-meta-item">📍 <strong>Lieu :</strong> ${ev.location}</div>
+      <div class="event-meta-item">🏫 <strong>Organisateur :</strong> ${ev.org}</div>
+      <div class="event-meta-item">🎯 <strong>Public visé :</strong> ${ev.target || 'Tout public'}</div>
+    </div>
+
+    <div class="note" style="margin-bottom: 20px;">
+      <strong>Présentation :</strong><br>${ev.desc}
+    </div>
+
+    ${ev.contact ? `<p>📧 <strong>Contact / Renseignements :</strong> ${ev.contact}</p>` : ''}
+
+    <div style="display:flex; gap:10px; margin-top:24px; flex-wrap:wrap;">
+      <button class="btn" onclick="addToCalendar('${ev.title}')">📅 Exporter ICS (.ics)</button>
+      <button class="btn sec" onclick="shareWhatsApp('${ev.title}')">📲 Partager sur WhatsApp</button>
+      ${ev.id === 1 ? `<button class="btn" style="background:var(--ok);" onclick="closeModal(); switchTab('salon-exposants')">✍️ S'inscrire comme Exposant</button>` : ''}
+    </div>
+  `;
+
+  modal.style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('eventModal').style.display = 'none';
+}
+
+// Export au format ICS (.ics)
+function addToCalendar(title) {
+  const ev = eventsData.find(e => e.title === title) || eventsData[0];
+  const dateFormatted = ev.date ? ev.date.replace(/-/g, '') : '20270828';
+  
+  const icsContent = 
+`BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Portail Evénements Scolaires NC//FR
+BEGIN:VEVENT
+SUMMARY:${ev.title}
+DESCRIPTION:${ev.desc.replace(/\n/g, ' ')}
+LOCATION:${ev.location}
+DTSTART:${dateFormatted}T080000Z
+DTEND:${dateFormatted}T160000Z
+END:VEVENT
+END:VCALENDAR`;
+
+  const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+  const link = document.createElement('a');
+  link.href = window.URL.createObjectURL(blob);
+  link.setAttribute('download', `${ev.title.toLowerCase().replace(/[^a-z0-9]/g, '_')}.ics`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function shareWhatsApp(title) {
+  const url = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent(`Découvrez cet événement éducatif en Nouvelle-Calédonie : ${title}\nPlus d'infos sur le portail : `);
+  window.open(`https://wa.me/?text=${text}${url}`, '_blank');
+}
+
+function togglePanel(id, show) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('active', show);
+}
+
+// Soumission Formulaire Exposant
+function handleExposantSubmit(e) {
+  e.preventDefault();
+  const err = document.getElementById('expErr');
+  err.innerText = "";
+
+  const nom = document.getElementById('exp_nom').value.trim();
+  const ville = document.getElementById('exp_ville').value.trim();
+  const refNom = document.getElementById('exp_ref_nom').value.trim();
+  const refEmail = document.getElementById('exp_ref_email').value.trim();
+  const refTel = document.getElementById('exp_ref_tel').value.trim();
+
+  if (!nom || !ville || !refNom || !refEmail || !refTel) {
+    err.innerText = "Veuillez remplir tous les champs obligatoires (*).";
+    return;
+  }
+
+  const sectors = Array.from(document.querySelectorAll('input[name="exp_sec"]:checked')).map(c => c.value);
+
+  const newExp = {
+    id: Date.now(),
+    nom,
+    type: document.querySelector('input[name="exp_type"]:checked')?.value || 'Entreprise',
+    ville,
+    ref_nom: refNom,
+    ref_email: refEmail,
+    ref_tel: refTel,
+    secteurs: sectors,
+    materiel: document.getElementById('exp_materiel').value || 'Aucun matériel spécifique',
+    statut: "Reçue"
+  };
+
+  exposantsData.unshift(newExp);
+
+  alert(`🎉 Merci ! L'inscription de "${nom}" au Salon Formations & Métiers a bien été enregistrée.\nUn email de confirmation a été envoyé à ${refEmail}.`);
+  document.getElementById('formExposant').reset();
+  switchTab('admin');
+}
+
+// Soumission Formulaire Proposer un Événement
+function handleEventSubmit(e) {
+  e.preventDefault();
+
+  const title = document.getElementById('ev_title').value.trim();
+  const org = document.getElementById('ev_org').value.trim();
+  const typeInst = document.getElementById('ev_type_inst').value;
+  const date = document.getElementById('ev_date').value;
+  const time = document.getElementById('ev_time').value;
+  const location = document.getElementById('ev_location').value;
+  const zone = document.getElementById('ev_zone').value;
+  const category = document.getElementById('ev_category').value;
+  const desc = document.getElementById('ev_desc').value;
+
+  const catObj = {
+    'JPO': 'Portes Ouvertes',
+    'Salon': 'Salon des Métiers',
+    'Alternance': 'Alternance & Apprentissage',
+    'Pedagogique': 'Projet Pédagogique',
+    'Immerse': 'Immersion & Stages'
+  };
+
+  const newEv = {
+    id: Date.now(),
+    title,
+    org,
+    typeInst,
+    date,
+    dateStr: date,
+    time,
+    location,
+    zone,
+    category,
+    categoryLabel: catObj[category] || 'Événement',
+    target: document.getElementById('ev_target').value || 'Élèves & Familles',
+    desc,
+    contact: document.getElementById('ev_contact').value,
+    featured: false
+  };
+
+  eventsData.unshift(newEv);
+  filterEvents();
+
+  alert(`🚀 Votre événement "${title}" a été publié avec succès sur le portail !`);
+  document.getElementById('formEvent').reset();
+  switchTab('agenda');
+}
+
+// Tableaux Espace Organisateur (Admin)
+function renderAdminTables() {
+  // Stats
+  document.getElementById('statExposants').innerText = exposantsData.length;
+  document.getElementById('statEvents').innerText = eventsData.length;
+
+  // Table Exposants
+  const expTbody = document.getElementById('adminExposantsTable');
+  expTbody.innerHTML = exposantsData.map(exp => `
+    <tr>
+      <td><strong>${exp.nom}</strong><br><span class="hint">${exp.type} (${exp.ville})</span></td>
+      <td>${exp.ref_nom}<br><small>${exp.ref_email} | ${exp.ref_tel}</small></td>
+      <td>${(exp.secteurs || []).join(', ') || 'Non précisé'}</td>
+      <td><small>${exp.materiel}</small></td>
+      <td><span class="status-badge st-conf">${exp.statut}</span></td>
+      <td>
+        <button class="btn sm outline" onclick="deleteExposant(${exp.id})">Supprimer</button>
+      </td>
+    </tr>
+  `).join('');
+
+  // Table Evénements
+  const evTbody = document.getElementById('adminEventsTable');
+  evTbody.innerHTML = eventsData.map(ev => `
+    <tr>
+      <td><strong>${ev.title}</strong></td>
+      <td>${ev.org}</td>
+      <td>${ev.date}<br><small>${ev.location}</small></td>
+      <td><span class="event-type-tag">${ev.categoryLabel}</span></td>
+      <td>
+        <button class="btn sm outline" onclick="deleteEvent(${ev.id})">Supprimer</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function deleteExposant(id) {
+  if (confirm("Voulez-vous vraiment supprimer cette inscription exposant ?")) {
+    exposantsData = exposantsData.filter(e => e.id !== id);
+    renderAdminTables();
+  }
+}
+
+function deleteEvent(id) {
+  if (confirm("Voulez-vous supprimer cet événement du calendrier ?")) {
+    eventsData = eventsData.filter(e => e.id !== id);
+    filterEvents();
+    renderAdminTables();
+  }
+}
+
+function exportDataCSV() {
+  const headers = ["ID", "Structure", "Ville", "Referent", "Email", "Telephone", "Statut"];
+  const rows = exposantsData.map(e => [e.id, `"${e.nom}"`, `"${e.ville}"`, `"${e.ref_nom}"`, e.ref_email, e.ref_tel, e.statut]);
+  
+  let csvContent = "data:text/csv;charset=utf-8,\uFEFF" + [headers.join(";"), ...rows.map(r => r.join(";"))].join("\n");
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "inscriptions_exposants.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// Initialisation au chargement
+window.onload = function() {
+  renderEvents(eventsData);
+};
+</script>
+</body>
+</html>
