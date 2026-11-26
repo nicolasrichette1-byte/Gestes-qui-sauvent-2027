@@ -956,7 +956,8 @@
   function createDataStore() {
     var SB_URL = 'https://xyrvjilfbbnucmocacek.supabase.co';
     var SB_KEY = 'sb_publishable_ymyeN1YlxpYev6LAQq56DA_8rOcz2vP';
-    if (SB_URL && SB_KEY) {
+    var CLOUD_ENABLED = false; // Remettre à true uniquement quand l'accès cloud fonctionne
+    if (CLOUD_ENABLED && SB_URL && SB_KEY) {
       var sbAuth = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
       var sbBase = SB_URL + '/rest/v1/coordination';
       var sbSessionsCb = null, sbClosuresCb = null, sbErrCb = null;
@@ -1112,7 +1113,9 @@
       }
     }
 
-    // Repli en mémoire locale (sans utiliser localStorage) avec données de démonstration réalistes en Nouvelle-Calédonie
+    // Stockage local persistant (navigateur) avec données de démonstration réalistes en Nouvelle-Calédonie
+    var LS_KEY_SESS = 'gestes_2027_sessions_v1';
+    var LS_KEY_CLOS = 'gestes_2027_closures_v1';
     var memSessions = [
       {
         id: 'demo-1',
@@ -1173,7 +1176,25 @@
     var sessionListeners = [];
     var closureListeners = [];
 
+    function lsLoad(key, fallback) {
+      try {
+        var raw = localStorage.getItem(key);
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          if (parsed != null) return parsed;
+        }
+      } catch (e) {}
+      return fallback;
+    }
+    function lsSave(key, value) {
+      try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
+    }
+    memSessions = lsLoad(LS_KEY_SESS, memSessions);
+    memClosures = lsLoad(LS_KEY_CLOS, memClosures);
+
     function notify() {
+      lsSave(LS_KEY_SESS, memSessions);
+      lsSave(LS_KEY_CLOS, memClosures);
       var snapSessions = memSessions.map(function(s) { return JSON.parse(JSON.stringify(s)); });
       var snapClosures = JSON.parse(JSON.stringify(memClosures));
       sessionListeners.forEach(function(fn) { fn(snapSessions); });
@@ -1181,7 +1202,7 @@
     }
 
     return {
-      mode: 'memory',
+      mode: 'local',
       init: function(onSessions, onClosures) {
         sessionListeners.push(onSessions);
         closureListeners.push(onClosures);
