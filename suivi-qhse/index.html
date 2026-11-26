@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suivi QHSE & SST — Plateaux techniques</title>
+<style>
+:root{
+  --bg:#f4f7fa; --surface:#ffffff; --surface2:#eef2f7; --border:#d6dde8;
+  --text:#1f2a3d; --muted:#5d6b82; --accent:#1f6fa8; --accent-soft:#e1eef8;
+  --ok:#1d7f55; --ok-soft:#dff3ea; --warn:#9a6200; --warn-soft:#fdf0d5;
+  --alert:#b23a48; --alert-soft:#fbe4e7; --info:#3f5fa8; --info-soft:#e4eaf8;
+  --radius:12px; --shadow:0 1px 3px rgba(31,42,61,.08),0 4px 14px rgba(31,42,61,.05);
+  --font:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#141a24; --surface:#1d2634; --surface2:#263143; --border:#34425a;
+    --text:#e8edf5; --muted:#9fadc4; --accent:#6bb3e6; --accent-soft:#1e3347;
+    --ok:#5fd0a0; --ok-soft:#18362b; --warn:#f0c15a; --warn-soft:#3b2f12;
+    --alert:#f08a97; --alert-soft:#3d1f25; --info:#9db4f0; --info-soft:#222d4a;
+    --shadow:none;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 var(--font)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.hidden{display:none!important}
+
+/* En-tête */
+header.top{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px}
+.top-in{max-width:1000px;margin:0 auto;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.brand h1{margin:0;font-size:1.25rem;line-height:1.2}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:.85rem}
+.top-right{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.save-ind{font-size:.78rem;color:var(--muted)}
+.role{display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden;background:var(--surface2)}
+.role button{border:0;background:transparent;padding:6px 14px;cursor:pointer;font-size:.85rem;font-weight:600;color:var(--muted)}
+.role button[aria-pressed="true"]{background:var(--accent);color:#fff}
+
+/* Navigation */
+nav#tabs{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5}
+.tabs-in{max-width:1000px;margin:0 auto;display:flex;overflow-x:auto;padding:0 12px;gap:2px}
+.tab{border:0;background:transparent;padding:12px 14px;cursor:pointer;white-space:nowrap;font-weight:600;font-size:.92rem;color:var(--muted);border-bottom:3px solid transparent}
+.tab[aria-current="page"]{color:var(--accent);border-bottom-color:var(--accent)}
+.tab .n{display:inline-block;min-width:20px;padding:0 6px;margin-left:6px;border-radius:999px;background:var(--warn-soft);color:var(--warn);font-size:.75rem;text-align:center}
+
+main{max-width:1000px;margin:0 auto;padding:20px 16px 60px}
+h2{font-size:1.2rem;margin:0 0 4px}
+.lead{color:var(--muted);margin:0 0 16px;font-size:.92rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
+.card h3{margin:0 0 8px;font-size:1rem}
+.charte{background:var(--accent-soft);border-color:transparent}
+.charte ul{margin:6px 0 0;padding-left:20px}
+.grid{display:grid;gap:12px}
+.g-stats{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.stat{display:block;text-align:left;width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;cursor:pointer;box-shadow:var(--shadow)}
+.stat:hover{border-color:var(--accent)}
+.stat b{display:block;font-size:1.9rem;line-height:1.1}
+.stat span{color:var(--muted);font-size:.85rem}
+
+/* Boutons */
+.btn{border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:9px 14px;cursor:pointer;font-weight:600;font-size:.9rem;min-height:40px}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{filter:brightness(1.08);color:#fff}
+.btn.small{padding:5px 10px;min-height:32px;font-size:.82rem}
+.btn.danger:hover{border-color:var(--alert);color:var(--alert)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row.between{justify-content:space-between}
+
+/* Formulaires */
+label{display:block;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:10px}
+label.inline{display:flex;gap:8px;align-items:center;color:var(--text);font-size:.92rem;font-weight:500}
+input[type=text],input[type=date],input[type=number],select,textarea{width:100%;margin-top:4px;padding:9px 11px;border:1px solid var(--border);border-radius:9px;background:var(--surface);font-weight:400;color:var(--text)}
+textarea{min-height:84px;resize:vertical}
+input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent)}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+@media (max-width:620px){.f2{grid-template-columns:1fr}}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:999px;font-size:.76rem;font-weight:700;white-space:nowrap}
+.b-ok{background:var(--ok-soft);color:var(--ok)}
+.b-warn{background:var(--warn-soft);color:var(--warn)}
+.b-alert{background:var(--alert-soft);color:var(--alert)}
+.b-info{background:var(--info-soft);color:var(--info)}
+.b-mute{background:var(--surface2);color:var(--muted)}
+
+/* Listes */
+.item{background:var(--surface);border:1px solid var(--border);border-left:5px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px}
+.item.k-ok{border-left-color:var(--ok)} .item.k-warn{border-left-color:#d9992e} .item.k-alert{border-left-color:var(--alert)} .item.k-info{border-left-color:var(--info)}
+.item h4{margin:0;font-size:1rem}
+.meta{color:var(--muted);font-size:.82rem}
+.item .badges{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.item .actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.desc{white-space:pre-wrap;margin:6px 0}
+.reply{background:var(--surface2);border-radius:8px;padding:8px 10px;margin-top:8px;font-size:.9rem}
+.empty{text-align:center;color:var(--muted);padding:28px 10px}
+.toolbar{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;align-items:end;margin-bottom:12px}
+.toolbar label{margin:0}
+@media (max-width:720px){.toolbar{grid-template-columns:1fr 1fr}.toolbar .btn{grid-column:1/-1}}
+.note{border-radius:10px;padding:10px 12px;font-size:.88rem;margin:8px 0}
+.note.alert{background:var(--alert-soft);color:var(--alert)}
+.note.warn{background:var(--warn-soft);color:var(--warn)}
+.note.info{background:var(--info-soft);color:var(--info)}
+
+/* Points de contrôle */
+details.theme{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px;box-shadow:var(--shadow)}
+details.theme>summary{cursor:pointer;padding:14px 16px;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:10px;align-items:center}
+details.theme>summary::-webkit-details-marker{display:none}
+details.theme>summary small{font-weight:400;color:var(--muted);display:block}
+.pt{padding:12px 16px;border-top:1px solid var(--border)}
+.pt-title{margin-bottom:8px;font-size:.95rem}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1px solid var(--border);background:var(--surface);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--muted);min-height:34px}
+.seg button[aria-pressed="true"].s-nv{background:var(--surface2);color:var(--text);border-color:var(--muted)}
+.seg button[aria-pressed="true"].s-am{background:var(--alert-soft);color:var(--alert);border-color:var(--alert)}
+.seg button[aria-pressed="true"].s-ec{background:var(--warn-soft);color:var(--warn);border-color:#d9992e}
+.seg button[aria-pressed="true"].s-ok{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+details.more{margin-top:8px}
+details.more>summary{cursor:pointer;font-size:.82rem;color:var(--accent);font-weight:600}
+.bar{height:8px;border-radius:99px;background:var(--surface2);overflow:hidden;margin-top:6px}
+.bar>i{display:block;height:100%;background:var(--ok)}
+
+/* Dialog */
+dialog{border:0;border-radius:16px;padding:0;max-width:560px;width:calc(100% - 24px);background:var(--surface);color:var(--text);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(15,22,35,.55)}
+.dlg{padding:20px}
+.dlg h3{margin:0 0 12px}
+.dlg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#1f2a3d;color:#fff;padding:10px 18px;border-radius:10px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .25s;z-index:50;max-width:90%}
+#toast.show{opacity:1}
+footer{max-width:1000px;margin:0 auto;padding:0 16px 30px;color:var(--muted);font-size:.78rem;text-align:center}
+footer a{color:inherit}
+
+table.t{width:100%;border-collapse:collapse;font-size:.88rem}
+table.t th,table.t td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+table.t th{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.03em}
+.print-head{display:none}
+
+@media print{
+  header.top,nav#tabs,footer,.noprint,#toast{display:none!important}
+  body{background:#fff;color:#000;font-size:11pt}
+  main{padding:0;max-width:none}
+  .card,.item{box-shadow:none;break-inside:avoid}
+  .print-head{display:block;margin-bottom:12px}
+  :root{--surface:#fff;--text:#000;--border:#bbb}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <h1>Suivi QHSE &amp; SST — Plateaux techniques</h1>
+      <p id="brand-sub">Vice-Rectorat de la Nouvelle-Calédonie · DAFPIC</p>
+    </div>
+    <div class="top-right">
+      <div class="role" role="group" aria-label="Vue">
+        <button type="button" data-act="role" data-v="ens">Enseignant</button>
+        <button type="button" data-act="role" data-v="ddfpt">DDFPT</button>
+      </div>
+      <span class="save-ind" id="save-ind" aria-live="polite"></span>
+    </div>
+  </div>
+</header>
+<nav id="tabs"><div class="tabs-in" id="tabs-in"></div></nav>
+<main id="view"></main>
+<footer>Outil conçu par <a href="mailto:nicolas.richette@ac-noumea.nc">Nicolas Richette</a> · Vice-Rectorat de la Nouvelle-Calédonie · Version 2.0 · Données conservées uniquement dans ce navigateur</footer>
+<dialog id="dlg"></dialog>
+<div id="toast" role="status"></div>
+
+<script>
+/* ═════════════ DONNÉES DE RÉFÉRENCE ═════════════ */
+const ATELIERS_BASE=[
+ {id:'menuiserie',label:'Menuiserie'},{id:'maintenance',label:'Maintenance'},{id:'hotrest',label:'Hôtellerie-Restauration'},
+ {id:'electricite',label:'Électricité'},{id:'froid',label:'Froid-Climatisation'},{id:'chaudronnerie',label:'Chaudronnerie / Soudage'},
+ {id:'carrosserie',label:'Carrosserie'},{id:'maconnerie',label:'Maçonnerie'},{id:'plomberie',label:'Plomberie-Sanitaire'},
+ {id:'auto',label:'Automobile'},{id:'informatique',label:'Informatique'},{id:'coiffure',label:'Coiffure-Esthétique'},
+ {id:'commerce',label:'Commerce-Vente'}
+];
+const CATEGORIES=['Machine','Extincteur','Trousse de secours','Éclairage de sécurité (BAES)','Défibrillateur (DAE)','Aspiration / ventilation','Installation électrique','Outillage électroportatif','Protection collective (carters, rideaux)','Armoire produits chimiques','Autre'];
+const ETATS={service:{l:'En service',c:'b-ok'},surveiller:{l:'À surveiller',c:'b-warn'},hs:{l:'Hors service',c:'b-alert'},retire:{l:'Retiré',c:'b-mute'}};
+const NATURES={materiel:{l:'Matériel à réparer / remplacer',c:'b-info'},securite:{l:'Point de sécurité à corriger',c:'b-warn'},conso:{l:'Consommable ou affichage manquant',c:'b-info'},idee:{l:'Idée d\'amélioration',c:'b-ok'}};
+const SIG_ST={nouveau:{l:'Reçu',c:'b-warn'},pris:{l:'Pris en compte',c:'b-info'},traite:{l:'Traité',c:'b-ok'}};
+const PT_ST={nv:{l:'Pas encore vu',i:'○'},am:{l:'À améliorer',i:'!'},ec:{l:'En cours',i:'…'},ok:{l:'En place',i:'✓'}};
+const ACT_ST={adem:{l:'À démarrer',c:'b-mute'},encours:{l:'En cours',c:'b-warn'},termine:{l:'Terminée',c:'b-ok'}};
+const RISQUES=['','Chute de plain-pied','Chute de hauteur','Circulations internes','Risques routiers en mission','Charge physique de travail','Manutention mécanique','Produits chimiques, émissions et déchets','Agents biologiques','Équipements de travail','Effondrements et chutes d\'objet','Bruit','Ambiances thermiques','Incendie et explosion','Électricité','Ambiances lumineuses','Rayonnements','Risques psychosociaux','Autre risque'];
+
+const THEMES=[
+ {id:'m1',label:'Bâtiment, électricité & contrôles',sub:'CAFAT, APAVE/SOCOTEC, électricité, issues de secours',points:[
+  ['m1_01','Visite CAFAT réalisée et préconisations relevées'],
+  ['m1_02','Préconisations CAFAT : levée réalisée ou en cours'],
+  ['m1_03','Contrôle APAVE/SOCOTEC planifié (date programmée)'],
+  ['m1_04','Rapport de contrôle reçu, archivé et accessible'],
+  ['m1_05','Réserves du rapport : levée réalisée ou en cours'],
+  ['m1_06','Armoire électrique principale fermée à clé et signalée'],
+  ['m1_07','Prises électriques en bon état, sans surcharge'],
+  ['m1_08','Signalisation de sécurité visible (sorties, extincteurs)'],
+  ['m1_09','Issues de secours dégagées et déverrouillées pendant les cours'],
+  ['m1_10','Éclairage général et de sécurité fonctionnel']]},
+ {id:'m2',label:'Machines, protections & affichages',sub:'Registre machines, aspiration, carters, BAES',points:[
+  ['m2_01','Registre de maintenance tenu à jour pour chaque machine'],
+  ['m2_02','Fiche d\'identité machine (marque, n° de série, mise en service)'],
+  ['m2_03','Plan de renouvellement des équipements formalisé'],
+  ['m2_04','Affichages réglementaires présents près des machines'],
+  ['m2_05','Affiches de port des EPI visibles et à jour'],
+  ['m2_06','Aspiration centralisée fonctionnelle, filtres vérifiés'],
+  ['m2_07','Mesures de poussières réalisées si nécessaire'],
+  ['m2_08','Carters et rideaux de protection en place'],
+  ['m2_09','Blocs de sécurité (BAES) testés et fonctionnels'],
+  ['m2_10','Registre de contrôle BAES tenu à jour']]},
+ {id:'m3',label:'Produits chimiques & déchets',sub:'Inventaire, FDS, stockage, filières de déchets',points:[
+  ['m3_01','Inventaire des produits chimiques à jour'],
+  ['m3_02','Stockage conforme (armoire ventilée, séparation des produits)'],
+  ['m3_03','Pictogrammes de danger présents sur les contenants'],
+  ['m3_04','Dates de péremption vérifiées, produits périmés évacués'],
+  ['m3_05','Fiches de données de sécurité (FDS) disponibles et à jour'],
+  ['m3_06','Équipe informée de la consultation des FDS'],
+  ['m3_07','Filière de collecte des huiles usagées identifiée'],
+  ['m3_08','Filière de collecte des batteries identifiée'],
+  ['m3_09','Filière de collecte des solvants / peintures identifiée'],
+  ['m3_10','Bordereaux de suivi des déchets (BSD) archivés']]},
+ {id:'m4',label:'Secours, circulation & rangement',sub:'Trousses, extincteurs, DAE, marquage, outillage',points:[
+  ['m4_01','Trousses de secours complètes et non périmées'],
+  ['m4_02','Vérification mensuelle des trousses (registre signé)'],
+  ['m4_03','Extincteurs vérifiés dans les délais'],
+  ['m4_04','Défibrillateur (DAE) accessible, signalé, opérationnel'],
+  ['m4_05','Marquage au sol des circulations lisible'],
+  ['m4_06','Accès aux issues de secours entièrement dégagés'],
+  ['m4_07','Zones de stockage délimitées et respectées'],
+  ['m4_08','Stock de réserve rangé et organisé'],
+  ['m4_09','Outillage manuel en bon état (manches, affûtage)'],
+  ['m4_10','Outillage électroportatif en bon état (câbles, interrupteurs, protections)']]},
+ {id:'m5',label:'Formations & habilitations',sub:'Passeport sécurité, SST, habilitations, CACES, AMD',points:[
+  ['m5_01','Passeport Sécurité des élèves : suivi à jour'],
+  ['m5_02','SST des élèves : liste des certifiés tenue'],
+  ['m5_03','Recyclage SST du personnel : dates de validité suivies'],
+  ['m5_04','Habilitations électriques : liste, niveaux, validité'],
+  ['m5_05','Autorisations internes de conduite à jour'],
+  ['m5_06','CACES valides et archivés'],
+  ['m5_07','Interventions de l\'AMD planifiées pour l\'année'],
+  ['m5_08','Interventions de l\'AMD réalisées, comptes rendus archivés'],
+  ['m5_09','Préconisations de l\'AMD : plan d\'actions formalisé']]}
+];
+const ALL_POINTS={}; THEMES.forEach(t=>t.points.forEach(([id,title])=>ALL_POINTS[id]={id,title,theme:t.id}));
+
+/* ═════════════ ÉTAT & OUTILS ═════════════ */
+const LS_KEY='suivi_qhse_sst_v2', OLD_KEY='ddfpt_securite_v1';
+let memOnly=false;
+let state={v:2,etab:'',role:'ens',ateliers:[],customAteliers:[],points:{},equipements:[],signalements:[],actions:[],lastBackup:null};
+const ui={tab:'home',eqSearch:'',eqAtelier:'',eqFilter:'',sigFilter:'open',actFilter:'open',openThemes:new Set(),openDetails:new Set(),prefill:null};
+
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const nowISO=()=>new Date().toISOString();
+const pad=n=>String(n).padStart(2,'0');
+const isoOf=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const today=()=>isoOf(new Date());
+const fmt=iso=>{if(!iso)return '—';const [y,m,d]=iso.slice(0,10).split('-');return `${d}/${m}/${y}`};
+const addMonths=(iso,n)=>{const [y,m,d]=iso.split('-').map(Number);const dt=new Date(y,m-1+n,d);if(dt.getDate()!==d)dt.setDate(0);return isoOf(dt)};
+const diffDays=(a,b)=>{const p=s=>{const [y,m,d]=s.split('-').map(Number);return Date.UTC(y,m-1,d)};return Math.round((p(b)-p(a))/864e5)};
+const money=v=>{const n=parseInt(String(v).replace(/[^\d]/g,''),10);return isNaN(n)?0:n};
+const fmtMoney=n=>n.toLocaleString('fr-FR')+' FCFP';
+
+function allAteliers(){return ATELIERS_BASE.concat(state.customAteliers)}
+function activeAteliers(){
+  const all=allAteliers();
+  const sel=state.ateliers.length?all.filter(a=>state.ateliers.includes(a.id)):ATELIERS_BASE;
+  return sel.concat([{id:'general',label:'Général / tous ateliers'}]);
+}
+function atelierLabel(id){const a=allAteliers().concat([{id:'general',label:'Général / tous ateliers'}]).find(x=>x.id===id);return a?a.label:(id||'—')}
+
+function save(){
+  state.updated=nowISO();
+  if(!memOnly){
+    try{localStorage.setItem(LS_KEY,JSON.stringify(state))}
+    catch(e){memOnly=true;toast('⚠️ Stockage du navigateur indisponible : exportez régulièrement une sauvegarde.')}
+  }
+  const t=new Date();
+  $('#save-ind').textContent=memOnly?'⚠️ Non enregistré (mémoire temporaire)':`✓ Enregistré à ${pad(t.getHours())}:${pad(t.getMinutes())}`;
+}
+function load(){
+  let raw=null;
+  try{raw=localStorage.getItem(LS_KEY)}catch(e){memOnly=true}
+  if(raw){
+    try{const o=JSON.parse(raw);Object.assign(state,o)}catch(e){console.warn(e)}
+    return;
+  }
+  try{
+    const old=localStorage.getItem(OLD_KEY);
+    if(old){const conv=convertOld(JSON.parse(old));if(conv){mergeInto(conv);setTimeout(()=>toast('Anciennes données reprises automatiquement'),600)}}
+  }catch(e){}
+}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),3200)}
+function download(name,text,mime){
+  const blob=new Blob([text],{type:mime});const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+}
+function copyText(txt){
+  const done=()=>toast('Texte copié — collez-le dans un e-mail ou un message');
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,()=>fallback())}else fallback();
+  function fallback(){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(e){toast('Copie impossible')}ta.remove()}
+}
+const slug=s=>(s||'etablissement').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'_').replace(/^_|_$/g,'').slice(0,30)||'etablissement';
+
+/* ═════════════ FUSION / IMPORT ═════════════ */
+function convertOld(o){
+  if(!o||typeof o!=='object'||!('evaluations' in o))return null;
+  const map={non_evalue:'nv',non_conforme:'am',en_cours:'ec',conforme:'ok'};
+  const avMap={non_conforme:'adem',en_cours:'encours',conforme:'termine'};
+  const out={points:{},signalements:[],actions:[],ateliers:o.ateliers||[],customAteliers:o.customAteliers||[],etab:(o.userName||'').split('—')[1]?.trim()||''};
+  const ts=nowISO();
+  Object.entries(o.evaluations||{}).forEach(([id,ev])=>{
+    if(!ALL_POINTS[id])return;
+    const s=map[ev.status]||'nv';
+    out.points[id]={s,note:ev.plan||'',resp:ev.responsable||'',ech:ev.echeance||'',maj:ts};
+    if(s==='am'||s==='ec'){
+      out.actions.push({id:'old_'+id,pid:id,titre:ALL_POINTS[id].title,risque:'',desc:ev.plan||'',resp:ev.responsable||'',budget:ev.budget||'',annee:ev.annee||'',ech:ev.echeance||'',av:s==='ec'?'encours':'adem',maj:ts});
+    }
+  });
+  (o.manualActions||[]).forEach(m=>out.actions.push({id:'old_'+m.id,pid:'',titre:m.titre||'',risque:'',desc:m.plan||'',resp:m.responsable||'',budget:m.budget||'',annee:m.annee||'',ech:m.echeance||'',av:avMap[m.avancement]||'adem',maj:ts}));
+  (o.tickets||[]).forEach(t=>{
+    const parts=(t.date||'').split('/');const d=parts.length===3?`${parts[2]}-${parts[1]}-${parts[0]}`:today();
+    const at=ATELIERS_BASE.find(a=>a.label.toLowerCase().startsWith((t.atelier||'').toLowerCase().slice(0,6)));
+    out.signalements.push({id:'old_'+t.id,date:d,atelier:at?at.id:'general',equipId:'',cat:t.type==='urgence'?'securite':t.type==='info'?'idee':'materiel',urgent:t.type==='urgence',desc:t.desc||'',auteur:'',statut:t.resolved?'traite':'nouveau',reponse:'',maj:ts});
+  });
+  return out;
+}
+function newer(a,b){return (a.maj||'')>=(b.maj||'')}
+function mergeInto(inc){
+  let added=0,updated=0;
+  ['equipements','signalements','actions'].forEach(k=>{
+    (inc[k]||[]).forEach(x=>{
+      if(!x||!x.id)return;
+      const i=state[k].findIndex(y=>y.id===x.id);
+      if(i<0){state[k].push(x);added++}
+      else if(!newer(state[k][i],x)){state[k][i]=x;updated++}
+    });
+  });
+  Object.entries(inc.points||{}).forEach(([id,p])=>{
+    if(!ALL_POINTS[id])return;
+    const cur=state.points[id];
+    if(!cur||!newer(cur,p)){state.points[id]=p;cur?updated++:added++}
+  });
+  (inc.ateliers||[]).forEach(a=>{if(!state.ateliers.includes(a))state.ateliers.push(a)});
+  (inc.customAteliers||[]).forEach(a=>{if(!state.customAteliers.find(x=>x.id===a.id))state.customAteliers.push(a)});
+  if(!state.etab&&inc.etab)state.etab=inc.etab;
+  return {added,updated};
+}
+function readJSONFile(file,cb){
+  const r=new FileReader();
+  r.onload=e=>{try{cb(JSON.parse(e.target.result))}catch(err){toast('⚠️ Fichier illisible')}};
+  r.readAsText(file);
+}
+function doMerge(file){
+  readJSONFile(file,o=>{
+    const inc=convertOld(o)||o;
+    if(!inc||typeof inc!=='object'||!(inc.signalements||inc.equipements||inc.points||inc.actions)){toast('⚠️ Ce fichier ne ressemble pas à une sauvegarde de cet outil');return}
+    const r=mergeInto(inc);save();render();
+    toast(`Fusion terminée : ${r.added} élément(s) ajouté(s), ${r.updated} mis à jour`);
+  });
+}
+function doRestore(file){
+  readJSONFile(file,o=>{
+    const inc=convertOld(o)||o;
+    if(!inc||typeof inc!=='object'||!(inc.signalements||inc.equipements||inc.points||inc.actions)){toast('⚠️ Ce fichier ne ressemble pas à une sauvegarde de cet outil');return}
+    if(!confirm('Restaurer cette sauvegarde REMPLACE toutes les données de ce navigateur. Continuer ?'))return;
+    const keepRole=state.role;
+    state={v:2,etab:'',role:keepRole,ateliers:[],customAteliers:[],points:{},equipements:[],signalements:[],actions:[],lastBackup:null};
+    mergeInto(inc);if(o.etab)state.etab=o.etab;save();render();toast('Sauvegarde restaurée');
+  });
+}
+function exportBackup(){
+  state.lastBackup=nowISO();save();
+  download(`Sauvegarde_QHSE_${slug(state.etab)}_${today()}.json`,JSON.stringify(state,null,2),'application/json');
+  toast('Sauvegarde téléchargée — déposez-la sur votre espace partagé');render();
+}
+function exportSignalements(){
+  const payload={type:'signalements',etab:state.etab,date:nowISO(),signalements:state.signalements};
+  download(`Signalements_${slug(state.etab)}_${today()}.json`,JSON.stringify(payload,null,2),'application/json');
+  toast('Fichier prêt : envoyez-le au DDFPT (il l\'importera dans son outil)');
+}
+function csv(rows){return '\ufeff'+rows.map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(';')).join('\r\n')}
+
+/* ═════════════ ÉQUIPEMENTS ═════════════ */
+function dueInfo(e){
+  if(e.etat==='retire'||!e.period)return {k:'none',label:'Pas de périodicité définie'};
+  if(!e.derniere)return {k:'never',label:'Jamais vérifié'};
+  const next=addMonths(e.derniere,e.period),d=diffDays(today(),next);
+  if(d<0)return {k:'late',next,d,label:`À revérifier (échéance dépassée de ${-d} j)`};
+  if(d<=30)return {k:'soon',next,d,label:`À vérifier avant le ${fmt(next)}`};
+  return {k:'ok',next,d,label:`Prochaine vérification : ${fmt(next)}`};
+}
+const needsCheck=e=>['never','late','soon'].includes(dueInfo(e).k);
+
+function equipItem(e){
+  const di=dueInfo(e),et=ETATS[e.etat]||ETATS.service;
+  const cls=e.etat==='hs'?'k-alert':(di.k==='late'||di.k==='never'||e.etat==='surveiller')?'k-warn':di.k==='soon'?'k-info':'k-ok';
+  const dBadge=di.k==='none'?'':`<span class="badge ${di.k==='ok'?'b-ok':di.k==='soon'?'b-info':'b-warn'}">${esc(di.label)}</span>`;
+  return `<div class="item ${cls}">
+    <div class="row between"><h4>${esc(e.nom)}</h4><span class="badge ${et.c}">${et.l}</span></div>
+    <div class="meta">${esc(e.cat)} · ${esc(atelierLabel(e.atelier))}${e.repere?' · Repère : '+esc(e.repere):''}</div>
+    <div class="badges">${dBadge}${e.derniere?`<span class="badge b-mute">Dernière vérif. : ${fmt(e.derniere)}</span>`:''}</div>
+    ${e.comment?`<div class="desc">${esc(e.comment)}</div>`:''}
+    ${e.doc?`<div class="meta">📎 ${/^https?:\/\//i.test(e.doc)?`<a href="${esc(e.doc)}" target="_blank" rel="noopener">${esc(e.doc)}</a>`:esc(e.doc)}</div>`:''}
+    <div class="actions">
+      <button class="btn small primary" data-act="eq-verif" data-id="${e.id}">✓ Vérifié aujourd'hui</button>
+      <button class="btn small" data-act="eq-edit" data-id="${e.id}">Modifier</button>
+      <button class="btn small" data-act="eq-sig" data-id="${e.id}">Signaler un souci</button>
+      ${state.role==='ddfpt'?`<button class="btn small danger" data-act="eq-del" data-id="${e.id}">Supprimer</button>`:''}
+    </div></div>`;
+}
+function filteredEquip(){
+  const q=ui.eqSearch.trim().toLowerCase();
+  return state.equipements.filter(e=>{
+    if(ui.eqAtelier&&e.atelier!==ui.eqAtelier)return false;
+    if(q&&!(`${e.nom} ${e.cat} ${e.repere} ${e.comment}`.toLowerCase().includes(q)))return false;
+    if(ui.eqFilter==='check'&&!needsCheck(e))return false;
+    if(ui.eqFilter==='surveiller'&&e.etat!=='surveiller')return false;
+    if(ui.eqFilter==='hs'&&e.etat!=='hs')return false;
+    return true;
+  }).sort((a,b)=>a.nom.localeCompare(b.nom,'fr'));
+}
+function renderEquipList(){
+  const list=filteredEquip(),box=$('#eq-list');if(!box)return;
+  box.innerHTML=list.length?list.map(equipItem).join(''):`<div class="empty">${state.equipements.length?'Aucun équipement ne correspond à ce filtre.':'Aucun équipement enregistré pour le moment.<br>Commencez par les équipements qui demandent un suivi régulier : trousses de secours, extincteurs, machines, BAES…'}</div>`;
+  const c=$('#eq-count');if(c)c.textContent=`${list.length} équipement(s)`;
+}
+function viewEquip(){
+  const opts=activeAteliers().map(a=>`<option value="${a.id}" ${ui.eqAtelier===a.id?'selected':''}>${esc(a.label)}</option>`).join('');
+  return `<h2>Équipements &amp; vérifications</h2>
+  <p class="lead">Le suivi du matériel : où il est, dans quel état, et quand il doit être revu. L'objectif est de ne rien oublier, pas de chercher un responsable.</p>
+  <div class="toolbar noprint">
+    <label>Rechercher<input type="text" id="eq-q" value="${esc(ui.eqSearch)}" placeholder="Nom, repère, catégorie…"></label>
+    <label>Atelier<select id="eq-at"><option value="">Tous</option>${opts}</select></label>
+    <label>Afficher<select id="eq-fl">
+      <option value="">Tous</option>
+      <option value="check" ${ui.eqFilter==='check'?'selected':''}>À vérifier prochainement</option>
+      <option value="surveiller" ${ui.eqFilter==='surveiller'?'selected':''}>À surveiller</option>
+      <option value="hs" ${ui.eqFilter==='hs'?'selected':''}>Hors service</option></select></label>
+    <button class="btn primary" data-act="eq-add">+ Ajouter</button>
+  </div>
+  <div class="meta" id="eq-count" style="margin-bottom:8px"></div>
+  <div id="eq-list"></div>`;
+}
+function equipForm(e){
+  e=e||{nom:'',cat:CATEGORIES[0],atelier:ui.eqAtelier||'general',repere:'',etat:'service',derniere:'',period:12,comment:'',doc:''};
+  const at=activeAteliers().map(a=>`<option value="${a.id}" ${e.atelier===a.id?'selected':''}>${esc(a.label)}</option>`).join('');
+  const cat=CATEGORIES.map(c=>`<option ${e.cat===c?'selected':''}>${esc(c)}</option>`).join('');
+  const et=Object.entries(ETATS).map(([k,v])=>`<option value="${k}" ${e.etat===k?'selected':''}>${v.l}</option>`).join('');
+  const per=[[0,'Pas de vérification régulière'],[1,'Tous les mois'],[3,'Tous les 3 mois'],[6,'Tous les 6 mois'],[12,'Tous les ans'],[24,'Tous les 2 ans']].map(([v,l])=>`<option value="${v}" ${Number(e.period)===v?'selected':''}>${l}</option>`).join('');
+  return `<label>Nom de l'équipement *<input type="text" name="nom" required value="${esc(e.nom)}" placeholder="Ex : Scie à ruban, Trousse de secours n°1"></label>
+  <div class="f2"><label>Catégorie<select name="cat">${cat}</select></label><label>Atelier / lieu<select name="atelier">${at}</select></label></div>
+  <div class="f2"><label>Repère / n° de série (facultatif)<input type="text" name="repere" value="${esc(e.repere)}"></label><label>État<select name="etat">${et}</select></label></div>
+  <div class="f2"><label>Dernière vérification<input type="date" name="derniere" value="${esc(e.derniere)}"></label><label>Périodicité (à adapter à vos consignes)<select name="period">${per}</select></label></div>
+  <label>Observations (faits uniquement)<textarea name="comment">${esc(e.comment)}</textarea></label>
+  <label>Document associé (lien ou emplacement du classeur)<input type="text" name="doc" value="${esc(e.doc)}" placeholder="Ex : classeur sécurité, étagère 2 — ou lien Nextcloud"></label>`;
+}
+function editEquip(id){
+  const cur=id?state.equipements.find(x=>x.id===id):null;
+  openDlg(cur?'Modifier l\'équipement':'Ajouter un équipement',equipForm(cur),d=>{
+    if(!d.nom.trim())return false;
+    const rec={...(cur||{id:uid(),hist:[]}),nom:d.nom.trim(),cat:d.cat,atelier:d.atelier,repere:d.repere.trim(),etat:d.etat,derniere:d.derniere,period:Number(d.period),comment:d.comment.trim(),doc:d.doc.trim(),maj:nowISO()};
+    if(cur){Object.assign(cur,rec)}else state.equipements.push(rec);
+    save();render();toast('Équipement enregistré');
+  });
+}
+
+/* ═════════════ SIGNALEMENTS ═════════════ */
+function sigText(s){
+  const eq=state.equipements.find(e=>e.id===s.equipId);
+  return `Signalement — ${atelierLabel(s.atelier)} — ${fmt(s.date)}\nNature : ${NATURES[s.cat]?.l||''}${s.urgent?'\n⚠ DANGER IMMÉDIAT signalé':''}${eq?'\nÉquipement : '+eq.nom:''}\n\n${s.desc}${s.auteur?'\n\nSignalé par : '+s.auteur:''}`;
+}
+function sigItem(s){
+  const st=SIG_ST[s.statut]||SIG_ST.nouveau,nat=NATURES[s.cat]||NATURES.materiel,eq=state.equipements.find(e=>e.id===s.equipId);
+  const cls=s.statut==='traite'?'k-ok':s.urgent?'k-alert':'k-warn';
+  const ddfpt=state.role==='ddfpt';
+  return `<div class="item ${cls}">
+    <div class="row between"><h4>${esc(atelierLabel(s.atelier))}${eq?' — '+esc(eq.nom):''}</h4><span class="badge ${st.c}">${st.l}</span></div>
+    <div class="badges"><span class="badge ${nat.c}">${nat.l}</span>${s.urgent?'<span class="badge b-alert">⚠ Danger immédiat signalé</span>':''}<span class="badge b-mute">${fmt(s.date)}</span></div>
+    <div class="desc">${esc(s.desc)}</div>
+    ${s.auteur?`<div class="meta">Signalé par : ${esc(s.auteur)}</div>`:''}
+    ${s.reponse?`<div class="reply"><b>Suite donnée :</b> ${esc(s.reponse)}</div>`:''}
+    <div class="actions">
+      ${ddfpt?`<button class="btn small primary" data-act="sg-reply" data-id="${s.id}">Répondre / changer le statut</button>`:''}
+      <button class="btn small" data-act="sg-copy" data-id="${s.id}">Copier le texte</button>
+      ${(ddfpt||s.statut==='nouveau')?`<button class="btn small danger" data-act="sg-del" data-id="${s.id}">Supprimer</button>`:''}
+    </div></div>`;
+}
+function viewSignal(){
+  const pre=ui.prefill||{};ui.prefill=null;
+  const ats=activeAteliers();
+  const sel=pre.atelier||'';
+  const at=ats.map(a=>`<option value="${a.id}" ${sel===a.id?'selected':''}>${esc(a.label)}</option>`).join('');
+  const nat=Object.entries(NATURES).map(([k,v])=>`<option value="${k}">${v.l}</option>`).join('');
+  const list=state.signalements.filter(s=>ui.sigFilter==='all'?true:ui.sigFilter==='done'?s.statut==='traite':s.statut!=='traite').sort((a,b)=>(b.date+b.maj).localeCompare(a.date+a.maj));
+  return `<h2>Signalements</h2>
+  <p class="lead">Remonter une information au DDFPT : un matériel en panne, un affichage manquant, une idée pour améliorer l'atelier.</p>
+  <div class="card noprint">
+    <h3>Nouveau signalement</h3>
+    <div class="note info">Décrivez les <b>faits</b> (quoi, où, depuis quand), sans nommer de personne. L'objectif est d'améliorer la situation, pas de désigner un responsable.</div>
+    <form id="sg-form" autocomplete="off">
+      <div class="f2">
+        <label>Atelier concerné<select id="sg-atelier" name="atelier">${at}</select></label>
+        <label>Équipement concerné (facultatif)<select id="sg-equip" name="equipId"></select></label>
+      </div>
+      <label>Nature<select name="cat">${nat}</select></label>
+      <label class="inline"><input type="checkbox" id="sg-urgent" name="urgent"> Il y a un danger immédiat</label>
+      <div id="urgent-note" class="note alert hidden"><b>Danger immédiat :</b> prévenez tout de suite, de vive voix ou par téléphone, le DDFPT, le chef de travaux ou la direction. Cet outil n'est pas un système d'alerte.</div>
+      <label>Description *<textarea name="desc" required placeholder="Ex : la trousse de secours de l'atelier est vide depuis lundi. La scie à ruban ne s'arrête plus avec l'arrêt d'urgence."></textarea></label>
+      <label>Signé par (facultatif — vous pouvez rester anonyme)<input type="text" name="auteur" placeholder="Prénom Nom, ou laisser vide"></label>
+      <button class="btn primary" type="submit">Enregistrer le signalement</button>
+    </form>
+  </div>
+  <div class="row between noprint" style="margin-bottom:10px">
+    <div class="row">
+      <label style="margin:0">Afficher <select id="sg-filter" style="width:auto"><option value="open" ${ui.sigFilter==='open'?'selected':''}>En cours</option><option value="done" ${ui.sigFilter==='done'?'selected':''}>Traités</option><option value="all" ${ui.sigFilter==='all'?'selected':''}>Tous</option></select></label>
+      <span class="meta">${list.length} signalement(s)</span>
+    </div>
+    <div class="row">
+      <button class="btn small" data-act="sg-export">Envoyer au DDFPT (fichier)</button>
+      <button class="btn small" data-act="sg-mail">Préparer un e-mail</button>
+      ${state.role==='ddfpt'?`<button class="btn small" data-act="pick-merge">Recevoir des signalements (importer)</button>`:''}
+    </div>
+  </div>
+  ${list.length?list.map(sigItem).join(''):'<div class="empty">Aucun signalement ici ✅</div>'}`;
+}
+function fillSigEquip(){
+  const at=$('#sg-atelier'),eq=$('#sg-equip');if(!at||!eq)return;
+  const cur=eq.value||(ui._eqPre||'');
+  const opts=state.equipements.filter(e=>e.etat!=='retire'&&(!at.value||e.atelier===at.value||at.value==='general')).sort((a,b)=>a.nom.localeCompare(b.nom,'fr'));
+  eq.innerHTML='<option value="">— Autre / non listé —</option>'+opts.map(e=>`<option value="${e.id}" ${e.id===cur?'selected':''}>${esc(e.nom)}</option>`).join('');
+  ui._eqPre='';
+}
+function replyDialog(id){
+  const s=state.signalements.find(x=>x.id===id);if(!s)return;
+  const st=Object.entries(SIG_ST).map(([k,v])=>`<option value="${k}" ${s.statut===k?'selected':''}>${v.l}</option>`).join('');
+  openDlg('Suite donnée au signalement',`<p class="meta">${esc(s.desc)}</p>
+  <label>Statut<select name="statut">${st}</select></label>
+  <label>Suite donnée / message pour l'équipe<textarea name="reponse" placeholder="Ex : trousse recomplétée le 12/11. Devis en cours pour la scie.">${esc(s.reponse)}</textarea></label>`,d=>{
+    s.statut=d.statut;s.reponse=d.reponse.trim();s.maj=nowISO();
+    if(d.statut==='traite'&&!s.dateTraite)s.dateTraite=today();
+    save();render();toast('Signalement mis à jour');
+  });
+}
+
+/* ═════════════ POINTS DE CONTRÔLE ═════════════ */
+function ensureAction(pid,status){
+  let a=state.actions.find(x=>x.pid===pid);
+  if(!a){
+    const p=state.points[pid]||{};
+    state.actions.push({id:uid(),pid,titre:ALL_POINTS[pid].title,risque:'',desc:p.note||'',resp:p.resp||'',budget:'',annee:String(new Date().getFullYear()),ech:p.ech||'',av:status==='ec'?'encours':'adem',maj:nowISO()});
+  }else if(a.av==='termine'){a.av=status==='ec'?'encours':'adem';a.maj=nowISO()}
+  else if(status==='ec'&&a.av==='adem'){a.av='encours';a.maj=nowISO()}
+}
+function setPoint(id,patch){
+  const cur=state.points[id]||{s:'nv',note:'',resp:'',ech:''};
+  state.points[id]={...cur,...patch,maj:nowISO()};
+  if(patch.s==='am'||patch.s==='ec')ensureAction(id,patch.s);
+  if(patch.s==='ok'){state.actions.filter(a=>a.pid===id&&a.av!=='termine').forEach(a=>{a.av='termine';a.maj=nowISO()})}
+  save();
+}
+function themeStats(t){
+  let seen=0,am=0,ec=0,ok=0;
+  t.points.forEach(([id])=>{const s=(state.points[id]||{}).s||'nv';if(s!=='nv')seen++;if(s==='am')am++;if(s==='ec')ec++;if(s==='ok')ok++});
+  return {seen,am,ec,ok,total:t.points.length};
+}
+function viewControles(){
+  return `<h2>Points de contrôle</h2>
+  <p class="lead">Une grille pour faire le tour de l'atelier, thème par thème. Rien n'est noté : on repère simplement ce qui est en place et ce qu'on peut améliorer. Un point « à améliorer » alimente automatiquement le plan d'actions.</p>
+  <div class="note info noprint">La grille concerne l'établissement. Si un point ne concerne qu'un atelier, précisez-le dans l'observation.</div>`+
+  THEMES.map(t=>{
+    const s=themeStats(t),open=ui.openThemes.has(t.id)?'open':'';
+    return `<details class="theme" data-theme="${t.id}" ${open}>
+      <summary><span>${esc(t.label)}<small>${esc(t.sub)}</small></span><span class="badge ${s.ok===s.total?'b-ok':'b-mute'}">${s.ok}/${s.total} en place</span></summary>
+      ${t.points.map(([id,title])=>{
+        const p=state.points[id]||{s:'nv',note:'',resp:'',ech:''};
+        const dOpen=ui.openDetails.has(id)||p.note||p.resp||p.ech?'':'';
+        return `<div class="pt"><div class="pt-title">${esc(title)}</div>
+          <div class="seg" role="group" aria-label="Statut du point">${Object.entries(PT_ST).map(([k,v])=>`<button type="button" class="s-${k}" aria-pressed="${p.s===k}" data-act="pt-st" data-id="${id}" data-v="${k}">${v.i} ${v.l}</button>`).join('')}</div>
+          <details class="more" data-det="${id}" ${ui.openDetails.has(id)?'open':''}><summary>Observation, qui peut agir, échéance${(p.note||p.resp||p.ech)?' •':''}</summary>
+            <label style="margin-top:8px">Observation (faits uniquement)<textarea data-chg="pt-note" data-id="${id}">${esc(p.note)}</textarea></label>
+            <div class="f2"><label>Qui peut agir (fonction, pas de nom)<input type="text" data-chg="pt-resp" data-id="${id}" value="${esc(p.resp)}"></label>
+            <label>Échéance souhaitée<input type="date" data-chg="pt-ech" data-id="${id}" value="${esc(p.ech)}"></label></div>
+          </details></div>`;
+      }).join('')}
+    </details>`;
+  }).join('');
+}
+
+/* ═════════════ PLAN D'ACTIONS ═════════════ */
+function actionItem(a){
+  const st=ACT_ST[a.av]||ACT_ST.adem,b=money(a.budget);
+  return `<div class="item ${a.av==='termine'?'k-ok':a.av==='encours'?'k-warn':'k-info'}">
+    <div class="row between"><h4>${esc(a.titre||'(sans titre)')}</h4><span class="badge ${st.c}">${st.l}</span></div>
+    <div class="badges">${a.risque?`<span class="badge b-mute">${esc(a.risque)}</span>`:''}${a.ech?`<span class="badge b-info">Échéance : ${fmt(a.ech)}</span>`:''}${b?`<span class="badge b-mute">${fmtMoney(b)}</span>`:''}${a.annee?`<span class="badge b-mute">${esc(a.annee)}</span>`:''}</div>
+    ${a.desc?`<div class="desc">${esc(a.desc)}</div>`:''}
+    ${a.resp?`<div class="meta">Financement / pilotage : ${esc(a.resp)}</div>`:''}
+    <div class="actions"><button class="btn small" data-act="ac-edit" data-id="${a.id}">Modifier</button>
+    ${a.av!=='termine'?`<button class="btn small" data-act="ac-done" data-id="${a.id}">✓ Marquer comme terminée</button>`:''}
+    <button class="btn small danger" data-act="ac-del" data-id="${a.id}">Supprimer</button></div></div>`;
+}
+function viewPlan(){
+  const open=state.actions.filter(a=>a.av!=='termine');
+  const total=open.reduce((s,a)=>s+money(a.budget),0);
+  const list=state.actions.filter(a=>ui.actFilter==='all'?true:ui.actFilter==='done'?a.av==='termine':a.av!=='termine').sort((a,b)=>(a.ech||'9999').localeCompare(b.ech||'9999'));
+  return `<h2>Plan d'actions</h2>
+  <p class="lead">Les améliorations à mener, avec une échéance et, si besoin, un budget estimé. Les points « à améliorer » des contrôles s'ajoutent ici automatiquement.</p>
+  <div class="card row between noprint"><div><div class="meta">Budget estimé des actions en cours</div><b style="font-size:1.5rem">${total?fmtMoney(total):'—'}</b></div>
+    <div class="row"><label style="margin:0">Afficher <select id="ac-filter" style="width:auto"><option value="open" ${ui.actFilter==='open'?'selected':''}>En cours</option><option value="done" ${ui.actFilter==='done'?'selected':''}>Terminées</option><option value="all" ${ui.actFilter==='all'?'selected':''}>Toutes</option></select></label>
+    <button class="btn primary" data-act="ac-add">+ Ajouter une action</button></div></div>
+  ${list.length?list.map(actionItem).join(''):'<div class="empty">Aucune action pour le moment.</div>'}`;
+}
+function actionForm(a){
+  a=a||{titre:'',risque:'',desc:'',resp:'',budget:'',annee:String(new Date().getFullYear()),ech:'',av:'adem'};
+  const r=RISQUES.map(x=>`<option value="${esc(x)}" ${a.risque===x?'selected':''}>${x||'— Risque concerné (facultatif) —'}</option>`).join('');
+  const av=Object.entries(ACT_ST).map(([k,v])=>`<option value="${k}" ${a.av===k?'selected':''}>${v.l}</option>`).join('');
+  return `<label>Action à mener *<input type="text" name="titre" required value="${esc(a.titre)}"></label>
+  <label>Risque concerné (brochure INRS)<select name="risque">${r}</select></label>
+  <label>Description<textarea name="desc">${esc(a.desc)}</textarea></label>
+  <div class="f2"><label>Qui finance / pilote (fonction)<input type="text" name="resp" value="${esc(a.resp)}"></label><label>Budget estimé (FCFP)<input type="text" inputmode="numeric" name="budget" value="${esc(a.budget)}"></label></div>
+  <div class="f2"><label>Année<input type="text" name="annee" value="${esc(a.annee)}"></label><label>Échéance<input type="date" name="ech" value="${esc(a.ech)}"></label></div>
+  <label>Avancement<select name="av">${av}</select></label>`;
+}
+function editAction(id){
+  const cur=id?state.actions.find(x=>x.id===id):null;
+  openDlg(cur?'Modifier l\'action':'Ajouter une action',actionForm(cur),d=>{
+    if(!d.titre.trim())return false;
+    const rec={titre:d.titre.trim(),risque:d.risque,desc:d.desc.trim(),resp:d.resp.trim(),budget:d.budget.trim(),annee:d.annee.trim(),ech:d.ech,av:d.av,maj:nowISO()};
+    if(cur)Object.assign(cur,rec);else state.actions.push({id:uid(),pid:'',...rec});
+    save();render();toast('Action enregistrée');
+  });
+}
+
+/* ═════════════ SYNTHÈSE ═════════════ */
+function viewSynthese(){
+  const pts=Object.values(ALL_POINTS);
+  const get=id=>(state.points[id]||{}).s||'nv';
+  const cnt={nv:0,am:0,ec:0,ok:0};pts.forEach(p=>cnt[get(p.id)]++);
+  const seen=pts.length-cnt.nv;
+  const toImprove=pts.filter(p=>['am','ec'].includes(get(p.id)));
+  const eqCheck=state.equipements.filter(needsCheck),eqHs=state.equipements.filter(e=>e.etat==='hs'),eqSurv=state.equipements.filter(e=>e.etat==='surveiller');
+  const sigOpen=state.signalements.filter(s=>s.statut!=='traite'),sigDone=state.signalements.filter(s=>s.statut==='traite');
+  const acts=state.actions.filter(a=>a.av!=='termine'),total=acts.reduce((s,a)=>s+money(a.budget),0);
+  return `<div class="print-head"><h1 style="margin:0">Synthèse de suivi QHSE &amp; SST</h1><div>${esc(state.etab||'Établissement non renseigné')} — ${fmt(today())}</div></div>
+  <div class="row between noprint"><div><h2>Synthèse</h2><p class="lead">Un point d'étape à partager avec la direction ou à transmettre à la DAFPIC (compte rendu attendu avant le 15 novembre). Aucune donnée nominative n'y figure.</p></div>
+  <div class="row"><button class="btn primary" data-act="print">🖨️ Imprimer / PDF</button></div></div>
+  <div class="card"><h3>Avancement des points de contrôle</h3>
+    <div>${seen} point(s) examiné(s) sur ${pts.length} · ${cnt.ok} en place · ${cnt.ec} en cours d'amélioration · ${cnt.am} à améliorer</div>
+    <div class="bar"><i style="width:${Math.round(cnt.ok/pts.length*100)}%"></i></div>
+    <table class="t" style="margin-top:12px"><thead><tr><th>Thème</th><th>En place</th><th>En cours</th><th>À améliorer</th><th>Pas encore vu</th></tr></thead><tbody>
+    ${THEMES.map(t=>{const s=themeStats(t);return `<tr><td>${esc(t.label)}</td><td>${s.ok}</td><td>${s.ec}</td><td>${s.am}</td><td>${s.total-s.seen}</td></tr>`}).join('')}</tbody></table></div>
+  <div class="card"><h3>Points à améliorer ou en cours (${toImprove.length})</h3>
+    ${toImprove.length?`<table class="t"><thead><tr><th>Point</th><th>Statut</th><th>Qui peut agir</th><th>Échéance</th></tr></thead><tbody>${toImprove.map(p=>{const x=state.points[p.id];return `<tr><td>${esc(p.title)}${x.note?`<div class="meta">${esc(x.note)}</div>`:''}</td><td>${PT_ST[x.s].l}</td><td>${esc(x.resp)||'—'}</td><td>${fmt(x.ech)}</td></tr>`}).join('')}</tbody></table>`:'<div class="meta">Aucun point à signaler.</div>'}</div>
+  <div class="card"><h3>Équipements</h3>
+    <div>${state.equipements.filter(e=>e.etat!=='retire').length} équipement(s) suivi(s) · ${eqCheck.length} à vérifier prochainement · ${eqSurv.length} à surveiller · ${eqHs.length} hors service</div>
+    ${(eqHs.length||eqCheck.length)?`<table class="t" style="margin-top:10px"><thead><tr><th>Équipement</th><th>Atelier</th><th>Situation</th></tr></thead><tbody>${eqHs.concat(eqCheck.filter(e=>e.etat!=='hs')).map(e=>`<tr><td>${esc(e.nom)}</td><td>${esc(atelierLabel(e.atelier))}</td><td>${e.etat==='hs'?'Hors service':esc(dueInfo(e).label)}</td></tr>`).join('')}</tbody></table>`:''}</div>
+  <div class="card"><h3>Signalements</h3><div>${sigOpen.length} en cours · ${sigDone.length} traité(s)</div></div>
+  <div class="card"><h3>Plan d'actions</h3><div>${acts.length} action(s) en cours · budget estimé : ${total?fmtMoney(total):'non renseigné'}</div>
+    ${acts.length?`<table class="t" style="margin-top:10px"><thead><tr><th>Action</th><th>Échéance</th><th>Budget</th></tr></thead><tbody>${acts.map(a=>`<tr><td>${esc(a.titre)}</td><td>${fmt(a.ech)}</td><td>${money(a.budget)?fmtMoney(money(a.budget)):'—'}</td></tr>`).join('')}</tbody></table>`:''}</div>
+  <div class="card noprint"><h3>Exporter les données (Excel)</h3><p class="meta">Fichiers CSV, ouvrables directement dans Excel.</p>
+    <div class="row"><button class="btn" data-act="csv" data-v="eq">Équipements</button><button class="btn" data-act="csv" data-v="sg">Signalements</button><button class="btn" data-act="csv" data-v="ac">Plan d'actions</button><button class="btn" data-act="csv" data-v="pt">Points de contrôle</button></div></div>`;
+}
+function exportCSV(kind){
+  let rows,name;
+  if(kind==='eq'){name='Equipements';rows=[['Équipement','Catégorie','Atelier','Repère','État','Dernière vérification','Périodicité (mois)','Prochaine vérification','Observations','Document']].concat(state.equipements.map(e=>{const d=dueInfo(e);return [e.nom,e.cat,atelierLabel(e.atelier),e.repere,ETATS[e.etat]?.l,fmt(e.derniere),e.period||'',d.next?fmt(d.next):'',e.comment,e.doc]}))}
+  if(kind==='sg'){name='Signalements';rows=[['Date','Atelier','Équipement','Nature','Danger immédiat','Description','Statut','Suite donnée']].concat(state.signalements.map(s=>[fmt(s.date),atelierLabel(s.atelier),state.equipements.find(e=>e.id===s.equipId)?.nom||'',NATURES[s.cat]?.l,s.urgent?'Oui':'',s.desc,SIG_ST[s.statut]?.l,s.reponse]))}
+  if(kind==='ac'){name='Plan_actions';rows=[['Action','Risque','Description','Financement / pilotage','Budget (FCFP)','Année','Échéance','Avancement']].concat(state.actions.map(a=>[a.titre,a.risque,a.desc,a.resp,money(a.budget)||'',a.annee,fmt(a.ech),ACT_ST[a.av]?.l]))}
+  if(kind==='pt'){name='Points_controle';rows=[['Thème','Point','Statut','Observation','Qui peut agir','Échéance']];THEMES.forEach(t=>t.points.forEach(([id,title])=>{const p=state.points[id]||{s:'nv'};rows.push([t.label,title,PT_ST[p.s].l,p.note||'',p.resp||'',fmt(p.ech)])}))}
+  download(`${name}_${slug(state.etab)}_${today()}.csv`,csv(rows),'text/csv;charset=utf-8');
+}
+
+/* ═════════════ PARAMÈTRES / DONNÉES ═════════════ */
+function viewParams(){
+  const ddfpt=state.role==='ddfpt';
+  const days=state.lastBackup?diffDays(state.lastBackup.slice(0,10),today()):null;
+  const chips=allAteliers().map(a=>`<label class="inline" style="margin:0 12px 8px 0"><input type="checkbox" data-chg="atelier-toggle" data-id="${a.id}" ${state.ateliers.includes(a.id)?'checked':''}> ${esc(a.label)}</label>`).join('');
+  return `<h2>${ddfpt?'Paramètres &amp; données':'Mes données'}</h2>
+  <p class="lead">Les données restent dans ce navigateur, sur cet appareil. Pour les transmettre ou les conserver, utilisez les fichiers de sauvegarde.</p>
+  ${ddfpt?`<div class="card"><h3>Établissement et ateliers</h3>
+    <label>Nom de l'établissement<input type="text" data-chg="etab" value="${esc(state.etab)}" placeholder="Ex : Lycée professionnel …"></label>
+    <div class="meta" style="margin-bottom:6px">Ateliers de l'établissement (si rien n'est coché, tous sont proposés)</div>
+    <div>${chips}</div>
+    <div class="row"><input type="text" id="new-atelier" placeholder="Atelier non listé (ex : Carrelage)" style="max-width:300px"><button class="btn" data-act="add-atelier">Ajouter</button></div></div>`:''}
+  <div class="card"><h3>Sauvegarde et partage</h3>
+    ${days===null?'<div class="note warn">Aucune sauvegarde téléchargée pour l\'instant.</div>':days>14?`<div class="note warn">Dernière sauvegarde il y a ${days} jours.</div>`:`<div class="meta">Dernière sauvegarde : ${fmt(state.lastBackup)}</div>`}
+    <div class="row" style="margin-top:8px">
+      <button class="btn primary" data-act="backup">💾 Télécharger une sauvegarde</button>
+      <button class="btn" data-act="pick-merge">📥 Importer et fusionner</button>
+      <button class="btn" data-act="pick-restore">📂 Restaurer (remplace tout)</button>
+    </div>
+    <p class="meta">« Importer et fusionner » ajoute les éléments d'un autre fichier (signalements d'un collègue, par exemple) sans rien effacer. Les anciennes sauvegardes de la version 1 sont acceptées.</p>
+    ${state.signalements.length?`<div class="row"><button class="btn" data-act="sg-export">Envoyer mes signalements au DDFPT (fichier)</button></div>`:''}
+  </div>
+  ${ddfpt?`<div class="card"><h3>Zone sensible</h3><button class="btn danger" data-act="reset">Effacer toutes les données de ce navigateur</button></div>`:''}`;
+}
+
+/* ═════════════ ACCUEIL ═════════════ */
+function viewHome(){
+  const ddfpt=state.role==='ddfpt';
+  const chk=state.equipements.filter(needsCheck).length;
+  const hs=state.equipements.filter(e=>e.etat==='hs').length;
+  const newS=state.signalements.filter(s=>s.statut==='nouveau').length;
+  const pris=state.signalements.filter(s=>s.statut==='pris').length;
+  const pts=Object.keys(ALL_POINTS).length,seen=Object.keys(ALL_POINTS).filter(id=>((state.points[id]||{}).s||'nv')!=='nv').length;
+  const acts=state.actions.filter(a=>a.av!=='termine').length;
+  const days=state.lastBackup?diffDays(state.lastBackup.slice(0,10),today()):null;
+  const hasData=state.equipements.length||state.signalements.length||Object.keys(state.points).length;
+  return `<h2>${state.etab?esc(state.etab):'Bienvenue'}</h2>
+  <p class="lead">Un outil simple pour suivre les équipements des plateaux techniques et faire remonter les informations utiles à l'amélioration de la sécurité.</p>
+  <div class="card charte"><h3>L'esprit de cet outil</h3>
+    <ul><li>Un outil de <b>progrès partagé</b>, pas un outil de contrôle ni de notation.</li>
+    <li>On décrit des <b>faits</b> (matériel, lieu, date), jamais des personnes.</li>
+    <li>Aucun classement ni comparaison entre ateliers ou établissements.</li>
+    <li>Les signalements peuvent rester anonymes. Un danger immédiat se signale toujours de vive voix.</li></ul></div>
+  ${(!state.etab&&ddfpt)?`<div class="note warn noprint">Pour commencer, renseignez le nom de l'établissement et vos ateliers dans <a href="#" data-act="go" data-tab="params">Paramètres</a>.</div>`:''}
+  ${(hasData&&(days===null||days>14))?`<div class="note warn noprint">Pensez à télécharger une sauvegarde de vos données (<a href="#" data-act="go" data-tab="params">Sauvegarde</a>).</div>`:''}
+  <div class="row noprint" style="margin-bottom:14px"><button class="btn primary" data-act="go" data-tab="signal">Signaler un souci</button><button class="btn" data-act="eq-add">Ajouter un équipement</button></div>
+  <div class="grid g-stats">
+    <button class="stat" data-act="go" data-tab="equip" data-f="check"><b>${chk}</b><span>équipement(s) à vérifier prochainement</span></button>
+    <button class="stat" data-act="go" data-tab="equip" data-f="hs"><b>${hs}</b><span>équipement(s) hors service</span></button>
+    <button class="stat" data-act="go" data-tab="signal"><b>${newS}</b><span>signalement(s) reçu(s)${pris?`, ${pris} pris en compte`:''}</span></button>
+    ${ddfpt?`<button class="stat" data-act="go" data-tab="controles"><b>${seen}/${pts}</b><span>points de contrôle examinés</span></button>
+    <button class="stat" data-act="go" data-tab="plan"><b>${acts}</b><span>action(s) d'amélioration en cours</span></button>`:''}
+  </div>`;
+}
+
+/* ═════════════ DIALOGUE ═════════════ */
+function openDlg(title,body,onSubmit){
+  const dlg=$('#dlg');
+  dlg.innerHTML=`<form class="dlg" method="dialog"><h3>${esc(title)}</h3>${body}<div class="dlg-actions"><button type="button" class="btn" data-act="dlg-close">Annuler</button><button type="submit" class="btn primary">Enregistrer</button></div></form>`;
+  const f=$('form',dlg);
+  f.onsubmit=ev=>{
+    ev.preventDefault();
+    const d=Object.fromEntries(new FormData(f).entries());
+    if(onSubmit(d)===false)return;
+    dlg.close();
+  };
+  dlg.showModal();
+}
+
+/* ═════════════ RENDU GÉNÉRAL ═════════════ */
+function tabsFor(){
+  const t=[['home','Accueil'],['equip','Équipements'],['signal','Signalements']];
+  if(state.role==='ddfpt')t.push(['controles','Points de contrôle'],['plan','Plan d\'actions'],['synthese','Synthèse'],['params','Paramètres']);
+  else t.push(['params','Mes données']);
+  return t;
+}
+function render(){
+  const tabs=tabsFor();
+  if(!tabs.find(t=>t[0]===ui.tab))ui.tab='home';
+  document.querySelectorAll('.role button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===state.role)));
+  $('#brand-sub').textContent=(state.etab?state.etab+' · ':'')+'Vice-Rectorat de la Nouvelle-Calédonie · DAFPIC';
+  const newS=state.signalements.filter(s=>s.statut==='nouveau').length;
+  $('#tabs-in').innerHTML=tabs.map(([id,l])=>`<button class="tab" data-act="go" data-tab="${id}" ${ui.tab===id?'aria-current="page"':''}>${l}${id==='signal'&&newS?`<span class="n">${newS}</span>`:''}</button>`).join('');
+  const y=window.scrollY;
+  const v={home:viewHome,equip:viewEquip,signal:viewSignal,controles:viewControles,plan:viewPlan,synthese:viewSynthese,params:viewParams}[ui.tab];
+  $('#view').innerHTML=v();
+  if(ui.tab==='equip')renderEquipList();
+  if(ui.tab==='signal')fillSigEquip();
+  window.scrollTo(0,y);
+}
+
+/* ═════════════ ÉVÉNEMENTS ═════════════ */
+function pickFile(handler){
+  const i=document.createElement('input');i.type='file';i.accept='application/json,.json';
+  i.onchange=()=>{if(i.files&&i.files[0])handler(i.files[0])};i.click();
+}
+document.addEventListener('click',e=>{
+  const el=e.target.closest('[data-act]');if(!el)return;
+  const a=el.dataset.act,id=el.dataset.id;
+  if(el.tagName==='A')e.preventDefault();
+  switch(a){
+    case 'role':state.role=el.dataset.v;save();render();break;
+    case 'go':
+      ui.tab=el.dataset.tab;
+      if(el.dataset.tab==='equip'){ui.eqFilter=el.dataset.f||'';ui.eqSearch='';ui.eqAtelier=''}
+      render();window.scrollTo(0,0);break;
+    case 'dlg-close':$('#dlg').close();break;
+    case 'eq-add':editEquip(null);break;
+    case 'eq-edit':editEquip(id);break;
+    case 'eq-verif':{const x=state.equipements.find(q=>q.id===id);if(x){x.derniere=today();x.maj=nowISO();(x.hist=x.hist||[]).push({d:today(),t:'Vérification effectuée'});save();render();toast('Vérification enregistrée')}break}
+    case 'eq-sig':{const x=state.equipements.find(q=>q.id===id);if(x){ui.prefill={atelier:x.atelier};ui._eqPre=x.id;ui.tab='signal';render();window.scrollTo(0,0)}break}
+    case 'eq-del':if(confirm('Supprimer cet équipement ?')){state.equipements=state.equipements.filter(q=>q.id!==id);save();render()}break;
+    case 'sg-copy':{const s=state.signalements.find(q=>q.id===id);if(s)copyText(sigText(s));break}
+    case 'sg-del':if(confirm('Supprimer ce signalement ?')){state.signalements=state.signalements.filter(q=>q.id!==id);save();render()}break;
+    case 'sg-reply':replyDialog(id);break;
+    case 'sg-export':exportSignalements();break;
+    case 'sg-mail':{
+      const open=state.signalements.filter(s=>s.statut!=='traite');
+      if(!open.length){toast('Aucun signalement en cours à envoyer');break}
+      const body=open.map(sigText).join('\n\n———\n\n');
+      const href='mailto:?subject='+encodeURIComponent('Signalement(s) — plateaux techniques')+'&body='+encodeURIComponent(body.slice(0,1500));
+      if(body.length>1500)copyText(body);
+      location.href=href;break}
+    case 'pt-st':{
+      const cur=(state.points[id]||{}).s;
+      const v=el.dataset.v;
+      ui.openThemes=new Set([...document.querySelectorAll('details.theme[open]')].map(d=>d.dataset.theme));
+      ui.openDetails=new Set([...document.querySelectorAll('details.more[open]')].map(d=>d.dataset.det));
+      setPoint(id,{s:cur===v?'nv':v});render();
+      if(['am','ec'].includes(v)&&cur!==v)toast('Ajouté au plan d\'actions');
+      break}
+    case 'ac-add':editAction(null);break;
+    case 'ac-edit':editAction(id);break;
+    case 'ac-done':{const x=state.actions.find(q=>q.id===id);if(x){x.av='termine';x.maj=nowISO();save();render()}break}
+    case 'ac-del':if(confirm('Supprimer cette action ?')){state.actions=state.actions.filter(q=>q.id!==id);save();render()}break;
+    case 'print':window.print();break;
+    case 'csv':exportCSV(el.dataset.v);break;
+    case 'add-atelier':{
+      const inp=$('#new-atelier'),v=inp.value.trim();if(!v)break;
+      const aid='c_'+slug(v).toLowerCase();
+      if(!allAteliers().find(x=>x.id===aid)){state.customAteliers.push({id:aid,label:v});state.ateliers.push(aid);save();render()}
+      break}
+    case 'backup':exportBackup();break;
+    case 'pick-merge':pickFile(doMerge);break;
+    case 'pick-restore':pickFile(doRestore);break;
+    case 'reset':
+      if(confirm('Effacer TOUTES les données de ce navigateur ? Pensez à télécharger une sauvegarde avant.')&&confirm('Dernière confirmation : cette action est définitive.')){
+        state={v:2,etab:'',role:state.role,ateliers:[],customAteliers:[],points:{},equipements:[],signalements:[],actions:[],lastBackup:null};save();render();toast('Données effacées')}
+      break;
+  }
+});
+document.addEventListener('change',e=>{
+  const el=e.target;
+  if(el.id==='sg-atelier'){fillSigEquip();return}
+  if(el.id==='sg-urgent'){$('#urgent-note').classList.toggle('hidden',!el.checked);return}
+  if(el.id==='eq-at'){ui.eqAtelier=el.value;renderEquipList();return}
+  if(el.id==='eq-fl'){ui.eqFilter=el.value;renderEquipList();return}
+  if(el.id==='sg-filter'){ui.sigFilter=el.value;render();return}
+  if(el.id==='ac-filter'){ui.actFilter=el.value;render();return}
+  const c=el.dataset.chg,id=el.dataset.id;if(!c)return;
+  if(c==='pt-note')setPoint(id,{note:el.value.trim()});
+  if(c==='pt-resp')setPoint(id,{resp:el.value.trim()});
+  if(c==='pt-ech')setPoint(id,{ech:el.value});
+  if(c==='etab'){state.etab=el.value.trim();save();render()}
+  if(c==='atelier-toggle'){
+    state.ateliers=el.checked?[...new Set([...state.ateliers,id])]:state.ateliers.filter(x=>x!==id);save();
+  }
+});
+document.addEventListener('input',e=>{
+  if(e.target.id==='eq-q'){ui.eqSearch=e.target.value;renderEquipList()}
+});
+document.addEventListener('submit',e=>{
+  if(e.target.id!=='sg-form')return;
+  e.preventDefault();
+  const d=Object.fromEntries(new FormData(e.target).entries());
+  if(!d.desc.trim()){toast('Décrivez le problème');return}
+  state.signalements.unshift({id:uid(),date:today(),atelier:d.atelier,equipId:d.equipId||'',cat:d.cat,urgent:!!d.urgent,desc:d.desc.trim(),auteur:(d.auteur||'').trim(),statut:'nouveau',reponse:'',maj:nowISO()});
+  save();ui.sigFilter='open';render();
+  toast(d.urgent?'Enregistré — pensez à prévenir directement le DDFPT':'Signalement enregistré');
+});
+
+/* ═════════════ DÉMARRAGE ═════════════ */
+load();
+if(!state.lastBackup&&false)state.lastBackup=null;
+render();
+save();
+</script>
+</body>
+</html>
