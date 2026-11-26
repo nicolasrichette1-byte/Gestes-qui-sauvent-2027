@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DAFPIC &amp; GRETA-CFA NC — Recueil Alternance en Public Mixé</title>
+  <!-- Chargement de Tailwind CSS pour une interface institutionnelle claire, réactive et sobre -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chargement de la police Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* Configuration typographique et palette institutionnelle Nouvelle-Calédonie */
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f4f6f9;
+      color: #1e293b;
+    }
+
+    /* Styles spécifiques pour la vue d'impression / fiche synthétique officielle */
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        color: #0f172a !important;
+        font-size: 11pt;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-only-block {
+        display: block !important;
+      }
+      .print-shadow-none {
+        box-shadow: none !important;
+        border: 1px solid #cbd5e1 !important;
+      }
+      .page-break-avoid {
+        break-inside: avoid;
+      }
+    }
+
+    .print-only-block {
+      display: none;
+    }
+
+    /* Barres de défilement discrètes pour tableaux sur tablette/mobile */
+    .table-scroll::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .table-scroll::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Bandeau supérieur institutionnel DAFPIC / Vice-rectorat / GRETA-CFA NC -->
+  <header class="bg-[#0f294a] text-white border-b-4 border-[#d97706] shadow-sm no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div class="flex items-start sm:items-center gap-3.5">
+          <!-- Emblème géométrique sobre évoquant l'ancrage institutionnel et l'alternance -->
+          <div class="w-11 h-11 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+            <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+            </svg>
+          </div>
+          <div>
+            <div class="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-300">
+              <span>Vice-rectorat de la Nouvelle-Calédonie</span>
+              <span>•</span>
+              <span>DAFPIC</span>
+              <span>•</span>
+              <span>GRETA-CFA</span>
+            </div>
+            <h1 class="text-lg sm:text-xl font-bold tracking-tight text-white mt-0.5">
+              Recueil &amp; Instruction des Propositions d'Alternance en Public Mixé
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-300">
+              Préparation des dossiers d'autorisation auprès du Gouvernement de la Nouvelle-Calédonie (intégration d'alternants en section initiale)
+            </p>
+          </div>
+        </div>
+
+        <!-- Actions rapides : Nouvelle proposition, Imprimer / Fiche synthèse, Exports/Imports -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" id="btnQuickNew" class="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition cursor-pointer">
+            + Nouvelle proposition
+          </button>
+
+          <button type="button" id="btnQuickPrint" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium border border-white/15 transition cursor-pointer" title="Ouvrir la fiche synthèse et lancer l'impression">
+            Imprimer / Fiche synthèse
+          </button>
+
+          <button type="button" id="btnExportCsvPropositions" class="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium border border-white/15 transition cursor-pointer" title="Exporter les propositions en CSV">
+            Exporter CSV
+          </button>
+
+          <button type="button" id="btnExportJson" class="px-3 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-semibold transition cursor-pointer">
+            Exporter JSON
+          </button>
+
+          <label class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-medium border border-slate-600 transition cursor-pointer">
+            Importer JSON
+            <input type="file" id="inputImportJson" accept=".json,application/json" class="hidden" />
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barre d'onglets de navigation principale -->
+    <nav class="bg-[#16365e] border-t border-white/10" aria-label="Navigation principale">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex flex-wrap items-center gap-1 py-1.5">
+          <button type="button" data-tab="saisie" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer bg-white text-[#0f294a] shadow-sm">
+            1. Formulaire de Proposition
+          </button>
+          <button type="button" data-tab="dashboard" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer text-slate-200 hover:bg-white/10">
+            2. Suivi des Dossiers (<span id="badgeProposalCount">0</span>)
+          </button>
+          <button type="button" data-tab="synthese" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer text-slate-200 hover:bg-white/10">
+            3. Fiche d'Instruction &amp; Impression
+          </button>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 py-1.5">
+          <button type="button" id="btnLoadDemo" class="px-3 py-1.5 rounded-lg text-xs font-medium text-amber-200 hover:bg-white/10 border border-amber-300/30 transition cursor-pointer">
+            Charger exemples NC
+          </button>
+          <button type="button" id="btnClearAllProposals" class="px-3 py-1.5 rounded-lg text-xs font-medium text-red-200 hover:bg-red-950/60 border border-red-300/25 transition cursor-pointer">
+            Vider la liste
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Zone de notification non bloquante (remplace alert/confirm) -->
+  <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-md w-full px-4 sm:px-0 pointer-events-none no-print"></div>
+
+  <!-- Contenu principal -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Bandeau d'information contextuelle sur le dispositif en public mixé NC -->
+    <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4 no-print">
+      <div class="space-y-1">
+        <p class="text-sm font-semibold text-slate-900">
+          Dispositif « Alternance en public mixé » — Vice-rectorat de la Nouvelle-Calédonie &amp; GRETA-CFA
+        </p>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Cet outil centralise les propositions d'intégration d'alternants au sein de classes de formation initiale dans les établissements de Nouvelle-Calédonie afin de préparer l'instruction <strong>DAFPIC / GRETA-CFA</strong> et le dossier de demande d'autorisation auprès du <strong>Gouvernement de la Nouvelle-Calédonie</strong>.
+        </p>
+      </div>
+      <div class="shrink-0 bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 min-w-[220px]">
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-700 mb-1">
+          <span>Complétude du dossier</span>
+          <span id="completenessPercent" class="text-[#0f294a]">0%</span>
+        </div>
+        <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+          <div id="completenessBar" class="h-full bg-[#0f294a] transition-all duration-300" style="width: 0%;"></div>
+        </div>
+        <p id="completenessHint" class="text-[11px] text-slate-500 mt-1">Renseignez l'établissement, la faisabilité et les engagements.</p>
+      </div>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- ONGLET 1 : FORMULAIRE DE PROPOSITION (SECTIONS 1 À 4)                 -->
+    <!-- ===================================================================== -->
+    <section id="tab-saisie" class="tab-panel space-y-6">
+      <form id="proposalForm" class="space-y-6" novalidate>
+        <input type="hidden" id="proposalId" value="" />
+
+        <!-- Bandeau d'édition active -->
+        <div id="editingBanner" class="hidden bg-amber-50 border border-amber-300 rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div class="text-xs sm:text-sm text-amber-950">
+            Vous modifiez actuellement la proposition : <strong id="editingTitleDisplay"></strong>
+          </div>
+          <button type="button" id="btnCancelEdit" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-200/80 hover:bg-amber-300 text-amber-950 cursor-pointer">
+            Quitter le mode édition
+          </button>
+        </div>
+
+        <!-- SECTION 1 : IDENTIFICATION DE L'ÉTABLISSEMENT & PROJET EN PUBLIC MIXÉ -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <div class="bg-slate-50 border-b border-slate-200 px-5 py-3.5 flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-[#0f294a]">Section 1</span>
+              <h2 class="text-base font-bold text-slate-900">Identification de l'établissement &amp; projet en public mixé</h2>
+            </div>
+            <span class="text-xs text-slate-500">* Champs clés d'identification</span>
+          </div>
+
+          <div class="p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Établissement scolaire -->
+            <div class="lg:col-span-2">
+              <label for="etablissement" class="block text-xs font-semibold text-slate-700 mb-1">
+                Établissement scolaire *
+              </label>
+              <select id="etablissement" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none">
+                <option value="">— Sélectionner un établissement de Nouvelle-Calédonie —</option>
+                <option value="Lycée du Mont-Dore">Lycée du Mont-Dore (Le Mont-Dore)</option>
+                <option value="Lycée Jules Garnier">Lycée Jules Garnier (Nouméa)</option>
+                <option value="Lycée Auguste Escoffier">Lycée Auguste Escoffier (Nouméa)</option>
+                <option value="Lycée Dick Ukeiwë">Lycée Dick Ukeiwë (Wé — Lifou)</option>
+                <option value="Lycée Pétro Attiti">Lycée Pétro Attiti (Nouméa)</option>
+                <option value="LP Père Guéneau">LP Père Guéneau (La Foa)</option>
+                <option value="Lycée Professionnel de Pouembout">Lycée Professionnel de Pouembout (Pouembout)</option>
+                <option value="Lycée Grand Nouméa">Lycée Grand Nouméa (Dumbéa)</option>
+                <option value="Lycée Lapérouse">Lycée Lapérouse (Nouméa)</option>
+                <option value="Lycée Antoine Kéla">Lycée Antoine Kéla (Poindimié)</option>
+                <option value="Lycée Williama Haudra">Lycée Williama Haudra (Lifou)</option>
+                <option value="Lycée Johanna Vakié">Lycée Johanna Vakié (Ouvéa)</option>
+                <option value="Lycée Professionnel Agricole de Pouembout">Lycée Professionnel Agricole de Pouembout (Pouembout)</option>
+                <option value="Autre établissement">Autre établissement (préciser dans les observations)</option>
+              </select>
+            </div>
+
+            <!-- Période / Rentrée visée -->
+            <div>
+              <label for="rentreeVisee" class="block text-xs font-semibold text-slate-700 mb-1">
+                Période / Rentrée visée *
+              </label>
+              <select id="rentreeVisee" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none">
+                <option value="Rentrée 2027">Rentrée 2027</option>
+                <option value="Rentrée 2028">Rentrée 2028</option>
+                <option value="Rentrée 2026 (ajustement)">Rentrée 2026 (ajustement)</option>
+                <option value="Session / cohorte intermédiaire">Session / cohorte intermédiaire</option>
+              </select>
+            </div>
+
+            <!-- Commune -->
+            <div>
+              <label for="commune" class="block text-xs font-semibold text-slate-700 mb-1">
+                Commune *
+              </label>
+              <input type="text" id="commune" placeholder="Ex. Le Mont-Dore, Nouméa, Pouembout, Wé..." class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none" />
+            </div>
+
+            <!-- Province -->
+            <div>
+              <label for="province" class="block text-xs font-semibold text-slate-700 mb-1">
+                Province *
+              </label>
+              <select id="province" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none">
+                <option value="">— Choisir la province —</option>
+                <option value="Province Sud">Province Sud</option>
+                <option value="Province Nord">Province Nord</option>
+                <option value="Province des Îles Loyauté">Province des Îles Loyauté</option>
+              </select>
+            </div>
+
+            <!-- Niveau -->
+            <div>
+              <label for="niveauFormation" class="block text-xs font-semibold text-slate-700 mb-1">
+                Niveau *
+              </label>
+              <select id="niveauFormation" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none">
+                <option value="">— Choisir le niveau —</option>
+                <option value="Niveau 3 (CAP)">Niveau 3 (CAP)</option>
+                <option value="Niveau 4 (Bac Pro / BP / MC)">Niveau 4 (Bac Pro / BP / MC)</option>
+                <option value="Niveau 5 (BTS)">Niveau 5 (BTS)</option>
+                <option value="Autre niveau / certification NC">Autre niveau / certification NC</option>
+              </select>
+            </div>
+
+            <!-- Diplôme / Titre / Formation visée -->
+            <div class="lg:col-span-3">
+              <label for="intituleDiplome" class="block text-xs font-semibold text-slate-700 mb-1">
+                Diplôme / Titre / Formation visée *
+              </label>
+              <input type="text" id="intituleDiplome" placeholder="Ex. Bac Pro Maintenance des Véhicules, CAP Électricien, BTS NDRC..." class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none" />
+            </div>
+
+            <!-- Effectif total de la classe initiale prévue -->
+            <div>
+              <label for="effectifInitial" class="block text-xs font-semibold text-slate-700 mb-1">
+                Effectif total de la classe initiale prévue *
+              </label>
+              <input type="number" id="effectifInitial" min="0" max="60" step="1" value="20" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none" />
+            </div>
+
+            <!-- Nombre d'alternants envisagés -->
+            <div>
+              <label for="nbAlternants" class="block text-xs font-semibold text-slate-700 mb-1">
+                Nombre d'alternants envisagés *
+              </label>
+              <input type="number" id="nbAlternants" min="1" max="30" step="1" value="6" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none" />
+            </div>
+
+            <!-- Indicateur calculé de calibrage de la classe mixée -->
+            <div class="bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2 flex flex-col justify-center">
+              <span class="text-[11px] font-medium text-slate-500">Calibrage classe mixée envisagée</span>
+              <span id="effectifTotalDisplay" class="text-sm sm:text-base font-bold text-[#0f294a]">26 apprenants au total (6 alternants / 20 initiaux)</span>
+            </div>
+
+            <!-- Référent / DDFPT / Chef d'établissement -->
+            <div>
+              <label for="referentNom" class="block text-xs font-semibold text-slate-700 mb-1">
+                Référent / DDFPT / Chef d'établissement *
+              </label>
+              <input type="text" id="referentNom" placeholder="Ex. Mme Hélène Païta — DDFPT" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none" />
+            </div>
+
+            <!-- Contact email / téléphone -->
+            <div class="lg:col-span-2">
+              <label for="referentContact" class="block text-xs font-semibold text-slate-700 mb-1">
+                Contact email / téléphone *
+              </label>
+              <input type="text" id="referentContact" placeholder="Ex. ddfpt.etablissement@ac-noumea.nc / +687 43.xx.xx" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none" />
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2 : ENQUÊTE & FAISABILITÉ PÉDAGOGIQUE / ORGANISATIONNELLE EN PUBLIC MIXÉ -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <div class="bg-slate-50 border-b border-slate-200 px-5 py-3.5">
+            <span class="text-xs font-bold uppercase tracking-wider text-[#0f294a]">Section 2</span>
+            <h2 class="text-base font-bold text-slate-900">Enquête &amp; faisabilité pédagogique / organisationnelle en public mixé</h2>
+          </div>
+
+          <div class="p-5 space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="rythmeAlternance" class="block text-xs font-semibold text-slate-700 mb-1">
+                  Rythme d'alternance envisagé entreprise / établissement
+                </label>
+                <textarea id="rythmeAlternance" rows="3" placeholder="Ex. 2 semaines en entreprise / 2 semaines au lycée, périodes calendaires ou regroupements dédiés..." class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none"></textarea>
+              </div>
+
+              <div>
+                <label for="entreprisePresentie" class="block text-xs font-semibold text-slate-700 mb-1">
+                  Entreprise(s) ou organisme d'accueil pressenti(e)(s) *
+                </label>
+                <input type="text" id="entreprisePresentie" placeholder="Ex. Garage Sud Autos, OPT-NC, entreprise d'accueil identifiée..." class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none" />
+              </div>
+
+              <div>
+                <label for="tuteurIdentifie" class="block text-xs font-semibold text-slate-700 mb-1">
+                  Tuteur / maître d'apprentissage identifié
+                </label>
+                <input type="text" id="tuteurIdentifie" placeholder="Nom et fonction du tuteur pressenti" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none" />
+              </div>
+
+              <div class="md:col-span-2">
+                <label for="moyensPlateaux" class="block text-xs font-semibold text-slate-700 mb-1">
+                  Cours, espaces et plateaux techniques disponibles pour accueillir les alternants
+                </label>
+                <textarea id="moyensPlateaux" rows="3" placeholder="Ex. atelier maintenance adapté aux harmattan, salle informatique disponible le jeudi, créneaux..."
+                  class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none"></textarea>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <p class="text-xs font-semibold text-slate-700">Critères de faisabilité — cochez ce qui est acquis</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <label class="flex items-start gap-2 text-sm text-slate-700">
+                  <input type="checkbox" id="critEnt" class="mt-0.5 w-4 h-4 accent-[#0f294a]" />
+                  Accueil possible dans l'entreprise / l'organisme pressenti
+                </label>
+                <label class="flex items-start gap-2 text-sm text-slate-700">
+                  <input type="checkbox" id="critPlateau" class="mt-0.5 w-4 h-4 accent-[#0f294a]" />
+                  Plateaux techniques capables d'accueillir les alternants
+                </label>
+                <label class="flex items-start gap-2 text-sm text-slate-700">
+                  <input type="checkbox" id="critSecurite" class="mt-0.5 w-4 h-4 accent-[#0f294a]" />
+                  Conditions de sécurité et EPI conformes
+                </label>
+                <label class="flex items-start gap-2 text-sm text-slate-700">
+                  <input type="checkbox" id="critCompat" class="mt-0.5 w-4 h-4 accent-[#0f294a]" />
+                  Compatibilité avec l'emploi du temps de la formation initiale
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3 : ENGAGEMENTS & CONDITIONS DE MISE EN ŒUVRE -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <div class="bg-slate-50 border-b border-slate-200 px-5 py-3.5">
+            <span class="text-xs font-bold uppercase tracking-wider text-[#0f294a]">Section 3</span>
+            <h2 class="text-base font-bold text-slate-900">Engagements &amp; conditions de mise en œuvre</h2>
+          </div>
+
+          <div class="p-5 space-y-3">
+            <label class="flex items-start gap-2 text-sm text-slate-700">
+              <input type="checkbox" id="engDirection" class="mt-0.5 w-4 h-4 accent-[#0f294a]" required />
+              L'établissement s'engage à accueillir les alternants en section de formation initiale et à désigner un référent pédagogique.
+            </label>
+            <label class="flex items-start gap-2 text-sm text-slate-700">
+              <input type="checkbox" id="engEntreprise" class="mt-0.5 w-4 h-4 accent-[#0f294a]" required />
+              L'entreprise / l'organisme pressenti confirme son accord de principe pour accueillir le ou les alternants.
+            </label>
+            <label class="flex items-start gap-2 text-sm text-slate-700">
+              <input type="checkbox" id="engTuteur" class="mt-0.5 w-4 h-4 accent-[#0f294a]" required />
+              Un tuteur est identifié, informé et disponible pour le suivi des alternants.
+            </label>
+            <label class="flex items-start gap-2 text-sm text-slate-700">
+              <input type="checkbox" id="engCalendrier" class="mt-0.5 w-4 h-4 accent-[#0f294a]" required />
+              Le rythme d'alternance envisagé est compatible avec le calendrier de la formation initiale.
+            </label>
+          </div>
+        </div>
+
+        <!-- SECTION 4 : OBSERVATIONS & TRANSMISSION -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+          <div class="bg-slate-50 border-b border-slate-200 px-5 py-3.5">
+            <span class="text-xs font-bold uppercase tracking-wider text-[#0f294a]">Section 4</span>
+            <h2 class="text-base font-bold text-slate-900">Observations &amp; transmission</h2>
+          </div>
+
+          <div class="p-5 space-y-4">
+            <div>
+              <label for="dateProposition" class="block text-xs font-semibold text-slate-700 mb-1">
+                Date de la proposition
+              </label>
+              <input type="date" id="dateProposition" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none" />
+            </div>
+            <div>
+              <label for="observations" class="block text-xs font-semibold text-slate-700 mb-1">
+                Observations complémentaires
+              </label>
+              <textarea id="observations" rows="3" placeholder="Précisions sur le contexte, les partenaires, les difficultés anticipées..."
+                class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 outline-none"></textarea>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="submit" class="px-4 py-2.5 rounded-lg bg-[#0f294a] hover:bg-[#16365e] text-white text-sm font-semibold transition cursor-pointer">
+                Enregistrer la proposition
+              </button>
+              <button type="button" id="btnResetForm" class="px-4 py-2.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-sm font-medium transition cursor-pointer">
+                Réinitialiser le formulaire
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- ONGLET 2 : SUIVI DES DOSSIERS                                         -->
+    <!-- ===================================================================== -->
+    <section id="tab-dashboard" class="tab-panel hidden space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="print-only-block page-break-avoid"><p class="text-xs text-slate-500">Suivi des propositions d'alternance en public mixé — DAFPIC / GRETA-CFA NC</p></div>
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm page-break-avoid">
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Propositions</p>
+          <p class="text-2xl font-bold text-[#0f294a] mt-1"><span id="kpiTotal">0</span></p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm page-break-avoid">
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">En instruction</p>
+          <p class="text-2xl font-bold text-amber-600 mt-1"><span id="kpiInstruction">0</span></p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm page-break-avoid">
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Validées</p>
+          <p class="text-2xl font-bold text-emerald-600 mt-1"><span id="kpiValidees">0</span></p>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm page-break-avoid">
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Alternants envisagés</p>
+          <p class="text-2xl font-bold text-[#0f294a] mt-1"><span id="kpiAlternants">0</span></p>
+        </div>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+        <div class="bg-slate-50 border-b border-slate-200 px-5 py-3.5 flex flex-col md:flex-row md:items-center gap-3 md:justify-between">
+          <h2 class="text-base font-bold text-slate-900">Suivi des dossiers</h2>
+          <div class="flex flex-wrap items-center gap-2">
+            <input type="search" id="filterSearch" placeholder="Rechercher (établissement, formation, commune...)" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm outline-none focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 min-w-[240px]" />
+            <select id="filterStatut" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm outline-none focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20">
+              <option value="">Tous les statuts</option>
+            </select>
+            <select id="filterEtablissement" class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm outline-none focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 max-w-[240px]">
+              <option value="">Tous les établissements</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-scroll overflow-x-auto px-5 py-4">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-xs uppercase tracking-wider text-slate-500 border-b border-slate-200">
+                <th class="py-2 pr-4 font-semibold">Établissement</th>
+                <th class="py-2 pr-4 font-semibold">Formation visée</th>
+                <th class="py-2 pr-4 font-semibold">Alternants</th>
+                <th class="py-2 pr-4 font-semibold">Rentrée</th>
+                <th class="py-2 pr-4 font-semibold">Statut</th>
+                <th class="py-2 pr-4 font-semibold">Mise à jour</th>
+                <th class="py-2 font-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="dashboardBody" class="divide-y divide-slate-100"></tbody>
+          </table>
+          <p id="dashboardEmpty" class="text-sm text-slate-500 py-6 text-center hidden">Aucune proposition enregistrée pour l'instant. Utilisez le formulaire ou chargez les exemples NC.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- ONGLET 3 : FICHE D'INSTRUCTION & IMPRESSION                           -->
+    <!-- ===================================================================== -->
+    <section id="tab-synthese" class="tab-panel hidden space-y-6">
+      <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm no-print flex flex-col md:flex-row md:items-end gap-3 md:justify-between">
+        <div class="flex flex-wrap items-end gap-3 flex-1">
+          <div>
+            <label for="syntheseSelect" class="block text-xs font-semibold text-slate-700 mb-1">Proposition à instruire</label>
+            <select id="syntheseSelect" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 min-w-[300px]"></select>
+          </div>
+          <div>
+            <label for="avisStatut" class="block text-xs font-semibold text-slate-700 mb-1">Avis / suite donnée</label>
+            <select id="avisStatut" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20"></select>
+          </div>
+          <div>
+            <label for="avisCommentaire" class="block text-xs font-semibold text-slate-700 mb-1">Commentaire d'instruction</label>
+            <input type="text" id="avisCommentaire" placeholder="Ex. dossier complet, completer le volet sécurité..." class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-[#0f294a] focus:ring-2 focus:ring-[#0f294a]/20 w-full md:w-80" />
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="btnSaveAvis" class="px-3 py-2 rounded-lg bg-[#0f294a] hover:bg-[#16365e] text-white text-xs font-semibold transition cursor-pointer">Enregistrer l'avis</button>
+          <button type="button" id="btnPrintSynthese" class="px-3 py-2 rounded-lg bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs font-medium transition cursor-pointer">Imprimer la fiche</button>
+        </div>
+      </div>
+      <div id="syntheseContent" class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 print-shadow-none max-w-4xl mx-auto w-full"></div>
+    </section>
+  </main>
+
+  <!-- Fenêtre de confirmation non bloquante -->
+  <dialog id="confirmDialog" class="rounded-xl p-0 backdrop:bg-slate-900/50 max-w-md w-full">
+    <form id="confirmForm" class="p-5 space-y-4" method="dialog">
+      <p id="confirmText" class="text-sm text-slate-800"></p>
+      <div class="flex justify-end gap-2">
+        <button type="submit" id="confirmYes" class="px-3 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white text-xs font-semibold cursor-pointer">Confirmer</button>
+        <button type="button" id="confirmNo" class="px-3 py-2 rounded-lg bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs font-medium cursor-pointer">Annuler</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+(function () {
+  "use strict";
+
+  var LS = "dafpic-alternance-publicmixe-v1";
+  var STATUTS = ["Reçue", "En instruction", "Complément demandé", "Validée", "Refusée"];
+
+  var FIELDS = [
+    ["etablissement", "Établissement scolaire"],
+    ["rentreeVisee", "Période / rentrée visée"],
+    ["commune", "Commune"],
+    ["province", "Province"],
+    ["niveauFormation", "Niveau"],
+    ["intituleDiplome", "Diplôme / Titre / Formation visée"],
+    ["effectifInitial", "Effectif de la classe initiale prévue"],
+    ["nbAlternants", "Nombre d'alternants envisagés"],
+    ["referentNom", "Référent / DDFPT / Chef d'établissement"],
+    ["referentContact", "Contact email / téléphone"],
+    ["rythmeAlternance", "Rythme d'alternance envisagé"],
+    ["entreprisePresentie", "Entreprise(s) ou organisme d'accueil pressenti(e)(s)"],
+    ["tuteurIdentifie", "Tuteur / maître d'apprentissage identifié"],
+    ["moyensPlateaux", "Cours, espaces et plateaux techniques disponibles"],
+    ["dateProposition", "Date de la proposition"],
+    ["observations", "Observations complémentaires"]
+  ];
+
+  var REQUIRED = ["etablissement", "rentreeVisee", "commune", "province", "niveauFormation",
+    "intituleDiplome", "effectifInitial", "nbAlternants", "referentNom", "referentContact",
+    "entreprisePresentie"];
+
+  var CRITERES = [
+    ["critEnt", "Accueil possible dans l'entreprise / l'organisme pressenti"],
+    ["critPlateau", "Plateaux techniques capables d'accueillir les alternants"],
+    ["critSecurite", "Conditions de sécurité et EPI conformes"],
+    ["critCompat", "Compatibilité avec l'emploi du temps de la formation initiale"]
+  ];
+
+  var ENGAGEMENTS = [
+    ["engDirection", "Engagement de l'établissement (référent désigné)"],
+    ["engEntreprise", "Accord de principe de l'entreprise / l'organisme"],
+    ["engTuteur", "Tuteur identifié, informé et disponible"],
+    ["engCalendrier", "Rythme d'alternance compatible avec le calendrier de formation"]
+  ];
+
+  var DEMO = [
+    { id: "demo-1", exemple: true, maj: "2027-01-15T09:00:00.000Z", statut: "Reçue", avisCommentaire: "",
+      etablissement: "Lycée du Mont-Dore", rentreeVisee: "Rentrée 2027", commune: "Le Mont-Dore", province: "Province Sud",
+      niveauFormation: "Niveau 4 (Bac Pro / BP / MC)", intituleDiplome: "Bac Pro Maintenance des Véhicules",
+      effectifInitial: "20", nbAlternants: "6", referentNom: "Mme Hélène Païta — DDFPT",
+      referentContact: "ddfpt.montdore@ac-noumea.nc / +687 43.11.22",
+      rythmeAlternance: "1 semaine en entreprise / 1 semaine au lycée, sur les deux premières années.",
+      entreprisePresentie: "Garage Sud Autos (Nouméa), concession nord (Dumbéa)", tuteurIdentifie: "M. Denis Wamytan — chef d'atelier",
+      moyensPlateaux: "Atelier maintenance équipé, salle informatique disponible le jeudi.",
+      critEnt: true, critPlateau: true, critSecurite: true, critCompat: false,
+      engDirection: true, engEntreprise: true, engTuteur: true, engCalendrier: false,
+      dateProposition: "2027-01-15", observations: "Exemple — proposition sans engagement." },
+    { id: "demo-2", exemple: true, maj: "2027-01-18T14:30:00.000Z", statut: "En instruction", avisCommentaire: "",
+      etablissement: "LP Père Guéneau", rentreeVisee: "Rentrée 2027", commune: "La Foa", province: "Province Sud",
+      niveauFormation: "Niveau 3 (CAP)", intituleDiplome: "CAP Électricien",
+      effectifInitial: "16", nbAlternants: "4", referentNom: "M. Jean-Marc Tidjine — DDFPT",
+      referentContact: "ddfp.gueneau@ac-noumea.nc / +687 44.55.66",
+      rythmeAlternance: "2 semaines entreprise / 2 semaines centre, regroupements calendaires.",
+      entreprisePresentie: "Elitelec SARL (Bouloupari), artisans local La Foa", tuteurIdentifie: "M. Pierre Kaavo",
+      moyensPlateaux: "Plateau technique adapté au public mixé.",
+      critEnt: true, critPlateau: true, critSecurite: true, critCompat: true,
+      engDirection: true, engEntreprise: true, engTuteur: true, engCalendrier: true,
+      dateProposition: "2027-01-18", observations: "Exemple — proposition sans engagement." },
+    { id: "demo-3", exemple: true, maj: "2027-01-20T10:15:00.000Z", statut: "Complément demandé", avisCommentaire: "",
+      etablissement: "Lycée Grand Nouméa", rentreeVisee: "Rentrée 2028", commune: "Dumbéa", province: "Province Sud",
+      niveauFormation: "Niveau 5 (BTS)", intituleDiplome: "BTS NDRC",
+      effectifInitial: "24", nbAlternants: "8", referentNom: "Mme Aline Mwadi — chef de travaux",
+      referentContact: "bts.gn@ac-noumea.nc / +687 45.77.88",
+      rythmeAlternance: "3 semaines entreprise / 1 semaine centre, sur la 2e année de BTS.",
+      entreprisePresentie: "À identifier (commerces de Nouméa et Dumbéa)", tuteurIdentifie: "Non identifié à ce stade",
+      moyensPlateaux: "Salles de cours et plateforme commerciale.",
+      critEnt: false, critPlateau: true, critSecurite: true, critCompat: true,
+      engDirection: true, engEntreprise: false, engTuteur: false, engCalendrier: true,
+      dateProposition: "2027-01-20", observations: "Exemple — proposition sans engagement." }
+  ];
+
+  function $(id) { return document.getElementById(id); }
+  function esc(v) { return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function todayISO() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function nowISO() { return new Date().toISOString(); }
+  function norm(s) { return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+
+  var proposals = [];
+  var editingId = null;
+
+  function load() {
+    try { var s = localStorage.getItem(LS); if (s) proposals = JSON.parse(s) || []; } catch (e) { proposals = []; }
+  }
+  function persist() {
+    try { localStorage.setItem(LS, JSON.stringify(proposals)); } catch (e) { toast("Enregistrement impossible dans ce navigateur. Exportez une sauvegarde JSON.", "error"); }
+  }
+
+  function toast(msg, type) {
+    var c = $("toastContainer"); if (!c) return;
+    var el = document.createElement("div");
+    el.className = "pointer-events-auto px-4 py-3 rounded-lg shadow-lg text-sm font-medium transition-opacity duration-300 " +
+      (type === "error" ? "bg-red-600 text-white" : type === "warn" ? "bg-amber-500 text-slate-950" : "bg-slate-900 text-white");
+    el.textContent = msg;
+    c.appendChild(el);
+    setTimeout(function () { el.style.opacity = "0"; setTimeout(function () { el.remove(); }, 300); }, 3200);
+  }
+
+  function confirmBox(msg, cb) {
+    var d = $("confirmDialog");
+    $("confirmText").textContent = msg;
+    $("confirmYes").onclick = function () { d.close(); cb(true); };
+    d.showModal();
+  }
+
+  function readForm() {
+    var o = { id: $("proposalId").value || "", maj: nowISO(), statut: "Reçue", avisCommentaire: "" };
+    FIELDS.forEach(function (f) { var el = $(f[0]); o[f[0]] = el ? String(el.value || "").trim() : ""; });
+    CRITERES.forEach(function (c) { o[c[0]] = $(c[0]).checked; });
+    ENGAGEMENTS.forEach(function (c) { o[c[0]] = $(c[0]).checked; });
+    return o;
+  }
+
+  function fillForm(p) {
+    $("proposalId").value = p.id || "";
+    FIELDS.forEach(function (f) { var el = $(f[0]); if (el) el.value = p[f[0]] || ""; });
+    if (!p.dateProposition) $("dateProposition").value = todayISO();
+    CRITERES.forEach(function (c) { $(c[0]).checked = !!p[c[0]]; });
+    ENGAGEMENTS.forEach(function (c) { $(c[0]).checked = !!p[c[0]]; });
+    updateComplete(); updateTotalDisplay();
+  }
+
+  function resetForm() {
+    editingId = null;
+    $("proposalForm").reset();
+    $("proposalId").value = "";
+    CRITERES.forEach(function (c) { $(c[0]).checked = false; });
+    ENGAGEMENTS.forEach(function (c) { $(c[0]).checked = false; });
+    $("dateProposition").value = todayISO();
+    $("editingBanner").classList.add("hidden");
+    updateComplete(); updateTotalDisplay();
+  }
+
+  function missingRequired() {
+    var miss = REQUIRED.filter(function (id) { var el = $(id); return !el || !String(el.value || "").trim(); })
+      .map(function (id) { var f = FIELDS.find(function (x) { return x[0] === id; }); return f ? f[1] : id; });
+    return miss.filter(function (v, i, a) { return a.indexOf(v) === i; });
+  }
+
+  function updateComplete() {
+    var done = 0, total = REQUIRED.length + ENGAGEMENTS.length;
+    REQUIRED.forEach(function (id) { var el = $(id); if (el && String(el.value || "").trim()) done++; });
+    ENGAGEMENTS.forEach(function (c) { if ($(c[0]).checked) done++; });
+    var pct = Math.round(done / total * 100);
+    $("completenessPercent").textContent = pct + "%";
+    $("completenessBar").style.width = pct + "%";
+    var miss = missingRequired();
+    var engMiss = ENGAGEMENTS.filter(function (c) { return !$(c[0]).checked; }).length;
+    $("completenessHint").textContent = miss.length
+      ? "À compléter : " + miss.slice(0, 3).join(", ") + (miss.length > 3 ? "…" : "") + "."
+      : (engMiss ? "Presque complet : il reste " + engMiss + " engagement(s) à cocher." : "Dossier complet — vous pouvez enregistrer.");
+  }
+
+  function updateTotalDisplay() {
+    var ei = parseInt($("effectifInitial").value, 10) || 0;
+    var na = parseInt($("nbAlternants").value, 10) || 0;
+    $("effectifTotalDisplay").textContent = (ei + na) + " apprenants au total (" + na + " alternants / " + ei + " initiaux)";
+  }
+
+  function showTab(name) {
+    ["saisie", "dashboard", "synthese"].forEach(function (t) {
+      var panel = $("tab-" + t); if (panel) panel.classList.toggle("hidden", t !== name);
+    });
+    document.querySelectorAll(".tab-btn").forEach(function (b) {
+      var active = b.dataset.tab === name;
+      b.className = "tab-btn px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer " +
+        (active ? "bg-white text-[#0f294a] shadow-sm" : "text-slate-200 hover:bg-white/10");
+    });
+    window.scrollTo(0, 0);
+    if (name === "dashboard") renderDashboard();
+    if (name === "synthese") renderSynthese();
+  }
+
+  function updateBadge() { $("badgeProposalCount").textContent = proposals.length; }
+
+  function renderDashboard() {
+    updateBadge();
+    var q = norm($("filterSearch").value), fs = $("filterStatut").value, fe = $("filterEtablissement").value;
+    var rows = proposals.filter(function (p) {
+      if (fs && p.statut !== fs) return false;
+      if (fe && p.etablissement !== fe) return false;
+      if (q && norm(FIELDS.map(function (f) { return p[f[0]]; }).join(" ")).indexOf(q) === -1) return false;
+      return true;
+    });
+    var counts = {};
+    proposals.forEach(function (p) { counts[p.statut] = (counts[p.statut] || 0) + 1; });
+    $("kpiTotal").textContent = proposals.length;
+    $("kpiInstruction").textContent = (counts["En instruction"] || 0) + (counts["Complément demandé"] || 0);
+    $("kpiValidees").textContent = counts["Validée"] || 0;
+    var alts = proposals.reduce(function (a, p) { return a + (parseInt(p.nbAlternants, 10) || 0); }, 0);
+    $("kpiAlternants").textContent = alts;
+
+    $("dashboardBody").innerHTML = rows.slice().sort(function (a, b) { return (b.maj || "").localeCompare(a.maj || ""); }).map(function (p) {
+      return '<tr class="border-b border-slate-100 hover:bg-slate-50">' +
+        '<td class="py-2.5 pr-4 font-medium text-slate-900">' + esc(p.etablissement) + (p.exemple ? ' <span class="ml-1 text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 align-middle">Exemple</span>' : '') + '<br><span class="text-xs text-slate-500">' + esc(p.commune) + " — " + esc(p.province) + '</span></td>' +
+        '<td class="py-2.5 pr-4">' + esc(p.intituleDiplome) + '<br><span class="text-xs text-slate-500">' + esc(p.niveauFormation) + '</span></td>' +
+        '<td class="py-2.5 pr-4 font-semibold text-[#0f294a]">' + esc(p.nbAlternants) + '</td>' +
+        '<td class="py-2.5 pr-4 text-xs">' + esc(p.rentreeVisee) + '</td>' +
+        '<td class="py-2.5 pr-4"><select data-statut="' + esc(p.id) + '" class="rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs">' +
+          STATUTS.map(function (s) { return '<option' + (s === p.statut ? " selected" : "") + '>' + esc(s) + '</option>'; }).join("") +
+        '</select></td>' +
+        '<td class="py-2.5 pr-4 text-xs text-slate-500">' + esc((p.maj || "").slice(0, 10)) + '</td>' +
+        '<td class="py-2.5 text-xs whitespace-nowrap">' +
+          '<button type="button" data-open="' + esc(p.id) + '" class="px-2 py-1 rounded bg-[#0f294a] text-white font-semibold mr-1 cursor-pointer">Ouvrir</button> ' +
+          '<button type="button" data-fiche="' + esc(p.id) + '" class="px-2 py-1 rounded border border-slate-300 text-slate-700 mr-1 cursor-pointer">Fiche</button> ' +
+          '<button type="button" data-del="' + esc(p.id) + '" class="px-2 py-1 rounded border border-red-300 text-red-600 cursor-pointer">Supprimer</button>' +
+        '</td></tr>';
+    }).join("");
+    $("dashboardEmpty").classList.toggle("hidden", rows.length > 0);
+  }
+
+  function kv(l, v) {
+    return '<div class="border-b border-slate-100 py-1.5"><span class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">' + esc(l) + '</span><br><span class="text-sm text-slate-900">' + (String(v || "").trim() ? esc(v) : '<span class="text-slate-400">— non renseigné —</span>') + '</span></div>';
+  }
+  function yesno(v) { return v ? '<span class="font-semibold text-emerald-700">Oui</span>' : '<span class="font-semibold text-red-700">Non / à confirmer</span>'; }
+
+  function buildFiche(p) {
+    if (!p) {
+      $("syntheseContent").innerHTML = '<p class="text-sm text-slate-500">Choisissez une proposition ci-dessus (ou ouvrez une fiche depuis le suivi) pour afficher la fiche d\'instruction imprimable.</p>';
+      return;
+    }
+    var crit = CRITERES.map(function (c) { return '<p class="text-sm text-slate-700">' + yesno(p[c[0]]) + ' <span class="text-slate-600">' + esc(c[1]) + '</span></p>'; }).join("");
+    var eng = ENGAGEMENTS.map(function (c) { return '<p class="text-sm text-slate-700">' + yesno(p[c[0]]) + ' <span class="text-slate-600">' + esc(c[1]) + '</span></p>'; }).join("");
+    $("syntheseContent").innerHTML =
+      '<div class="space-y-4">' +
+      '<div class="border-b-2 border-[#0f294a] pb-2"><h2 class="text-lg font-bold text-[#0f294a]">' + esc(p.etablissement) + '</h2>' +
+      '<p class="text-sm text-slate-600">' + esc(p.intituleDiplome) + ' · ' + esc(p.niveauFormation) + ' · ' + esc(p.rentreeVisee) + '</p>' +
+      '<p class="text-xs text-slate-500 mt-0.5">' + esc(p.commune) + ' · ' + esc(p.province) + ' · maj ' + esc((p.maj || "").slice(0, 10)) + (p.exemple ? ' · <strong>exemple, sans engagement</strong>' : '') + '</p></div>' +
+      '<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 page-break-avoid">' + kv(FIELDS[0][1], p.etablissement) + kv(FIELDS[1][1], p.rentreeVisee) + kv(FIELDS[2][1], p.commune) + kv(FIELDS[3][1], p.province) + kv(FIELDS[4][1], p.niveauFormation) + '</div>' +
+      '<div class="page-break-avoid"><h3 class="text-sm font-bold text-slate-900 mb-1">Classe mixée et référent</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">' + kv(FIELDS[5][1], p.intituleDiplome) + kv(FIELDS[6][1], p.effectifInitial) + kv(FIELDS[7][1], p.nbAlternants) + kv(FIELDS[8][1], p.referentNom) + kv(FIELDS[9][1], p.referentContact) + '</div></div>' +
+      '<div class="page-break-avoid"><h3 class="text-sm font-bold text-slate-900 mb-1">Enquête et faisabilité</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">' + kv(FIELDS[10][1], p.rythmeAlternance) + kv(FIELDS[11][1], p.entreprisePresentie) + kv(FIELDS[12][1], p.tuteurIdentifie) + kv(FIELDS[13][1], p.moyensPlateaux) + '</div><div class="mt-2 space-y-1">' + crit + '</div></div>' +
+      '<div class="page-break-avoid"><h3 class="text-sm font-bold text-slate-900 mb-1">Engagements</h3><div class="space-y-1">' + eng + '</div></div>' +
+      '<div class="page-break-avoid"><h3 class="text-sm font-bold text-slate-900 mb-1">Observations</h3><p class="text-sm text-slate-700 whitespace-pre-wrap">' + (String(p.observations || "").trim() ? esc(p.observations) : '<span class="text-slate-400">— aucune —</span>') + '</p></div>' +
+      '<div class="page-break-avoid"><h3 class="text-sm font-bold text-slate-900 mb-1">Instruction DAFPIC / GRETA-CFA</h3>' +
+      '<p class="text-sm">Avis : <span class="font-bold text-[#0f294a]">' + esc(p.statut || "Reçue") + '</span></p>' +
+      '<p class="text-sm">Commentaire : ' + (String(p.avisCommentaire || "").trim() ? esc(p.avisCommentaire) : '<span class="text-slate-400">— aucun —</span>') + '</p>' +
+      '<div class="mt-4 grid grid-cols-2 gap-8 text-xs text-slate-500"><p>Le DAFPIC / GRETA-CFA<br><br>____________________</p><p>L\'établissement<br><br>____________________</p></div>' +
+      '</div></div>';
+  }
+
+  function renderSynthese() {
+    var sel = $("syntheseSelect");
+    var current = sel.value;
+    sel.innerHTML = '<option value="">— Choisir une proposition —</option>' + proposals
+      .slice().sort(function (a, b) { return (b.maj || "").localeCompare(a.maj || ""); })
+      .map(function (p) { return '<option value="' + esc(p.id) + '">' + esc(p.etablissement + " — " + p.intituleDiplome + " (" + p.rentreeVisee + ")") + '</option>'; }).join("");
+    sel.value = proposals.some(function (p) { return p.id === current; }) ? current : "";
+    var avis = $("avisStatut");
+    avis.innerHTML = STATUTS.map(function (s) { return '<option>' + esc(s) + '</option>'; }).join("");
+    var p = proposals.find(function (x) { return x.id === sel.value; });
+    $("avisStatut").value = p ? (p.statut || "Reçue") : "Reçue";
+    $("avisCommentaire").value = p ? (p.avisCommentaire || "") : "";
+    buildFiche(p);
+  }
+
+  function exportCsv() {
+    if (!proposals.length) { toast("Aucune proposition à exporter.", "warn"); return; }
+    var q = function (v) { return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; };
+    var head = FIELDS.map(function (f) { return f[1]; }).concat(CRITERES.map(function (c) { return c[1]; }), ENGAGEMENTS.map(function (c) { return c[1]; }), ["Statut", "Commentaire d'instruction"]);
+    var lines = proposals.map(function (p) {
+      return FIELDS.map(function (f) { return p[f[0]]; })
+        .concat(CRITERES.map(function (c) { return p[c[0]] ? "Oui" : "Non"; }), ENGAGEMENTS.map(function (c) { return p[c[0]] ? "Oui" : "Non"; }), [p.statut || "", p.avisCommentaire || ""])
+        .map(q).join(";");
+    });
+    var blob = new Blob(["\uFEFF" + head.map(q).join(";") + "\r\n" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "propositions-alternance-public-mixe.csv";
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    toast("Export CSV téléchargé.");
+  }
+
+  function exportJson() {
+    download("sauvegarde-alternance-public-mixe.json", JSON.stringify(proposals, null, 1), "application/json");
+    toast("Sauvegarde JSON téléchargée.");
+  }
+
+  function download(name, text, mime) {
+    var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: mime })); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  }
+
+  function importJsonText(text) {
+    var arr;
+    try { arr = JSON.parse(text.replace(/^\uFEFF/, "").trim()); } catch (e) { return "Fichier illisible."; }
+    arr = [].concat(arr);
+    var add = 0, up = 0, old = 0;
+    arr.forEach(function (raw) {
+      if (!raw || typeof raw !== "object" || !raw.etablissement) return;
+      FIELDS.forEach(function (f) { r[f[0]] = String(raw[f[0]] == null ? "" : raw[f[0]]); });
+      CRITERES.forEach(function (c) { r[c[0]] = !!raw[c[0]]; });
+      ENGAGEMENTS.forEach(function (c) { r[c[0]] = !!raw[c[0]]; });
+      r.exemple = !!raw.exemple;
+      r.id = String(raw.id || ("p_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7)));
+      r.maj = String(raw.maj || "");
+      r.statut = STATUTS.includes(raw.statut) ? raw.statut : "Reçue";
+      r.avisCommentaire = String(raw.avisCommentaire || "");
+      var i = proposals.findIndex(function (x) { return x.id === r.id; });
+      if (i < 0) { proposals.push(r); add++; }
+      else if ((r.maj || "") > (proposals[i].maj || "")) { proposals[i] = r; up++; }
+      else old++;
+    });
+    persist(); renderDashboard();
+    return add + " ajoutée(s), " + up + " mise(s) à jour, " + old + " déjà à jour.";
+  }
+
+  function loadDemo() {
+    var m = importJsonText(JSON.stringify(DEMO));
+    toast(m + " — pensez à « Vider la liste » avant une vraie utilisation.", "warn");
+  }
+
+  function setup() {
+    load();
+    var fs = $("filterStatut");
+    fs.innerHTML = '<option value="">Tous les statuts</option>' + STATUTS.map(function (s) { return '<option>' + esc(s) + '</option>'; }).join("");
+    $("dateProposition").value = todayISO();
+
+    document.querySelectorAll(".tab-btn").forEach(function (b) {
+      b.addEventListener("click", function () { showTab(b.dataset.tab); });
+    });
+
+    ["effectifInitial", "nbAlternants"].forEach(function (id) { $(id).addEventListener("input", updateTotalDisplay); });
+    ["etablissement", "rentreeVisee", "commune", "province", "niveauFormation", "intituleDiplome", "effectifInitial", "nbAlternants",
+     "referentNom", "referentContact", "rythmeAlternance", "entreprisePresentie", "tuteurIdentifie", "moyensPlateaux", "observations"]
+      .forEach(function (id) { $(id).addEventListener("input", updateComplete); $(id).addEventListener("change", updateComplete); });
+    CRITERES.concat(ENGAGEMENTS).forEach(function (c) { $(c[0]).addEventListener("change", updateComplete); });
+
+    $("proposalForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var miss = missingRequired();
+      if (miss.length) { toast("Champs obligatoires à compléter : " + miss.slice(0, 3).join(", "), "error"); return; }
+      if (!ENGAGEMENTS.every(function (c) { return $(c[0]).checked; })) { toast("Cochez les quatre engagements avant d'enregistrer.", "error"); return; }
+      var o = readForm();
+      if (!o.id) o.id = "p_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+      var idx = providersIndex(o.id);
+      if (idx >= 0) { o.statut = proposals[idx].statut || "Reçue"; o.avisCommentaire = proposals[idx].avisCommentaire || ""; o.exemple = proposals[idx].exemple; proposals[idx] = o; toast("Proposition mise à jour."); }
+      else { o.statut = "Reçue"; o.exemple = false; proposals.push(o); toast("Proposition enregistrée."); }
+      persist(); updateBadge(); resetForm(); showTab("dashboard");
+    });
+
+    function providersIndex(id) { return id ? proposals.findIndex(function (x) { return x.id === id; }) : -1; }
+
+    $("btnCancelEdit").addEventListener("click", function () { resetForm(); toast("Mode édition quitté."); });
+    $("btnResetForm").addEventListener("click", function () {
+      confirmBox("Effacer la saisie en cours (sans supprimer les propositions enregistrées) ?", function () { resetForm(); });
+    });
+    $("btnQuickNew").addEventListener("click", function () { resetForm(); showTab("saisie"); });
+    $("btnQuickPrint").addEventListener("click", function () {
+      var idx = providersIndex(editingId);
+      var p = idx >= 0 ? proposals[idx] : readForm();
+      buildFiche(p);
+      $("avisStatut").value = p.statut || "Reçue";
+      $("avisCommentaire").value = p.avisCommentaire || "";
+      showTab("synthese");
+      setTimeout(function () { window.print(); }, 150);
+    });
+    $("btnExportCsvPropositions").addEventListener("click", exportCsv);
+    $("btnExportJson").addEventListener("click", exportJson);
+    $("inputImportJson").addEventListener("change", function (e) {
+      var f = e.target.files && e.target.files[0];
+      if (!f) return;
+      f.text().then(function (t) { var m = importJsonText(t); toast(m, m === "Fichier illisible." ? "error" : ""); e.target.value = ""; });
+    });
+    $("btnLoadDemo").addEventListener("click", loadDemo);
+    $("btnClearAllProposals").addEventListener("click", function () {
+      if (!proposals.length) { toast("La liste est déjà vide.", "warn"); return; }
+      confirmBox("Vider TOUTE la liste des propositions ?", function () { proposals = []; persist(); renderDashboard(); renderSynthese(); toast("Liste vidée."); });
+    });
+
+    $("dashboardBody").addEventListener("change", function (e) {
+      var sel = e.target.closest && e.target.closest("[data-statut]");
+      if (!sel) return;
+      var p = proposals.find(function (x) { return x.id === sel.dataset.statut; });
+      if (p && STATUTS.includes(sel.value)) { p.statut = sel.value; p.maj = nowISO(); persist(); renderDashboard(); toast("Statut mis à jour : " + sel.value); }
+    });
+
+    $("filterSearch").addEventListener("input", renderDashboard);
+    $("filterStatut").addEventListener("change", renderDashboard);
+    $("filterEtablissement").addEventListener("change", renderDashboard);
+
+    $("dashboardBody").addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest("button"); if (!b) return;
+      var id = b.dataset.open || b.dataset.del || b.dataset.fiche;
+      var idx = providersIndex(id);
+      if (idx < 0) return;
+      if (b.dataset.open) { editingId = id; fillForm(proposals[idx]); $("editingBanner").classList.remove("hidden"); $("editingTitleDisplay").textContent = proposals[idx].etablissement + " — " + proposals[idx].intituleDiplome; showTab("saisie"); }
+      else if (b.dataset.fiche) { buildFiche(proposals[idx]); $("avisStatut").value = proposals[idx].statut || "Reçue"; $("avisCommentaire").value = proposals[idx].avisCommentaire || ""; showTab("synthese"); }
+      else if (b.dataset.del) {
+        confirmBox("Supprimer définitivement la proposition « " + proposals[idx].etablissement + " » ?", function () {
+          proposals = proposals.filter(function (x) { return x.id !== id; });
+          if (editingId === id) resetForm();
+          persist(); renderDashboard(); toast("Proposition supprimée.");
+        });
+      }
+    });
+
+    $("syntheseSelect").addEventListener("change", renderSynthese);
+    $("btnSaveAvis").addEventListener("click", function () {
+      var p = proposals.find(function (x) { return x.id === $("syntheseSelect").value; });
+      if (!p) { toast("Choisissez d'abord une proposition.", "warn"); return; }
+      p.statut = $("avisStatut").value; p.avisCommentaire = $("avisCommentaire").value.trim(); p.maj = nowISO();
+      persist(); buildFiche(p); updateBadge(); toast("Avis enregistré.");
+    });
+    $("btnPrintSynthese").addEventListener("click", function () { window.print(); });
+
+    updateBadge();
+    updateComplete();
+    updateTotalDisplay();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setup);
+  else setup();
+})();
+</script>
+</body>
+</html>
