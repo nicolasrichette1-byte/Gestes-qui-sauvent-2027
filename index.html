@@ -1886,6 +1886,9 @@
   }
 
   function errText(e) {
+    var m = e && (e.message || String(e));
+    if (m && m.indexOf('HTTP ') === 0) return 'Échec cloud (' + m + '). Transmettez ce code.';
+    if (m && /(network|fetch|load failed)/i.test(m)) return 'Réseau indisponible : impossible de joindre le cloud. Vérifiez la connexion.';
     var c = e && e.code;
     if (c === 'permission-denied' || c === 'invalid_argument') return 'Action refusée : vous n’avez probablement pas le droit de modifier ces données.';
     if (c === 'quota_exceeded') return 'La limite de stockage est atteinte.';
