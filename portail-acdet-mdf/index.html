@@ -1783,6 +1783,43 @@
   <script>
     (function () {
       const STORAGE_KEY = 'acdet_mdf_dossiers_2027_v3';
+      const CLOUD_URL = 'https://xyrvjlfbncumocacek.supabase.co/rest/v1/coordination';
+      const CLOUD_KEY = 'sb_publishable_ymyeN1YlxpYev6LAQq56DA_8rOcz2vP';
+      const CLOUD_DOC = 'portail_acdet_dossiers_v1';
+      let cloudLastLocalSave = 0;
+
+      const cloudHeaders = () => ({ apikey: CLOUD_KEY, Authorization: `Bearer ${CLOUD_KEY}`, 'Content-Type': 'application/json' });
+
+      async function cloudPull() {
+        const res = await fetch(`${CLOUD_URL}?select=data&key=eq.${encodeURIComponent(CLOUD_DOC)}`, { headers: { apikey: CLOUD_KEY, Authorization: `Bearer ${CLOUD_KEY}` } });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const rows = await res.json();
+        return rows.length ? (rows[0].data || {}) : null;
+      }
+
+      async function cloudPush(list) {
+        const res = await fetch(CLOUD_URL, { method: 'POST', headers: Object.assign({ Prefer: 'resolution=merge-duplicates' }, cloudHeaders()), body: JSON.stringify({ key: CLOUD_DOC, data: { list: list } }) });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+      }
+
+      async function syncFromCloud() {
+        try {
+          const cloudDoc = await cloudPull();
+          const cloudList = cloudDoc && Array.isArray(cloudDoc.list) ? cloudDoc.list : null;
+          const localList = getDossiers();
+          if (cloudList === null) {
+            if (localList.length > 0) await cloudPush(localList);
+            return;
+          }
+          if (JSON.stringify(cloudList) === JSON.stringify(localList)) return;
+          if (Date.now() - cloudLastLocalSave < 20000) return;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudList));
+          updateBadgeCount();
+          if (typeof renderDashboard === 'function') renderDashboard();
+        } catch (e) {
+          /* hors ligne : la copie locale reste la référence */
+        }
+      }
       const AUTH_KEY = 'acdet_mdf_auth_2027';
       const ACCESS_CODE = 'ACDET2027';
       const STANDARD_AID = 50000;
@@ -1834,6 +1871,10 @@
 
       function saveDossiers(list) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        cloudLastLocalSave = Date.now();
+        cloudPush(list).catch(() => {
+          localStorage.setItem(STORAGE_KEY + '_pending', JSON.stringify(list));
+        });
         updateBadgeCount();
       }
 
@@ -2543,6 +2584,18 @@
             document.getElementById('detailModal').classList.remove('open');
           }
         });
+
+        const pendingRaw = localStorage.getItem(STORAGE_KEY + '_pending');
+        if (pendingRaw) {
+          try {
+            const pendingList = JSON.parse(pendingRaw);
+            cloudPush(pendingList).then(() => localStorage.removeItem(STORAGE_KEY + '_pending')).catch(() => {});
+          } catch (err) {
+            localStorage.removeItem(STORAGE_KEY + '_pending');
+          }
+        }
+        syncFromCloud();
+        setInterval(syncFromCloud, 15000);
       });
     })();
   </script>

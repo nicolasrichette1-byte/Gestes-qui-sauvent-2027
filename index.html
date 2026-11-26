@@ -952,8 +952,91 @@
     pending: false
   };
 
-  /* --- COUCHE DE PERSISTANCE (FIRESTORE + REPLI MÉMOIRE TRANSPARENT) --- */
+  /* --- COUCHE DE PERSISTANCE (SUPABASE + FIRESTORE + REPLI MÉMOIRE TRANSPARENT) --- */
   function createDataStore() {
+    var SB_URL = 'https://xyrvjlfbncumocacek.supabase.co';
+    var SB_KEY = 'sb_publishable_ymyeN1YlxpYev6LAQq56DA_8rOcz2vP';
+    if (SB_URL && SB_KEY) {
+      var sbAuth = { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY };
+      var sbBase = SB_URL + '/rest/v1/coordination';
+      var sbSessionsCb = null, sbClosuresCb = null, sbErrCb = null;
+      var lastSessionsJson = null, lastClosuresJson = null;
+
+      function sbFetchDoc(key) {
+        return fetch(sbBase + '?select=data&key=eq.' + encodeURIComponent(key), { headers: sbAuth })
+          .then(function(res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json();
+          })
+          .then(function(rows) { return rows.length ? (rows[0].data || null) : null; });
+      }
+      function sbPutDoc(key, value) {
+        var hd = Object.assign({}, sbAuth, { 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=minimal' });
+        return fetch(sbBase, { method: 'POST', headers: hd, body: JSON.stringify({ key: key, data: value }) })
+          .then(function(res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+          });
+      }
+      function sbRmw(key, mutate) {
+        return sbFetchDoc(key).then(function(current) {
+          var next = mutate(current === null ? null : (Array.isArray(current) ? current.slice() : Object.assign({}, current)));
+          if (next === null) return;
+          return sbPutDoc(key, next).then(sbNotify);
+        });
+      }
+      function sbNotify() {
+        return Promise.all([sbFetchDoc('gqs_2027_sessions'), sbFetchDoc('gqs_2027_closures')])
+          .then(function(result) {
+            var ses = result[0] || [];
+            var clo = result[1] || {};
+            var sj = JSON.stringify(ses), cj = JSON.stringify(clo);
+            if (sj !== lastSessionsJson) { lastSessionsJson = sj; if (sbSessionsCb) sbSessionsCb(ses); }
+            if (cj !== lastClosuresJson) { lastClosuresJson = cj; if (sbClosuresCb) sbClosuresCb(clo); }
+          })
+          .catch(function(err) { if (sbErrCb) sbErrCb(err); });
+      }
+
+      return {
+        mode: 'supabase',
+        init: function(onSessions, onClosures, onErr) {
+          sbSessionsCb = onSessions;
+          sbClosuresCb = onClosures;
+          sbErrCb = onErr || null;
+          sbNotify();
+          setInterval(sbNotify, 10000);
+        },
+        addSession: function(data) {
+          return sbRmw('gqs_2027_sessions', function(list) {
+            list = list || [];
+            list.push(Object.assign({}, data, { id: 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6) }));
+            return list;
+          });
+        },
+        updateVal: function(sessionId, orgKey, valObj) {
+          return sbRmw('gqs_2027_sessions', function(list) {
+            list = list || [];
+            var item = list.find(function(s) { return s.id === sessionId; });
+            if (!item) return null;
+            item.val = item.val || {};
+            item.val[orgKey] = valObj;
+            return list;
+          });
+        },
+        deleteSession: function(sessionId) {
+          return sbRmw('gqs_2027_sessions', function(list) {
+            list = list || [];
+            var out = list.filter(function(s) { return s.id !== sessionId; });
+            return out.length === list.length ? null : out;
+          });
+        },
+        setClosures: function(daysObj) {
+          return sbRmw('gqs_2027_closures', function() {
+            return { days: Object.assign({}, daysObj) };
+          });
+        }
+      };
+    }
+
     var hasFirebase = (typeof __firebase_config !== 'undefined' && __firebase_config);
     if (hasFirebase) {
       try {
