@@ -56,6 +56,7 @@ h2 .dot{width:12px;height:12px;border-radius:50%;flex:none}
 
   <footer class="footer">
     Page des logiciels — hébergée sur GitHub Pages (gratuit). Pour proposer un nouvel outil ou signaler un problème : contactez le DAFPIC.
+    <br>Espace réservé : <a href="https://nicolasrichette1-byte.github.io/Gestes-qui-sauvent-2027/pilotage/" title="Espace de pilotage DAFPIC × ACDET" style="color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--muted)">Pilotage DAFPIC × ACDET</a>
   </footer>
 </div>
 
@@ -70,7 +71,6 @@ h2 .dot{width:12px;height:12px;border-radius:50%;flex:none}
     {group:"dafpic",title:"Remontée formations – DAFPIC",desc:"Mise à jour annuelle de l'offre de formation du portail Formanoo Nouvelle-Calédonie : les établissements préparent leurs demandes (confirmer, modifier, créer, retirer) et la DAFPIC les traite.",icon:"up"},
     {group:"dafpic",title:"OGELI (INRS) — Gestion des formations SST",desc:"Site officiel de l'INRS (partenariat INRS / Éducation nationale) : gestion en ligne des formations Santé et Sécurité au Travail (SST, PRAP, PRE, travail en hauteur, CACES…), suivi des validations des acquis et édition des attestations. Site externe, accès avec vos identifiants.",icon:"check"},
     {group:"dafpic",title:"Alternance en Public Mixé — DAFPIC & GRETA-CFA",desc:"Recueil et instruction des propositions d'intégration d'alternants dans les classes de formation initiale : formulaire d'établissement, suivi des dossiers, fiche d'instruction imprimable, exports CSV/JSON.",icon:"hands"},
-    {group:"dafpic",title:"Espace DAFPIC × ACDET — Pilotage",desc:"Vue d'ensemble réservée : d'un seul coup d'œil, quels outils de la DAFPIC et de l'ACDET ont été utilisés sur un appareil et quels retours ont été reçus (sessions Gestes, stages, code prévention, QHSE, remontée Formanoo, salon, codes reçus par courriel). Lecture seule. Accès par code créé au premier usage.",icon:"shield"},
     {group:"acdet",title:"Portail A.C.D.E.T. × MDF",desc:"Appel à projets « Santé, Prévention & Sécurité » : le portail du partenariat pour déposer et suivre les dossiers.",icon:"hands"},
     {group:"acdet",title:"Salon ACDET 2027",desc:"Découverte des métiers et des formations — samedi 28 août 2027, salle d'honneur de la mairie de Nouméa : recensement des exposants sans engagement et espace administrateur.",icon:"cal"}
   ];
@@ -88,7 +88,7 @@ h2 .dot{width:12px;height:12px;border-radius:50%;flex:none}
     {id:"acdet",label:"A.C.D.E.T. (association de soutien)",note:"Projets portés avec l'association de soutien aux actions éducatives du DAFPIC.",color:"i-blue",dot:"blue"}
   ];
   var BASE="https://nicolasrichette1-byte.github.io/Gestes-qui-sauvent-2027/";
-  var PATHS={ "Gestes qui sauvent 2027":"", "Stage en Nouvelle-Calédonie":"stagenc/", "Code Prévention":"codeprvention/", "Suivi QHSE & SST — Plateaux techniques":"suivi-qhse/", "Portail des Événements (collèges & lycées)":"forums-salons/", "Portail A.C.D.E.T. × MDF":"portail-acdet-mdf/", "Salon ACDET 2027":"salon-acdet/", "Remontée formations – DAFPIC":"remontee-formation/", "OGELI (INRS) — Gestion des formations SST":"https://www.esst-inrs.fr/gestion/", "Alternance en Public Mixé — DAFPIC & GRETA-CFA":"alternance-mixte/", "Espace DAFPIC × ACDET — Pilotage":"pilotage/" };
+  var PATHS={ "Gestes qui sauvent 2027":"", "Stage en Nouvelle-Calédonie":"stagenc/", "Code Prévention":"codeprvention/", "Suivi QHSE & SST — Plateaux techniques":"suivi-qhse/", "Portail des Événements (collèges & lycées)":"forums-salons/", "Portail A.C.D.E.T. × MDF":"portail-acdet-mdf/", "Salon ACDET 2027":"salon-acdet/", "Remontée formations – DAFPIC":"remontee-formation/", "OGELI (INRS) — Gestion des formations SST":"https://www.esst-inrs.fr/gestion/", "Alternance en Public Mixé — DAFPIC & GRETA-CFA":"alternance-mixte/" };
   var root=document.getElementById("sections");
   GROUPS.forEach(function(g){
     var sec=document.createElement("section");
