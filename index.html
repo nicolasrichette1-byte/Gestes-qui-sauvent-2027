@@ -965,7 +965,7 @@
       function sbFetchDoc(key) {
         return fetch(sbBase + '?select=data&key=eq.' + encodeURIComponent(key), { headers: sbAuth })
           .then(function(res) {
-            if (!res.ok) throw new Error('HTTP ' + res.status);
+            if (!res.ok) return res.text().then(function(t) { throw new Error('HTTP ' + res.status + ' · ' + t.slice(0, 90)); });
             return res.json();
           })
           .then(function(rows) { return rows.length ? (rows[0].data || null) : null; });
@@ -974,7 +974,7 @@
         var hd = Object.assign({}, sbAuth, { 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates,return=minimal' });
         return fetch(sbBase, { method: 'POST', headers: hd, body: JSON.stringify({ key: key, data: value }) })
           .then(function(res) {
-            if (!res.ok) throw new Error('HTTP ' + res.status);
+            if (!res.ok) return res.text().then(function(t) { throw new Error('HTTP ' + res.status + ' · ' + t.slice(0, 90)); });
           });
       }
       function sbRmw(key, mutate) {
