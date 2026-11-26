@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Remontée formations – DAFPIC</title>
+<style>
+:root{--b:#0b4f6c;--a:#e8871e;--bg:#f3f6f8;--l:#d5dde3}
+*{box-sizing:border-box}body{margin:0;font:16px/1.45 system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:#1c2b33}
+header{background:var(--b);color:#fff;padding:18px 16px;border-bottom:5px solid var(--a)}header h1{margin:0;font-size:1.35rem}header p{margin:4px 0 0}
+main{max-width:1100px;margin:auto;padding:16px}
+.card{background:#fff;border:1px solid var(--l);border-radius:10px;padding:16px;margin-bottom:14px}
+.warn{border-left:5px solid var(--a);background:#fff7ec}
+h2{margin:0 0 10px;font-size:1.1rem;color:var(--b)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+label.f{display:block;font-weight:600;font-size:.9rem}
+input,select,textarea{width:100%;font:inherit;padding:8px;border:1px solid #aebbc4;border-radius:6px;background:#fff;margin-top:3px}
+textarea{min-height:80px}
+.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:4px;margin:6px 0 12px}
+.checks label,.one{display:flex;gap:8px;align-items:flex-start}input[type=checkbox]{width:auto;margin:5px 0 0}
+button{font:inherit;font-weight:600;padding:9px 14px;border-radius:6px;border:1px solid var(--b);background:var(--b);color:#fff;cursor:pointer}
+button.s{background:#fff;color:var(--b)}button.d{background:#fff;color:#a32020;border-color:#a32020}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+nav{margin-bottom:14px}nav button{background:#fff;color:var(--b)}nav button.on{background:var(--b);color:#fff}
+.k{font-size:1.9rem;font-weight:700;color:var(--b)}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{border-bottom:1px solid var(--l);padding:7px;text-align:left;vertical-align:top}
+[hidden]{display:none!important}
+@media print{nav,button,.noprint{display:none!important}body{background:#fff}.card{break-inside:avoid}}
+.d{margin-bottom:14px}fieldset{border:1px solid var(--l);border-radius:8px;margin:10px 0;padding:12px}legend{font-weight:700}td.p{white-space:pre-wrap}</style>
+</head><body>
+<header><h1>DAFPIC — Remontée annuelle de l'offre de formation</h1><p>Mise à jour des fiches du portail Formanoo Nouvelle-Calédonie : confirmer, modifier, créer ou retirer</p></header>
+<main>
+<div class="card warn">Les demandes transmises sont des propositions. Elles ne modifient pas Formanoo automatiquement et doivent être examinées par la DAFPIC.</div>
+<div id="home" class="grid">
+<div class="card" style="grid-column:1/-1"><h2>Formanoo, qu'est-ce que c'est ?</h2>
+<p>Le portail Formanoo « Nouvelle-Calédonie Formation » est un <strong>outil du gouvernement de la Nouvelle-Calédonie</strong>. Il est édité par le Carif-Oref Nouvelle-Calédonie, sous la responsabilité de la Direction du travail, de l'emploi et de la formation professionnelle (DTEFP).</p>
+<p><strong>À quoi sert-il ?</strong> Il recense les formations en Nouvelle-Calédonie. Chacun peut y rechercher une formation et consulter des informations telles que ses objectifs, son niveau, ses dates, son lieu et l'organisme qui la propose.</p>
+<p><strong>À quoi sert cet outil de remontée ?</strong> Il permet aux établissements scolaires de signaler à la DAFPIC les fiches à confirmer, modifier, créer ou retirer lors de la mise à jour annuelle.</p>
+<p>Site : <a href="https://nouvelle-caledonie-formation.formanoo.org/" target="_blank" rel="noopener" style="overflow-wrap:anywhere">https://nouvelle-caledonie-formation.formanoo.org/</a><br>Courriel de contact du site : <a href="mailto:dtefp.riife@gouv.nc">dtefp.riife@gouv.nc</a></p></div>
+<div class="card"><h2>Établissements scolaires</h2><p>Accès libre. Signalez ce qu'il faut confirmer, modifier, créer ou retirer.</p><button type="button" id="go-sch">Préparer ma remontée</button></div>
+<div class="card"><h2>DAFPIC</h2><p>Accès protégé par mot de passe.</p><button type="button" class="s" id="go-adm">Espace DAFPIC</button></div></div>
+
+<div id="sch" hidden>
+<p><button type="button" class="s" data-home>← Accueil</button></p>
+<form id="sf">
+<div class="card"><h2>1. Votre établissement</h2><div class="grid">
+<label class="f">Année de campagne *<input name="campagne" type="number" min="2026" max="2100" required></label>
+<label class="f">Nom de l'établissement *<input name="etab" required></label>
+<label class="f">Commune<input name="commune"></label>
+<label class="f">Nom du référent *<input name="referent" required></label>
+<label class="f">Fonction<input name="fonction"></label>
+<label class="f">Courriel *<input name="email" type="email" required></label>
+<label class="f">Téléphone<input name="tel" type="tel"></label></div></div>
+<div class="card"><h2>2. Vos demandes</h2><p>Une demande par formation.</p><div id="demands"></div><button type="button" id="add">+ Ajouter une formation</button></div>
+<div class="card"><label class="one"><input type="checkbox" name="accord" required><span>Je confirme l'exactitude des informations transmises, à ma connaissance. *</span></label>
+<p class="row"><button>Préparer l'envoi</button><button type="button" class="d" id="wipe">Effacer ma saisie</button></p><p id="draft" role="status">Votre saisie est conservée en brouillon dans ce navigateur.</p></div>
+</form>
+<div class="card" id="out" hidden><h2>3. Transmettre à la DAFPIC</h2><p><strong>Rien n'est envoyé automatiquement.</strong> Téléchargez le fichier et joignez-le à un courriel adressé à la DAFPIC, ou copiez le code dans le courriel.</p><button type="button" id="dl">Télécharger ma remontée</button><textarea id="code" readonly></textarea><button type="button" class="s" id="copy">Copier le code</button> <span id="ok" role="status"></span></div>
+</div>
+
+<div id="adm" hidden>
+<p class="noprint"><button type="button" class="s" data-home>← Accueil</button></p>
+<form id="gate" class="card"><h2 id="gt">Accès DAFPIC</h2><p id="gh"></p><label class="f">Mot de passe<input type="password" id="pw" required></label><label class="f" id="pw2l">Confirmer le mot de passe<input type="password" id="pw2"></label><p><button>Ouvrir</button></p><p id="gmsg" role="alert"></p></form>
+<div id="app" hidden>
+<div class="card noprint"><div class="grid"><label class="f">Campagne<select id="fc"></select></label><label class="f">Établissement<select id="fe"></select></label><label class="f">Demande<select id="fa"></select></label><label class="f">Traitement<select id="fs"></select></label><label class="f">Recherche<input type="search" id="q"></label></div></div>
+<div id="stats" class="grid"></div>
+<div class="card"><h2>Demandes</h2><div class="scroll" id="list"></div></div>
+<div class="card noprint"><h2>Établissements attendus</h2><label class="f">Un nom par ligne, écrit comme dans les réponses<textarea id="expected"></textarea></label><p id="missing"></p></div>
+<div class="card noprint"><h2>Importer</h2><label class="f">Fichiers reçus ou sauvegarde<input type="file" id="files" accept=".json,.txt" multiple></label><label class="f">Ou courriel contenant un code<textarea id="paste"></textarea></label><button type="button" id="imp">Importer le texte</button><p id="msg" role="status"></p></div>
+<div class="card noprint"><h2>Exporter</h2><div class="row"><button type="button" id="csv">Tableau Excel (CSV)</button><button type="button" class="s" id="save">Sauvegarde chiffrée</button><button type="button" class="s" id="print">Imprimer</button><button type="button" class="s" id="lock">Verrouiller</button></div><p>Les données restent dans ce navigateur. Sauvegardez après chaque séance. Le fichier CSV n'est pas chiffré.</p></div>
+</div></div>
+</main>
+<script>
+const ACTIONS=["Confirmer sans changement","Modifier une fiche","Créer une formation","Retirer une fiche"];
+const STATUS=["À traiter","À vérifier","Validée","Refusée","Mise à jour dans Formanoo"];
+const FICHE=[["objectifs","Objectifs","area"],["programme","Programme","area"],["entree","Niveau d'entrée"],["sortie","Niveau de sortie"],["validation","Validation (diplôme, certification)"],["commentaire","Commentaires sur la validation"],["financeur","Financeur"]];
+const SESSION=[["numero","N° de session (vide si nouvelle)"],["libelle","Intitulé / promotion"],["debut","Date de début","date"],["fin","Date de fin","date"],["lieu","Lieu (commune)"],["adresse","Adresse"],["telephone","Téléphone"],["duree","Durée (heures)","number"],["dispositifs","Dispositifs / financements"],["places","Nombre de places","number"],["publics","Publics"],["modalite","Modalité de suivi","select",["En présentiel","À distance","Mixte"]],["prerequis","Prérequis","area"]];
+const HEAD=["campagne","etab","commune","referent","fonction","email","tel"];
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const norm=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim();
+const slug=s=>norm(s).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"etablissement";
+const b64=u=>{let s="";u.forEach(c=>s+=String.fromCharCode(c));return btoa(s)},unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+function download(n,t,m){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:m}));a.download=n;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+const go=v=>{["home","sch","adm"].forEach(i=>$("#"+i).hidden=i!=v);scrollTo(0,0)};
+
+/* Établissements */
+const DRAFT="dafpic-brouillon",sf=$("#sf");let sub={id:uid()};
+const field=([k,l,t,o])=>`<label class="f">${l}${t=="area"?`<textarea data-k="${k}"></textarea>`:t=="select"?`<select data-k="${k}"><option value=""></option>${o.map(x=>`<option>${x}</option>`).join("")}</select>`:`<input data-k="${k}" type="${t||"text"}" ${t=="number"?'min="0"':""}>`}</label>`;
+const put=(box,o)=>box.querySelectorAll("[data-k]").forEach(e=>e.value=o[e.dataset.k]||"");
+const get=box=>Object.fromEntries([...box.querySelectorAll("[data-k]")].map(e=>[e.dataset.k,e.value.trim()]));
+function addSession(d,o={}){const s=document.createElement("fieldset");s.className="ses";s.innerHTML=`<legend>Session</legend><div class="grid">${SESSION.map(field).join("")}</div><button type="button" class="d" data-rs>Retirer cette session</button>`;put(s,o);d.querySelector(".sessions").appendChild(s)}
+function addDemand(o={}){const d=document.createElement("fieldset");d.className="dem";d.dataset.id=o.id||uid();
+ d.innerHTML=`<legend>Formation</legend><div class="head grid"><label class="f">Que faut-il faire ? *<select data-k="action" required><option value="">— choisir —</option>${ACTIONS.map(x=>`<option>${x}</option>`).join("")}</select></label><label class="f">Intitulé de la formation *<input data-k="titre" required></label><label class="f">Code CARIF (fiche existante)<input data-k="carif" placeholder="ex. 44S2600174"></label></div><label class="f"><span class="ml">Motif ou précisions</span><textarea data-k="motif"></textarea></label><div class="detail"><p class="hint"></p><div class="fiche grid">${FICHE.map(field).join("")}</div><div class="sessions"></div><button type="button" class="s" data-as>+ Ajouter une session</button></div><p><button type="button" class="d" data-rd>Retirer cette demande</button></p>`;
+ put(d.querySelector(".head"),o);d.querySelector('[data-k=motif]').value=o.motif||"";put(d.querySelector(".fiche"),o.fiche||{});(o.sessions||[]).forEach(s=>addSession(d,s));$("#demands").appendChild(d);mode(d)}
+function mode(d){const a=d.querySelector("[data-k=action]").value,edit=a==ACTIONS[1],make=a==ACTIONS[2],need=edit||a==ACTIONS[3];
+ d.querySelector(".detail").hidden=!(edit||make);d.querySelector("[data-k=motif]").required=need;d.querySelector(".ml").textContent=need?"Motif du changement *":"Motif ou précisions";
+ d.querySelector(".hint").textContent=edit?"Remplissez uniquement les informations à changer, avec leur nouvelle valeur. Un champ vide reste inchangé. Pour supprimer une information ou une session, indiquez-le dans le motif.":"Décrivez la nouvelle formation et au moins ses objectifs.";
+ d.querySelector("[data-k=objectifs]").required=make}
+function readDemand(d){const h=get(d.querySelector(".head")),active=!d.querySelector(".detail").hidden;
+ return {id:d.dataset.id,...h,motif:d.querySelector("[data-k=motif]").value.trim(),fiche:active?get(d.querySelector(".fiche")):{},sessions:active?[...d.querySelectorAll(".ses")].map(get).filter(s=>Object.values(s).some(Boolean)):[]}}
+const readAll=()=>({id:sub.id,...Object.fromEntries(HEAD.map(k=>[k,sf.elements[k].value.trim()])),demandes:[...document.querySelectorAll(".dem")].map(readDemand)});
+function saveDraft(){$("#out").hidden=true;try{localStorage.setItem(DRAFT,JSON.stringify(readAll()))}catch(e){$("#draft").textContent="Brouillon non enregistré : terminez la saisie avant de fermer la page."}}
+function init(o){sf.reset();$("#demands").innerHTML="";sub={id:o.id||uid()};HEAD.forEach(k=>sf.elements[k].value=o[k]||"");if(!o.campagne)sf.elements.campagne.value=new Date().getFullYear()+(new Date().getMonth()>8?1:0);(o.demandes?.length?o.demandes:[{}]).forEach(addDemand)}
+let draft={};try{draft=JSON.parse(localStorage.getItem(DRAFT))||{}}catch(e){}
+try{init(draft)}catch(e){init({})}
+sf.addEventListener("input",e=>{if(e.target.dataset.k=="action")mode(e.target.closest(".dem"));saveDraft()});
+sf.addEventListener("click",e=>{const b=e.target,d=b.closest(".dem");
+ if(b.id=="add")addDemand();else if(b.hasAttribute("data-as"))addSession(d);else if(b.hasAttribute("data-rs")&&confirm("Retirer cette session ?"))b.closest(".ses").remove();
+ else if(b.hasAttribute("data-rd")&&confirm("Retirer cette demande ?"))d.remove();else if(b.id=="wipe"){if(!confirm("Effacer toute la saisie ?"))return;init({})}else return;saveDraft()});
+const encode=o=>"DAFPIC1:"+b64(new TextEncoder().encode(JSON.stringify(o)))+":FIN";
+let ready;
+sf.onsubmit=e=>{e.preventDefault();const o=readAll();if(!o.demandes.length)return alert("Ajoutez au moins une formation.");
+ if(o.demandes.some(d=>d.sessions.some(s=>s.debut&&s.fin&&s.fin<s.debut)))return alert("Une session se termine avant sa date de début.");
+ if(o.demandes.some(d=>d.action==ACTIONS[2]&&!d.fiche.objectifs))return alert("Indiquez les objectifs de chaque nouvelle formation.");
+ ready={...o,maj:new Date().toISOString()};$("#code").value=encode(ready);$("#ok").textContent="";$("#out").hidden=false;$("#out").scrollIntoView()};
+$("#dl").onclick=()=>download(`remontee-${ready.campagne}-${slug(ready.etab)}.json`,JSON.stringify(ready,null,1),"application/json");
+$("#copy").onclick=async()=>{$("#code").select();try{await navigator.clipboard.writeText($("#code").value)}catch(e){document.execCommand("copy")}$("#ok").textContent="Code copié."};
+
+/* DAFPIC */
+const KEY="dafpic-suivi";let db={subs:[],expected:""},key,salt,queue=Promise.resolve(),open_=new Set();
+const stored=()=>{try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}};
+async function derive(pw,s){const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);return crypto.subtle.deriveKey({name:"PBKDF2",hash:"SHA-256",salt:s,iterations:310000},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
+async function seal(o){const iv=crypto.getRandomValues(new Uint8Array(12)),ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,new TextEncoder().encode(JSON.stringify(o)));return JSON.stringify({dafpic:1,salt:b64(salt),iv:b64(iv),ct:b64(new Uint8Array(ct))})}
+const unseal=async(o,k)=>JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(o.iv)},k,unb64(o.ct))));
+function persist(){const snap=JSON.parse(JSON.stringify(db));queue=queue.then(async()=>{try{localStorage.setItem(KEY,await seal(snap))}catch(e){alert("Enregistrement impossible. Faites une sauvegarde avant de fermer.")}})}
+function gate(){const n=!stored();$("#pw2l").hidden=!n;$("#gt").textContent=n?"Créez le mot de passe DAFPIC":"Accès DAFPIC";$("#gh").textContent=n?"10 caractères minimum. Il ne peut pas être récupéré en cas d'oubli : conservez-le en lieu sûr.":""}
+$("#go-sch").onclick=()=>go("sch");$("#go-adm").onclick=()=>{go("adm");if($("#app").hidden)gate()};
+const lock=async()=>{await queue;location.reload()};
+document.querySelectorAll("[data-home]").forEach(b=>b.onclick=()=>$("#app").hidden?go("home"):lock());$("#lock").onclick=lock;
+$("#gate").onsubmit=async e=>{e.preventDefault();const pw=$("#pw").value,s=stored(),m=$("#gmsg");
+ if(!s&&(pw.length<10||pw!=$("#pw2").value))return m.textContent="10 caractères minimum, saisis deux fois à l'identique.";
+ m.textContent="Vérification…";try{salt=s?unb64(s.salt):crypto.getRandomValues(new Uint8Array(16));key=await derive(pw,salt);if(s)db=await unseal(s,key);else persist()}catch(x){return m.textContent="Mot de passe incorrect ou données illisibles."}
+ m.textContent="";$("#pw").value=$("#pw2").value="";$("#gate").hidden=true;$("#app").hidden=false;$("#expected").value=db.expected;render()};
+const str=v=>String(v??"");
+const pick=(o,ks)=>Object.fromEntries(ks.map(k=>[k,str(o?.[k])]));
+function clean(r){if(!r||!str(r.id)||!str(r.etab).trim()||!Array.isArray(r.demandes))throw Error("invalide");
+ return {id:str(r.id),maj:str(r.maj),...pick(r,HEAD),demandes:r.demandes.map(d=>({id:str(d.id),...pick(d,["action","titre","carif","motif"]),fiche:pick(d.fiche,FICHE.map(f=>f[0])),sessions:(Array.isArray(d.sessions)?d.sessions:[]).map(s=>pick(s,SESSION.map(f=>f[0]))),statut:STATUS.includes(d.statut)?d.statut:STATUS[0],note:str(d.note)}))}}
+const content=d=>JSON.stringify([d.action,d.titre,d.carif,d.motif,d.fiche,d.sessions]);
+function merge(items,backup){let a=0,u=0,o=0;items.map(clean).forEach(r=>{
+ if(!backup)r.demandes.forEach(d=>{d.statut=STATUS[0];d.note=""});
+ const i=db.subs.findIndex(x=>x.id==r.id);if(i<0){db.subs.push(r);a++}else if(r.maj>db.subs[i].maj){if(!backup)r.demandes.forEach(d=>{const p=db.subs[i].demandes.find(x=>x.id==d.id);if(p){d.note=p.note;if(content(p)==content(d))d.statut=p.statut}});db.subs[i]=r;u++}else o++});
+ persist();return `${a} remontée(s) ajoutée(s), ${u} mise(s) à jour, ${o} déjà présente(s).`}
+async function importText(t){t=t.replace(/^﻿/,"").trim();const codes=[...t.matchAll(/DAFPIC1:([\s\S]*?):FIN/g)];
+ if(codes.length)return merge(codes.map(m=>JSON.parse(new TextDecoder().decode(unb64(m[1].replace(/[\s>]/g,""))))));
+ const o=JSON.parse(t);if(!o.dafpic)return merge([].concat(o));
+ let k=key;if(o.salt!=b64(salt))k=await derive(prompt("Mot de passe de cette sauvegarde (il sera visible à la saisie) :")||"",unb64(o.salt));
+ const x=await unseal(o,k);const m=merge(x.subs,true);if(!db.expected){db.expected=x.expected;$("#expected").value=x.expected;persist()}render();return m}
+async function handle(t){try{const m=await importText(t);render();return m}catch(e){return "Fichier ou texte non reconnu, ou mot de passe incorrect."}}
+$("#files").onchange=async e=>{const out=[];for(const f of e.target.files)out.push(f.name+" : "+await handle(await f.text()));$("#msg").textContent=out.join(" | ");e.target.value=""};
+$("#imp").onclick=async()=>{$("#msg").textContent=await handle($("#paste").value)};
+const rows=()=>db.subs.flatMap(s=>s.demandes.map(d=>({s,d})));
+function options(id,vals){const e=$(id),v=e.value;e.innerHTML='<option value="">Tout</option>'+vals.map(x=>`<option>${esc(x)}</option>`).join("");e.value=vals.includes(v)?v:""}
+const filtered=()=>rows().filter(({s,d})=>(!$("#fc").value||s.campagne==$("#fc").value)&&(!$("#fe").value||s.etab==$("#fe").value)&&(!$("#fa").value||d.action==$("#fa").value)&&(!$("#fs").value||d.statut==$("#fs").value)&&norm(JSON.stringify([s,d])).includes(norm($("#q").value)));
+const detail=d=>{const line=(defs,o)=>defs.filter(f=>o[f[0]]).map(f=>`<tr><th>${f[1]}</th><td class="p">${esc(o[f[0]])}</td></tr>`).join("");return `<table>${line([["motif","Motif ou précisions"],...FICHE],{motif:d.motif,...d.fiche})}${(d.sessions||[]).map((s,i)=>`<tr><th>Session ${i+1}</th><td class="p">${SESSION.filter(f=>s[f[0]]).map(f=>`${f[1]} : ${esc(s[f[0]])}`).join(" · ")}</td></tr>`).join("")}</table>`}
+function render(){
+ [...document.querySelectorAll("#list details")].forEach(x=>open_[x.open?"add":"delete"](x.dataset.id));
+ options("#fc",[...new Set(db.subs.map(s=>str(s.campagne)))].sort());
+ options("#fe",db.subs.map(s=>s.etab).filter((v,i,a)=>a.indexOf(v)==i).sort((a,b)=>a.localeCompare(b,"fr")));
+ options("#fa",ACTIONS);options("#fs",STATUS);
+ const rs=filtered(),st=n=>rs.filter(x=>x.d.statut==n).length;
+ $("#stats").innerHTML=`<div class="card"><div class="k">${rs.length}</div>demandes affichées</div>`+STATUS.map(s=>`<div class="card"><div class="k">${st(s)}</div>${esc(s)}</div>`).join("");
+ const block=({s,d})=>`<details class="d" data-id="${esc(d.id)}" ${open_.has(d.id)?"open":""}><summary><strong>${esc(s.etab)}</strong> — ${esc(d.titre||"(sans intitulé)")} <small>· campagne ${esc(String(s.campagne))} · ${esc(d.action)} · <em>${esc(d.statut)}</em></small></summary><p class="meta">${esc([s.referent,s.fonction,s.email,s.tel,s.commune].filter(Boolean).join(" · "))} · maj ${esc(str(s.maj).slice(0,10))}</p>${(d.motif||Object.values(d.fiche).some(Boolean)||d.sessions.length)?detail(d):""}<div class="grid"><label class="f">Traitement<select data-st="${esc(d.id)}">${STATUS.map(x=>`<option ${x==d.statut?"selected":""}>${x}</option>`).join("")}</select></label><label class="f">Note interne<textarea data-nt="${esc(d.id)}">${esc(d.note)}</textarea></label></div></details>`;
+ $("#list").innerHTML=rs.length?rs.map(block).join(""):"<p>Aucune demande à afficher. Importez les remontées reçues ou attendez les réponses des établissements.</p>";
+ const expected=$("#expected").value.split("\n").map(x=>x.trim()).filter(Boolean),present=new Set(db.subs.map(s=>slug(s.etab)));
+ const miss=expected.filter(e=>!present.has(slug(e)));
+ $("#missing").textContent=expected.length?(miss.length?miss.length+" établissement(s) attendus sans remontée : "+miss.join(", "):"Tous les établissements attendus ont une remontée."):"Listez ci-dessus les établissements dont vous attendez une remontée (un nom par ligne).";
+}
+$("#list").addEventListener("change",e=>{
+ const st=e.target.closest("[data-st]"),nt=e.target.closest("[data-nt]");
+ if(st){const r=rows().find(x=>x.d.id==st.dataset.st);if(r){r.d.statut=STATUS.includes(st.value)?st.value:r.d.statut;persist();render();return}}
+ if(nt){const r=rows().find(x=>x.d.id==nt.dataset.nt);if(r){r.d.note=nt.value.trim();persist()}}
+});
+$("#expected").oninput=()=>{db.expected=$("#expected").value;persist();render()};
+["fc","fe","fa","fs"].forEach(i=>$("#"+i).onchange=render);
+$("#q").oninput=render;
+$("#csv").onclick=()=>{
+ const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+ const h=["Établissement","Commune","Année de campagne","Référent","Fonction","Courriel","Téléphone","Action","Formation","Code CARIF","Statut","Note","Motif",...FICHE.map(f=>f[1]),"Sessions"];
+ const line=({s,d})=>[s.etab,s.commune,s.campagne,s.referent,s.fonction,s.email,s.tel,d.action,d.titre,d.carif,d.statut,d.note,d.motif,...FICHE.map(f=>d.fiche[f[0]]),d.sessions.map(s=>SESSION.filter(f=>s[f[0]]).map(f=>f[1]+" : "+s[f[0]]).join(" / ")).join(" || ")].map(q).join(",");
+ const body=filtered().map(line).join("\r\n");
+ download("remontees-formations-dafpic.csv","\uFEFF"+[h.map(q).join(","),body].join("\r\n"),"text/csv")};
+$("#save").onclick=async()=>{await queue;download("sauvegarde-remontees-dafpic.json",await seal(JSON.parse(JSON.stringify(db))),"application/json")};
+$("#print").onclick=()=>window.print();
+</script>
+</body>
+</html>

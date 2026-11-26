@@ -67,6 +67,7 @@ h2 .dot{width:12px;height:12px;border-radius:50%;flex:none}
     {group:"dafpic",title:"Code Prévention",desc:"Avant le stage : modules de santé et sécurité par secteur, entraînement, examen final puis badge à télécharger.",icon:"shield"},
     {group:"dafpic",title:"Suivi QHSE & SST — Plateaux techniques",desc:"Suivi multi-établissements du matériel et de la sécurité des plateaux techniques : état, pannes, signalements au DDFPT, grilles de contrôle et synthèse. Accès par code d'établissement.",icon:"check"},
     {group:"dafpic",title:"Portail des Événements (collèges & lycées)",desc:"Salons, forums, portes ouvertes, immersions et projets pédagogiques : l'agenda détaillé, l'inscription des exposants et l'espace organisateur.",icon:"cal"},
+    {group:"dafpic",title:"Remontée formations – DAFPIC",desc:"Mise à jour annuelle de l'offre de formation du portail Formanoo Nouvelle-Calédonie : les établissements préparent leurs demandes (confirmer, modifier, créer, retirer) et la DAFPIC les traite.",icon:"up"},
     {group:"acdet",title:"Portail A.C.D.E.T. × MDF",desc:"Appel à projets « Santé, Prévention & Sécurité » : le portail du partenariat pour déposer et suivre les dossiers.",icon:"hands"},
     {group:"acdet",title:"Salon ACDET 2027",desc:"Découverte des métiers et des formations — samedi 28 août 2027, salle d'honneur de la mairie de Nouméa : recensement des exposants sans engagement et espace administrateur.",icon:"cal"}
   ];
@@ -76,14 +77,15 @@ h2 .dot{width:12px;height:12px;border-radius:50%;flex:none}
     shield:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 7.9-8 9-4.6-1.1-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>',
     check:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8.5 12.5l2.5 2.5 5-5.5"/></svg>',
     cal:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>',
-    hands:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12c-2-2.5-6-2.5-7.5 0S5 17 8 17c2 0 3-1 4-2.5C13 16 14 17 16 17c3 0 5-2.7 3.5-5S14 9.5 12 12z"/><path d="M12 12V4"/></svg>'
+    hands:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12c-2-2.5-6-2.5-7.5 0S5 17 8 17c2 0 3-1 4-2.5C13 16 14 17 16 17c3 0 5-2.7 3.5-5S14 9.5 12 12z"/><path d="M12 12V4"/></svg>',
+    up:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>'
   };
   var GROUPS=[
     {id:"dafpic",label:"Outils du DAFPIC",note:"Santé et sécurité au travail, PFMP et orientation — vice-rectorat de la Nouvelle-Calédonie.",color:"i-green",dot:"green"},
     {id:"acdet",label:"A.C.D.E.T. (association de soutien)",note:"Projets portés avec l'association de soutien aux actions éducatives du DAFPIC.",color:"i-blue",dot:"blue"}
   ];
   var BASE="https://nicolasrichette1-byte.github.io/Gestes-qui-sauvent-2027/";
-  var PATHS={ "Gestes qui sauvent 2027":"", "Stage en Nouvelle-Calédonie":"stagenc/", "Code Prévention":"codeprvention/", "Suivi QHSE & SST — Plateaux techniques":"suivi-qhse/", "Portail des Événements (collèges & lycées)":"forums-salons/", "Portail A.C.D.E.T. × MDF":"portail-acdet-mdf/", "Salon ACDET 2027":"salon-acdet/" };
+  var PATHS={ "Gestes qui sauvent 2027":"", "Stage en Nouvelle-Calédonie":"stagenc/", "Code Prévention":"codeprvention/", "Suivi QHSE & SST — Plateaux techniques":"suivi-qhse/", "Portail des Événements (collèges & lycées)":"forums-salons/", "Portail A.C.D.E.T. × MDF":"portail-acdet-mdf/", "Salon ACDET 2027":"salon-acdet/", "Remontée formations – DAFPIC":"remontee-formation/" };
   var root=document.getElementById("sections");
   GROUPS.forEach(function(g){
     var sec=document.createElement("section");
