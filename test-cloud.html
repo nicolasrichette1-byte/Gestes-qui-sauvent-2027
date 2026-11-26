@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test cloud — Gestes qui sauvent 2027</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 720px; margin: 24px auto; padding: 0 16px; color: #1c2b33; }
+  h1 { font-size: 1.3rem; }
+  .card { border: 1px solid #d5dbe0; border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+  .ok { border-color: #2e9e5b; background: #ecf9f0; }
+  .ko { border-color: #d64545; background: #fdeeee; }
+  .wait { border-color: #c9a227; background: #fdf8e7; }
+  .tag { font-weight: 700; }
+  pre { background: #f4f6f8; padding: 10px; border-radius: 8px; overflow-x: auto; white-space: pre-wrap; word-break: break-all; font-size: 0.85rem; }
+  button { background: #0b6bcb; color: #fff; border: 0; border-radius: 8px; padding: 12px 20px; font-size: 1rem; cursor: pointer; }
+  #final { font-size: 1.05rem; font-weight: 700; margin-top: 18px; padding: 14px; border-radius: 10px; display: none; }
+  .green { background: #ecf9f0; border: 2px solid #2e9e5b; }
+  .red { background: #fdeeee; border: 2px solid #d64545; }
+</style>
+</head>
+<body>
+<h1>Test du cloud (Supabase)</h1>
+<p>Cette page teste automatiquement la connexion entre le site « Gestes qui sauvent 2027 » et la base de données. Elle ne modifie rien d'important et ne prend que quelques secondes.</p>
+<p><button id="go">▶ Lancer le test</button></p>
+<div id="results"></div>
+<div id="final"></div>
+
+<script>
+const SB_URL = 'https://xyrvjilfbbnucmocacek.supabase.co';
+const SB_KEY = 'sb_publishable_ymyeN1YlxpYev6LAQq56DA_8rOcz2vP';
+const TABLE = 'coordination';
+
+const results = document.getElementById('results');
+const final = document.getElementById('final');
+
+function card(title, state, detail) {
+  const d = document.createElement('div');
+  d.className = 'card ' + state;
+  let stateText = state === 'ok' ? '✅ RÉUSSI' : state === 'ko' ? '❌ ÉCHEC' : '⏳ EN COURS';
+  d.innerHTML = '<div class="tag">' + stateText + ' — ' + title + '</div><pre></pre>';
+  d.querySelector('pre').textContent = detail || '';
+  results.appendChild(d);
+  return d;
+}
+
+function headers(extra) {
+  return Object.assign({
+    'apikey': SB_KEY,
+    'Content-Type': 'application/json'
+  }, extra || {});
+}
+
+async function main() {
+  document.getElementById('go').disabled = true;
+  results.innerHTML = '';
+  final.style.display = 'none';
+
+  let insertOk = false;
+
+  // Test 1 : lecture
+  let c1 = card('Test 1 — Lecture de la table', 'wait', 'Connexion…');
+  try {
+    const r = await fetch(SB_URL + '/rest/v1/' + TABLE + '?select=key&limit=3', { headers: headers() });
+    const t = await r.text();
+    if (r.ok) {
+      c1.className = 'card ok';
+      c1.querySelector('.tag').textContent = '✅ RÉUSSI — Test 1 — Lecture de la table';
+      c1.querySelector('pre').textContent = 'La lecture fonctionne. Contenu actuel : ' + (t || '(table vide)');
+    } else {
+      c1.className = 'card ko';
+      c1.querySelector('.tag').textContent = '❌ ÉCHEC — Test 1 — Lecture de la table (HTTP ' + r.status + ')';
+      c1.querySelector('pre').textContent = t;
+    }
+  } catch (e) {
+    c1.className = 'card ko';
+    c1.querySelector('.tag').textContent = '❌ ÉCHEC — Test 1 — Lecture (réseau)';
+    c1.querySelector('pre').textContent = String(e);
+  }
+
+  // Test 2 : écriture
+  const tmpKey = 'test_diagnostic_' + Date.now();
+  let c2 = card('Test 2 — Écriture dans la table', 'wait', 'Connexion…');
+  try {
+    const r = await fetch(SB_URL + '/rest/v1/' + TABLE, {
+      method: 'POST',
+      headers: headers({ 'Prefer': 'return=minimal' }),
+      body: JSON.stringify({ key: tmpKey, data: { test: true } })
+    });
+    const t = r.status === 201 ? '' : await r.text();
+    if (r.status === 201) {
+      insertOk = true;
+      c2.className = 'card ok';
+      c2.querySelector('.tag').textContent = '✅ RÉUSSI — Test 2 — Écriture dans la table';
+      c2.querySelector('pre').textContent = "L'écriture fonctionne : les sites peuvent enregistrer !";
+    } else {
+      c2.className = 'card ko';
+      c2.querySelector('.tag').textContent = '❌ ÉCHEC — Test 2 — Écriture dans la table (HTTP ' + r.status + ')';
+      c2.querySelector('pre').textContent = t;
+    }
+  } catch (e) {
+    c2.className = 'card ko';
+    c2.querySelector('.tag').textContent = '❌ ÉCHEC — Test 2 — Écriture (réseau)';
+    c2.querySelector('pre').textContent = String(e);
+  }
+
+  if (insertOk) {
+    final.className = 'green';
+    final.style.display = 'block';
+    final.textContent = '🎉 TOUT FONCTIONNE. Retournez sur le site Gestes qui sauvent, faites Ctrl+F5, et proposez une session : l\'enregistrement va réussir.';
+  } else {
+    final.className = 'red';
+    final.style.display = 'block';
+    final.textContent = '⚠️ Le problème est dans la base Supabase : les GRANT n\'ont pas été appliqués. Envoyez-moi une capture d\'écran de cette page, elle montre exactement ce qui manque.';
+  }
+}
+
+document.getElementById('go').addEventListener('click', main);
+</script>
+</body>
+</html>
