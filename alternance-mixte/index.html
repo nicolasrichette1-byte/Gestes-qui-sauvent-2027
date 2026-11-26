@@ -830,6 +830,7 @@
     var add = 0, up = 0, old = 0;
     arr.forEach(function (raw) {
       if (!raw || typeof raw !== "object" || !raw.etablissement) return;
+      var r = {};
       FIELDS.forEach(function (f) { r[f[0]] = String(raw[f[0]] == null ? "" : raw[f[0]]); });
       CRITERES.forEach(function (c) { r[c[0]] = !!raw[c[0]]; });
       ENGAGEMENTS.forEach(function (c) { r[c[0]] = !!raw[c[0]]; });
